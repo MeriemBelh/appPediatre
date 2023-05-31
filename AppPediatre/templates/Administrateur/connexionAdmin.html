@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Connexion</title>
+</head>
+<body>
+<p>
+    {% if error == True %}
+        <p>L'utilisateur ou le mot de passe est incorrect</p>
+    {% endif%}
+</p>
+    <form method="POST">
+        {% csrf_token %}
+        {{form.as_p}}
+        <input type="submit" value="Se connecter">
+    </form>
+<br>
+<p><a href="{% url 'new_admin' %}">new_admin</a></p>
+</body>
+</html>

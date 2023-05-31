@@ -1,0 +1,32 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" media="screen" href="{% static 'css/baseAdmin.css' %}">
+    {% block title %}<title>Administrateur</title>{% endblock %}
+</head>
+<body>
+<!-- Side navigation -->
+<div class="sidenav">
+  <a href="/administrateur/gestion-administrateur">Administarteur</a>
+  <a href="/administrateur/gestion-patient">Patient</a>
+  <a href="/administrateur/gestion-pediatre">Pediatre</a>
+  <a href="/administrateur/gestion-video">Video</a>
+  <a href="/administrateur/gestion-site">Site</a>
+  </br>
+  </br>
+  </br>
+  </br>
+  </br>
+  </br>
+  {% block admin%}<p></p>{% endblock %}
+</div>
+
+<!-- Page content -->
+<div class="main">
+{% block contenu %} {% endblock %}
+</div>
+</body>
+</html>

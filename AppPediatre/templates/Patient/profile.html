@@ -1,0 +1,147 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Profile</title>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+          integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <link rel="stylesheet" href="{% static 'css/Patient/profile.css' %}">
+    <script defer src="{% static 'js/Patient/profile.js' %}"></script>
+
+
+</head>
+<body>
+<header class="header">
+    <div class="top-bar">
+        <div class="top-bar__content">
+            <section class="phone">
+                <i class="fa-solid fa-phone icon"></i>
+                <span>+212-xxxx-xxxx</span>
+            </section>
+            <section class="email">
+                <i class="fa-solid fa-envelope icon"></i>
+                <span>xxxx@mailSite.com</span>
+            </section>
+        </div>
+    </div>
+
+    <div class="bottom-bar">
+        <div class="bottom-bar__content">
+            <a href="{% url 'home_patient' %}" class="logo">
+                <img class="logo__img" src="{% static 'images/Patient/logo.jpeg' %}">
+            </a>
+        </div>
+    </div>
+</header>
+<section class="py-5 my-5">
+    <div class="container">
+        <h1 class="mb-5">Mon compte</h1>
+        {% if messages %}
+        {% for message in messages %}
+
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            {{message}}
+            <button type="button" class="btn-close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        {% endfor %}
+        {% endif %}
+        <div class="bg-white shadow rounded-lg d-block d-sm-flex">
+            <div class="profile-tab-nav border-right">
+                <div class="p-4">
+                    <div class="img-circle text-center mb-3">
+                        {% if imgPatient %}
+                        <img src="{{imgPatient}}" alt="Image" class="shadow">
+                        {% else %}
+                        <img src="{% static 'images/Patient/user.jpg' %}" alt="Image" class="shadow">
+                        {% endif %}
+                    </div>
+                    <h4 class="text-center">{{patient.nomPatient}} {{patient.prenomPatient}}</h4>
+                </div>
+                <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                    <a class="nav-link active" id="account-tab" data-toggle="pill" href="#account" role="tab"
+                       aria-controls="account" aria-selected="true">
+                        <i class="fa fa-home text-center mr-1"></i>
+                        Compte
+                    </a>
+                    <a class="nav-link" id="password-tab" href="{% url 'update_password' %}" aria-controls="password"
+                       aria-selected="false">
+                        <i class="fa fa-key text-center mr-1"></i>Mot de passe
+                    </a>
+                    <a class="btn btn-light" role="button" href="{% url 'home_patient' %}">
+                        <i class="fa fa-home text-center mr-1"></i>Retourner
+                    </a>
+                </div>
+            </div>
+            <div class="tab-content p-4 p-md-5" id="v-pills-tabContent">
+                <div class="tab-pane fade show active" id="account" role="tabpanel" aria-labelledby="account-tab">
+                    <form action="{% url 'update_profile' %}" method="POST">
+                        {% csrf_token %}
+                        <input type="hidden" name="form_type" value="email_phone">
+                        <h3 class="mb-4">Paramètres du compte</h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Prénom</label>
+                                    <input type="text" class="form-control" value="{{patient.prenomPatient}}" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Nom</label>
+                                    <input type="text" class="form-control" value="{{patient.nomPatient}}" disabled>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Numéro de téléphone de la mère</label>
+                                    <input name="numTelMere" type="tel" class="form-control phone-input"
+                                           pattern="^(?:0[5-6-7]|[5-6-7])\d{8}$"
+                                           oninvalid="this.setCustomValidity('Veuillez saisir un numéro de téléphone valide')"
+                                           oninput="setCustomValidity('')"
+                                           value="{{patient.numTelephoneMere}}" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Numéro de téléphone du père</label>
+                                    <input name="numTelPere" type="tel" class="form-control phone-input"
+                                           pattern="^(?:0[5-6-7]|[5-6-7])\d{8}$"
+                                           oninvalid="this.setCustomValidity('Veuillez saisir un numéro de téléphone valide')"
+                                           oninput="setCustomValidity('')"
+                                           value="{{patient.numTelephonePere}}" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>E-mail</label>
+                                    <input name="mail" type="email" class="form-control phone-input"
+                                           oninvalid="this.setCustomValidity('Veuillez saisir une adresse mail valide ')"
+                                           oninput="setCustomValidity('')"
+                                           value="{{patient.mailPatient}}"
+                                           required>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    </br>
+                                    <input class="btn btn-primary" type="submit" value="Mettre a jour">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+
+</body>
+</html>

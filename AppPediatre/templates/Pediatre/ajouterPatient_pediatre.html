@@ -1,0 +1,2190 @@
+{% extends 'Pediatre/sideBar_pediatre.html' %}
+{% load static %}
+{% block import %}
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!----======== CSS ======== -->
+    <link rel="stylesheet" href="{% static 'css/Pediatre/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/Pediatre/ajouterPatient.css' %}">
+
+    <!----===== Boxicons CSS ===== -->
+    <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/all.css">
+
+    <!---====== JQuery =======-->
+    <link rel="stylesheet" href="https://jqueryvalidation.org/files/demo/site-demos.css">
+    <script src="{% static 'jquery/jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'jquery/jquery.steps.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
+
+    <!--====== JavaScript =====-->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
+{% endblock %}
+{% block styleCss %}
+    <style type="text/css">
+        span.error {
+            color: #ea3343;
+            font-size: 17.5px;
+            font-style: italic;
+            display: block;
+        }
+
+        span.error0 {
+            color: green;
+            font-size: 17.5px;
+            font-style: italic;
+            display: block;
+        }
+
+        .collapsible {
+            background-color: #262A56;
+            color: #E3CCAE;
+            cursor: pointer;
+            padding: 10px;
+            margin-top: 2%;
+            margin-bottom: 5%;
+            padding-left: 20px;
+            width: 100%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 16.2px;
+        }
+
+        .collapsible:after {
+            content: '\002B';
+            color: white;
+            font-weight: bold;
+            float: right;
+            padding-right: 16px;
+            font-size: 18px;
+        }
+
+        .active:after {
+            content: "\2212";
+        }
+
+        .ct {
+            padding: 0 28px;
+            display: none;
+            overflow: hidden;
+        }
+
+        [id$="error"] {
+            font-size: 14px;
+            color: red;
+            padding-left: 25px;
+        }
+
+        .wrapper {
+            margin-top: 15px;
+        }
+
+        .wrapper .custom_checkbox {
+            margin: 0px 20px;
+            margin-bottom: 18px;
+        }
+
+        .wrapper .dflex {
+            align-items: center;
+        }
+
+        .custom_checkbox input {
+            padding: 0;
+            height: initial;
+            width: initial;
+            display: none;
+            cursor: pointer;
+        }
+
+        .custom_checkbox label {
+            position: relative;
+            cursor: pointer;
+            color: black;
+            font-family: 'Poppins', sans-serif;
+            font-size: 17.5px;
+        }
+
+        .custom_checkbox label:before {
+            content: '';
+            background-color: transparent;
+            border: 2px solid green;
+            padding: 12px;
+            border-radius: 5px;
+            display: inline-block;
+            position: relative;
+            vertical-align: middle;
+            cursor: pointer;
+            margin-right: 15px;
+            transition: background-color 0.3s ease-in-out;
+        }
+
+        .custom_checkbox input:checked + label::after {
+            content: '';
+            display: block;
+            position: absolute;
+            top: 1px;
+            left: 9px;
+            width: 8px;
+            height: 15px;
+            border: solid #fff;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+
+        .custom_checkbox input:checked + label::before {
+            content: '';
+            background-color: #A5D7E8;
+            border-color: #A5D7E8;
+        }
+    </style>
+{% endblock %}
+{% block title %}<title>Ajouter Patient</title>{% endblock %}
+</head>
+
+{% block content %}
+    <span class="text">Ajouter Patient</span>
+    {% if errorValue == True %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+    {% endif %}
+    <div class="page-content">
+        <div class="wizard-v1-content">
+            <div class="wizard-form ">
+                <div class="wizard-header">
+                    <p>
+                        {% if errorValue == True %}
+                            <div class="alert alert-danger" role="alert">
+                                {{ error }}
+                            </div>
+                        {% endif %}
+                    </p>
+                    <h3>&nbsp;&nbsp;Dossier Médical&nbsp;</h3>
+                    <p>Remplissez tous les champs du formulaire pour passer à l'étape suivante</p>
+                </div>
+                <form id="form-register" class="form-register" action="{% url 'ajouter_patient' %}" method="POST"
+                      enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div id="form-total">
+                        <!-------------------------------SECTION 1--------------------------------------->
+                        <!--===================================================================-->
+                        <!--===================================================================-->
+                        <!--===================================================================-->
+                        <!--===================================================================-->
+                        <!--===================================================================-->
+                        <!--===================================================================-->
+                        <!--===================================================================-->
+                        <!--===================================================================-->
+                        <!--===================================================================-->
+                        <!--===================================================================-->
+                        <h2>
+                            <span class="step-icon"><i class='fa fa-user'></i></span>
+                            <span class="step-number">1ère étape</span>
+                            <span class="step-text">Identité Patient</span>
+                        </h2>
+                        <section>
+                            <div class="inner">
+                                <div class="form-row">
+                                    <div class="form-holder">
+                                        <label class="form-label" for="Nom">Nom *</label>
+                                        <input type="text" placeholder="Nom du patient" class="form-control" id="Nom"
+                                               name="nom" required>
+                                    </div>
+                                    <div class="form-holder">
+                                        <label class="form-label" for="Prenom">Prénom *</label>
+                                        <input type="text" placeholder="Prénom du patient" class="form-control"
+                                               id="Prenom"
+                                               name="prenom" required>
+                                        <span></span>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-holder">
+                                        <label for="date_naissance">Date de naissance *</label>
+                                        <input type="date" class="form-control" id="datePickerId" name="datenaissance"
+                                               required>
+                                    </div>
+                                    <div class="form-holder">
+                                        <label for="sexe">Sexe *</label>
+                                        <select name="sexe" id="sexe" class="form-control" required>
+                                            <option selected disabled>Choisir...</option>
+                                            <option value="Masculin">Masculin</option>
+                                            <option value="Féminin">Féminin</option>
+                                            <option value="Autre">Autre</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-holder">
+                                        <label class="form-label" for="tele">N° de télèphone de la mère *</label>
+                                        <input type="tel" placeholder="N° de télèphone de la mère" class="form-control"
+                                               id="tele" name="teleMom" pattern="^0[5-6-7]\d{8}$" required>
+                                        <span></span>
+                                    </div>
+                                    <div class="form-holder">
+                                        <label class="form-label" for="tele1">N° de télèphone du père *</label>
+                                        <input type="tel" placeholder="N° de télèphone du père" class="form-control"
+                                               id="tele1" name="teleDad" pattern="^0[5-6-7]\d{8}$" required>
+                                        <span></span>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-holder form-holder-2">
+                                        <label for="mailPatient">Email du patient *</label>
+                                        <input type="text" placeholder="L'émail du patient" class="form-control"
+                                               id="mailPatient" name="mailPatient" required>
+                                        <span></span>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-holder form-holder-2">
+                                        <label for="adresse">Adresse *</label>
+                                        <input type="text" placeholder="Adresse du patient" class="form-control"
+                                               id="adresse" name="adresse" required>
+                                        <span></span>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-holder">
+                                        <label for="delegation">Région *</label>
+                                        <select name="delegation" id="delegation" class="form-control" required>
+                                            <option selected disabled>Choisir...</option>
+                                            {% for d in delegations %}
+                                                <option value="{{ d }}">{{ d }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="form-holder">
+                                        <label for="ville">Ville *</label>
+                                        <select name="ville" id="ville" class="form-control required">
+                                            <option selected disabled>Choisir...</option>
+                                            <optgroup label="Tanger - Tétouan - Al Hoceima">
+                                                <option value="Tanger">Tanger</option>
+                                                <option value="Tétouan">Tétouan</option>
+                                                <option value="Al Hoceima">Al Hoceima</option>
+                                                <option value="Chefchaouen">Chefchaouen</option>
+                                                <option value="Fnideq">Fnideq</option>
+                                                <option value="Mdiq">Mdiq</option>
+                                                <option value="Assilah">Assilah</option>
+                                                <option value="Larache">Larache</option>
+                                                <option value="Ksar el Kébir">Ksar el Kébir</option>
+                                                <option value="Ouezzane">Ouezzane</option>
+                                            </optgroup>
+                                            <optgroup label="L'Oriental">
+                                                <option value="Oujda">Oujda</option>
+                                                <option value="Nador">Nador</option>
+                                                <option value="Driouch">Driouch</option>
+                                                <option value="Berkane">Berkane</option>
+                                                <option value="Taourirt">Taourirt</option>
+                                                <option value="Guercif">Guercif</option>
+                                                <option value="Jerada">Jerada</option>
+                                            </optgroup>
+                                            <optgroup label="Fès - Meknès">
+                                                <option value="Fès">Fès</option>
+                                                <option value="Meknès">Meknès</option>
+                                                <option value="Ifrane">Ifrane</option>
+                                                <option value="Taounate">Taounate</option>
+                                                <option value="Moulay Yacoub">Moulay Yacoub</option>
+                                                <option value="Taza">Taza</option>
+                                                <option value="Sefrou">Sefrou</option>
+                                                <option value="Boulmane">Boulmane</option>
+                                                <option value="El Hajeb">El Hajeb</option>
+                                            </optgroup>
+                                            <optgroup label="Rabat - Salé - Kénitra">
+                                                <option value="Rabat">Rabat</option>
+                                                <option value="Salé">Salé</option>
+                                                <option value="Kénitra">Kénitra</option>
+                                                <option value="Moulay Bousselham">Moulay Bousselham</option>
+                                                <option value="Temara">Temara</option>
+                                                <option value="Sidi Slimane">Sidi Slimane</option>
+                                                <option value="Sidi Kacem">Sidi Kacem</option>
+                                                <option value="Tiflet">Tiflet</option>
+                                                <option value="Khemisset">Khemisset</option>
+                                                <option value="Rommani">Rommani</option>
+                                                <option value="Oulmes">Oulmes</option>
+                                                <option value="Ezzhiliga">Ezzhiliga</option>
+                                            </optgroup>
+                                            <optgroup label="Casablanca - Settat">
+                                                <option value="Casablanca">Casablanca</option>
+                                                <option value="Settat">Settat</option>
+                                                <option value="El Jadida">El Jadida</option>
+                                                <option value="Mohammedia">Mohammedia</option>
+                                                <option value="Berrechid">Berrechid</option>
+                                                <option value="Benslimane">Benslimane</option>
+                                                <option value="Mediouna">Mediouna</option>
+                                                <option value="Sidi Bennour">Sidi Bennour</option>
+                                                <option value="Sidi Rahal Chatai">Sidi Rahal Chatai</option>
+                                                <option value="Tit Mellil">Tit Mellil</option>
+                                                <option value="Médiouna">Médiouna</option>
+                                                <option value="Oulad Haddou">Oulad Haddou</option>
+                                                <option value="Ain Harrouda">Ain Harrouda</option>
+                                                <option value="Dar Bouazza">Dar Bouazza</option>
+                                                <option value="Loulad">Loulad</option>
+                                                <option value="Sidi Maarouf">Sidi Maarouf</option>
+                                                <option value="Nouaceur">Nouaceur</option>
+                                                <option value="Ben Ahmed">Ben Ahmed</option>
+                                                <option value="Ben Yakhlef">Ben Yakhlef</option>
+                                                <option value="Bouskoura">Bouskoura</option>
+                                            </optgroup>
+                                            <optgroup label="Marrakech - Safi">
+                                                <option value="Marrakech">Marrakech</option>
+                                                <option value="Safi">Safi</option>
+                                                <option value="Essaouira">Essaouira</option>
+                                                <option value="Al Haouz">Al Haouz</option>
+                                                <option value="Chichaoua">Chichaoua</option>
+                                                <option value="El Kelaa des Sraghna">El Kelaa des Sraghna</option>
+                                                <option value="Youssoufia">Youssoufia</option>
+                                                <option value="Kelaat Sraghna">Kelaat Sraghna</option>
+                                                <option value="Sidi Youssef Ben Ali">Sidi Youssef Ben Ali</option>
+                                                <option value="Rehamna">Rehamna</option>
+                                                <option value="Ben Guerir">Ben Guerir</option>
+                                                <option value="Essaouira-Mogador">Essaouira-Mogador</option>
+                                            </optgroup>
+                                            <optgroup label="Beni Mellal - Khénifra">
+                                                <option value="Beni Mellal">Beni Mellal</option>
+                                                <option value="Kasba Tadla">Kasba Tadla</option>
+                                                <option value="Khouribga">Khouribga</option>
+                                                <option value="Fqih Ben Salah">Fqih Ben Salah</option>
+                                                <option value="Azilal">Azilal</option>
+                                                <option value="Béni Ayat">Béni Ayat</option>
+                                                <option value="Boumalne Dades">Boumalne Dades</option>
+                                                <option value="Demnate">Demnate</option>
+                                                <option value="Kelaat M'gouna">Kelaat M'gouna</option>
+                                                <option value="Ouaouizeght">Ouaouizeght</option>
+                                                <option value="Tadla-Azilal">Tadla-Azilal</option>
+                                                <option value="Taliouine">Taliouine</option>
+                                                <option value="Khénifra">Khénifra</option>
+                                                <option value="Aguelmous">Aguelmous</option>
+                                                <option value="Azrou">Azrou</option>
+                                                <option value="Khenifra Province">Khenifra Province</option>
+                                                <option value="Midelt">Midelt</option>
+                                                <option value="Mrirt">Mrirt</option>
+                                                <option value="Tighassaline">Tighassaline</option>
+                                                <option value="Tounfite">Tounfite</option>
+                                            </optgroup>
+                                            <optgroup label="Drâa - Tafilalet">
+                                                <option value="Errachidia">Errachidia</option>
+                                                <option value="Midelt">Midelt</option>
+                                                <option value="Tinghir">Tinghir</option>
+                                                <option value="Tinejdad">Tinejdad</option>
+                                                <option value="Boudnib">Boudnib</option>
+                                                <option value="Goulmima">Goulmima</option>
+                                                <option value="Erfoud">Erfoud</option>
+                                                <option value="Merzouga">Merzouga</option>
+                                                <option value="Rissani">Rissani</option>
+                                                <option value="Alnif">Alnif</option>
+                                                <option value="Arfoud">Arfoud</option>
+                                            </optgroup>
+                                            <optgroup label="Souss - Massa">
+                                                <option value="Agadir">Agadir</option>
+                                                <option value="Ait Melloul">Ait Melloul</option>
+                                                <option value="Inezgane">Inezgane</option>
+                                                <option value="Taroudant">Taroudant</option>
+                                                <option value="Oulad Teima">Oulad Teima</option>
+                                                <option value="Tiznit">Tiznit</option>
+                                                <option value="Chtouka Ait Baha">Chtouka Ait Baha</option>
+                                                <option value="Tata">Tata</option>
+                                                <option value="Guelmim">Guelmim</option>
+                                                <option value="Tan-Tan">Tan-Tan</option>
+                                                <option value="Assa-Zag">Assa-Zag</option>
+                                                <option value="Tarfaya">Tarfaya</option>
+                                            </optgroup>
+                                            <optgroup label="Guelmim - Oued Noun">
+                                                <option value="Guelmim">Guelmim</option>
+                                                <option value="Tan-Tan">Tan-Tan</option>
+                                                <option value="Assa-Zag">Assa-Zag</option>
+                                                <option value="Sidi Ifni">Sidi Ifni</option>
+                                                <option value="Tata">Tata</option>
+                                                <option value="Smara">Smara</option>
+                                                <option value="Akhfenir">Akhfenir</option>
+                                                <option value="Lakhssas">Lakhssas</option>
+                                                <option value="Oum El Guerdane">Oum El Guerdane</option>
+                                            </optgroup>
+                                            <optgroup label="Laâyoune - Saguia al Hamra">
+                                                <option value="Laâyoune">Laâyoune</option>
+                                                <option value="Boujdour">Boujdour</option>
+                                                <option value="Tarfaya">Tarfaya</option>
+                                                <option value="Es-Semara">Es-Semara</option>
+                                                <option value="Aousserd">Aousserd</option>
+                                                <option value="Oum Dreyga">Oum Dreyga</option>
+                                            </optgroup>
+                                            <optgroup label="Dakhla - Oued Ed-Dahab">
+                                                <option value="Aousserd">Aousserd</option>
+                                                <option value="Bir Gandouz">Bir Gandouz</option>
+                                                <option value="Dakhla">Dakhla</option>
+                                                <option value="Oued Ed-Dahab">Oued Ed-Dahab</option>
+                                                <option value="El Argoub">El Argoub</option>
+                                                <option value="Mijek">Mijek</option>
+                                                <option value="Tichla">Tichla</option>
+                                                <option value="Boujdour">Boujdour</option>
+                                            </optgroup>
+                                            <option value="Autre">Autre</option>
+                                        </select>
+                                        <span></span>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="formRadio">
+                                        <label>Couverture Médicale *</label>
+                                        <div class="radio">
+                                            <input label="Non Mutualiste" type="radio" value="NonMutualiste"
+                                                   id="NonMutualiste" name="CM" checked>
+                                            <input label="Mutualiste" type="radio" value="Mutualiste" id="Mutualiste"
+                                                   name="CM">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-holder form-holder-2" id="listeDesMutuelles" style="display:none;">
+                                        <label for="typeMutuelle">Mutuelle *</label>
+                                        <select class="form-control" id="typeMutuelle" name="nomCouvertureMedical"
+                                                required>
+                                            <option value="" selected disabled>Choisir...</option>
+                                            {% for m in mutuelles %}
+                                                <option value="{{ m }}">{{ m }}</option>
+                                            {% endfor %}
+                                            <option value="Autre">Autre</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <script>
+                                    $('#Mutualiste').change(function () {
+                                        if ($(this).is(':checked')) {
+                                            $('#listeDesMutuelles').show();
+                                        } else {
+                                            $('#listeDesMutuelles').hide();
+                                        }
+                                    });
+                                    $('#NonMutualiste').change(function () {
+                                        if ($(this).is(':checked')) {
+                                            $('#listeDesMutuelles').hide();
+                                        }
+                                    });
+                                </script>
+                                <div class="form-row">
+                                    <div class="form-holder form-holder-2">
+                                        <label for="imgPatient">Image du patient</label>
+                                        <input type="file"
+                                               id="imgPatient" name="imgPatient"
+                                               accept="image/png, image/jpeg, image/jpg">
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <!-----------------------SECTION 2---------------------------------->
+                        <!--===================================================================-->
+                        <!--===================================================================-->
+                        <!--===================================================================-->
+                        <!--===================================================================-->
+                        <!--===================================================================-->
+                        <!--===================================================================-->
+                        <!--===================================================================-->
+                        <!--===================================================================-->
+                        <!--===================================================================-->
+                        <!--===================================================================-->
+                        <h2>
+                            <span class="step-icon"><i class='fa fa-id-card'></i></span>
+                            <span class="step-number">2ème étape</span>
+                            <span class="step-text">Dossier Antécédent</span>
+                        </h2>
+                        <section>
+                            <div class="inner">
+                                <!--parents_Consanguins-->
+                                <div class="form-row">
+                                    <div class="form-holder form-holder-2">
+                                        <label for="PS">Parents Consanguins *</label>
+                                        <select name="parents_Consanguins" id="PS" class="form-control" required>
+                                            <option value="" selected disabled>Choisir...</option>
+                                            <option value="Oui">Oui</option>
+                                            <option value="Non">Non</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-holder form-holder-2">
+                                        <label for="A_M_A">Age maternel à l'accouchement (en année) *</label>
+                                        <input type="NUMBER" min="1" class="form-control" id="A_M_A"
+                                               name="age_maternel_accouchement" required>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-holder form-holder-2">
+                                        <label for="GS">Grossesse suivi</label>
+                                        <select name="grossesse_suivi" id="GS" class="form-control">
+                                            <option value="" selected>Choisir...</option>
+                                            <option value="Oui">Oui</option>
+                                            <option value="Non">Non</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-holder form-holder-2">
+                                        <label for="TG">Terme de la grossesse</label>
+                                        <select name="terme_grossesse" id="TG" class="form-control">
+                                            <option value="" selected>Choisir...</option>
+                                            <option value="A terme">A terme</option>
+                                            <option value="Prématuré">Prématuré</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-holder" id="other1">
+                                        <label for="PTG">Préciser le terme : </label>
+                                        <input type="NUMBER" class="form-control" min="6" max="9" id="PTG"
+                                               name="precisionTerme" required>
+                                    </div>
+                                    <script>
+                                        $('#TG').change(function () {
+                                            $('#other1').toggle($(this).val() == 'Prématuré');
+                                        }).change();
+                                    </script>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-holder form-holder-2">
+                                        <label for="AV">Accouchement par voie</label>
+                                        <select name="accouchement_par_voie" id="AV" class="form-control">
+                                            <option value="" selected>Choisir...</option>
+                                            <option value="Basse">Basse</option>
+                                            <option value="Césarienne">Césarienne</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-holder form-holder-2">
+                                        <label for="SN">Souffrance Néonatale *</label>
+                                        <select name="souffrance_neonatal" id="SN" class="form-control" required>
+                                            <option value="" selected disabled>Choisir...</option>
+                                            <option value="Oui">Oui</option>
+                                            <option value="Non">Non</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-holder form-holder-2">
+                                        <label for="PN">Poids de naissance (en Kg) *</label>
+                                        <select name="poids_de_naissance" id="PN" class="form-control" required>
+                                            <option value="" selected disabled>Choisir...</option>
+                                            <option value="< 2Kg">
+                                                < 2Kg
+                                            </option>
+                                            <option value="2--2,5Kg"> 2--2,5Kg</option>
+                                            <option value="2,5--4Kg"> 2,5--4Kg</option>
+                                            <option value="> 4Kg"> > 4Kg</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-holder form-holder-2">
+                                        <label for="TN">Taille à la naissance (en cm) *</label>
+                                        <input type="NUMBER" class="form-control" min="45" id="TN"
+                                               name="taille_de_naissance" required>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-holder form-holder-2">
+                                        <label for="NHA">Hospitalisation à l'âge Néonatal *</label>
+                                        <select name="Notion_hospitalisation_age_neonatal" id="NHA" class="form-control"
+                                                required>
+                                            <option value="" selected disabled>Choisir...</option>
+                                            <option value="Oui">Oui</option>
+                                            <option value="Non">Non</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-holder form-holder-2">
+                                        <label for="All">Allaitement *</label>
+                                        <select name="allaitement" id="All" class="form-control" required>
+                                            <option value="" selected disabled>Choisir...</option>
+                                            <option value="Maternel">Maternel</option>
+                                            <option value="Mixte">Mixte</option>
+                                            <option value="Artificiel">Artificiel</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-holder form-holder-2">
+                                        <label for="DA">Diversification Alimentaire à l’âge de (en mois) *</label>
+                                        <input type="NUMBER" class="form-control" min="4" id="DA"
+                                               name="diversification_alimentaire" required>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-holder form-holder-2">
+                                        <label for="RSP">Retentissement Staturo-Pondérale *</label>
+                                        <select name="retentissement_staturo_ponderale" id="RSP" class="form-control"
+                                                required>
+                                            <option value="" disabled selected>Choisir...</option>
+                                            <option value="Retard">Retard</option>
+                                            <option value="Stagnation">Stagnation</option>
+                                            <option value="Bon">Bon</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <!-----------------------SECTION 3---------------------------------->
+                        <!--===================================================================-->
+                        <!--===================================================================-->
+                        <!--===================================================================-->
+                        <!--===================================================================-->
+                        <!--===================================================================-->
+                        <!--===================================================================-->
+                        <!--===================================================================-->
+                        <!--===================================================================-->
+                        <!--===================================================================-->
+                        <!--===================================================================-->
+                        <h2>
+                            <span class="step-icon"><i class='bx bx-plus-medical'></i></span>
+                            <span class="step-number">3ème étape</span>
+                            <span class="step-text">Dossier médical</span>
+                        </h2>
+                        <section>
+                            <div class="inner">
+                                <!--Développement psychomoteur-->
+                                <button type="button" id="col1" name="col1" class="collapsible">Développement
+                                    psychomoteur
+                                </button>
+                                <div class="ct">
+                                    <div class="form-row">
+                                        <div class="form-holder">
+                                            <label for="AAAa">Assis avec appui (en mois) </label>
+                                            <input type="NUMBER" class="form-control" min="1" id="AAAa"
+                                                   name="assis_avec_appui">
+                                        </div>
+                                        <div class="form-holder">
+                                            <label for="ASA">Assis sans appui (en mois) </label>
+                                            <input type="NUMBER" class="form-control" min="1" id="ASA"
+                                                   name="assis_sans_appui">
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-holder">
+                                            <label for="MS">Marche au serpent (en mois) </label>
+                                            <input type="NUMBER" class="form-control" min="1" id="MS"
+                                                   name="marche_serpant">
+                                        </div>
+                                        <div class="form-holder">
+                                            <label for="MP">Marche à 4 pattes (en mois) </label>
+                                            <input type="NUMBER" class="form-control" min="1" id="MP"
+                                                   name="marche_4_pattes">
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-holder">
+                                            <label for="DAA">Debout avec appui (en mois) </label>
+                                            <input type="NUMBER" class="form-control" min="1" id="DAA"
+                                                   name="debout_avec_appui">
+                                        </div>
+                                        <div class="form-holder">
+                                            <label for="DSA">Debout sans appui (en mois) </label>
+                                            <input type="NUMBER" class="form-control" min="1" id="DSA"
+                                                   name="debout_sans_appui">
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-holder form-holder-2">
+                                            <label for="PSy">Parole : Syllabe (en mois) </label>
+                                            <input type="NUMBER" class="form-control" min="1" id="PSy"
+                                                   name="parole_syllabe">
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-holder form-holder-2">
+                                            <label for="PM">Parole : Mots (en mois) </label>
+                                            <input type="NUMBER" class="form-control" min="1" id="PM"
+                                                   name="parole_mots">
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-holder form-holder-2">
+                                            <label for="PP">Parole : Phrase (en mois) </label>
+                                            <input type="NUMBER" class="form-control" min="1" id="PP"
+                                                   name="parole_phrase">
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-holder">
+                                            <label for="TC">Trouble de comportement </label>
+                                            <select name="trouble_de_comportement" id="TC" class="form-control">
+                                                <option value="" selected>Choisir...</option>
+                                                <option value="Oui">Oui</option>
+                                                <option value="Non">Non</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-holder">
+                                            <label for="TCO">Trouble de concentration </label>
+                                            <select name="trouble_de_concentration" id="TCO" class="form-control">
+                                                <option value="" selected>Choisir...</option>
+                                                <option value="Oui">Oui</option>
+                                                <option value="Non">Non</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-holder">
+                                            <label for="IAE">Interaction avec entourage </label>
+                                            <select name="interaction_avec_entourage" id="IAE" class="form-control">
+                                                <option value="" selected>Choisir...</option>
+                                                <option value="Oui">Oui</option>
+                                                <option value="Non">Non</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-holder">
+                                            <label for="SA">Spectre autiste </label>
+                                            <select name="spectre_autisme" id="SA" class="form-control">
+                                                <option value="" selected>Choisir...</option>
+                                                <option value="Oui">Oui</option>
+                                                <option value="Non">Non</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <!--Développement psychomoteur : Autre-->
+                                    <div class="form-row">
+                                        <div class="form-holder form-holder-2">
+                                            <label for="PEA">Potentiel évoqué auditif fait </label>
+                                            <select name="potentiel_evoque_auditif" id="PEA" class="form-control">
+                                                <option value="" selected>Choisir...</option>
+                                                <option value="Non fait">Non fait</option>
+                                                <optgroup label="Fait">
+                                                    <option value="Normaux">Normaux</option>
+                                                    <option value="Surdité totale">Surdité totale</option>
+                                                    <option value="Surdité partielle">Surdité partielle</option>
+                                                </optgroup>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-holder form-holder-2">
+                                            <label for="Cry">Caryotype </label>
+                                            <select name="caryotype" id="Cry" class="form-control">
+                                                <option value="" selected>Choisir...</option>
+                                                <option value="Fait">Fait</option>
+                                                <optgroup label="Non fait">
+                                                    <option value="Libre et homogène">Libre et homogène</option>
+                                                    <option value="Mosaique">Mosaique</option>
+                                                    <option value="Partielle">Partielle</option>
+                                                    <option value="Translocation">Translocation</option>
+                                                </optgroup>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <!--Bilan thyroïdien fait-->
+                                        <div class="form-holder form-holder-2">
+                                            <label for="BT">Bilan thyroïdien fait </label>
+                                            <select name="bilan_thyroidien" id="BT" class="form-control">
+                                                <option value="" selected>Choisir...</option>
+                                                <option value="Oui">Oui</option>
+                                                <option value="Non">Non</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                </script>
+                                <br>
+                                <!---------------------------------->
+                                <!--Pathologie cardiaque-->
+                                <button type="button" id="col2" name="col2" class="collapsible">Pathologie
+                                    cardiaque
+                                </button>
+                                <div class="ct">
+                                    <div class="form-row">
+                                        <div class="form-holder form-holder-2">
+                                            <label for="ECO">Dernier echocoeur</label>
+                                            <select name="echo_coeur_fait" id="ECO" class="form-control">
+                                                <option value="" selected>Choisir...</option>
+                                                <option value="Normal">Normal</option>
+                                                <option value="Cardiopathie congénitale">Cardiopathie congénitale
+                                                </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-row" id="other5">
+                                        <div class="form-holder">
+                                            <label for="ECOty">Préciser le type : </label>
+                                            <input type="text" class="form-control" id="ECOty" name="echo_coeur_type"
+                                                   required>
+                                        </div>
+                                        <script>
+                                            $('#ECO').change(function () {
+                                                $('#other5').toggle($(this).val() == 'Cardiopathie congénitale');
+                                            }).change();
+                                        </script>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-holder form-holder-2">
+                                            <label for="OP">Opéré</label>
+                                            <select name="opere" id="OP" class="form-control">
+                                                <option value="" selected>Choisir...</option>
+                                                <option value="Oui">Oui</option>
+                                                <option value="Non">Non</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-row" id="other6">
+                                        <div class="form-holder form-holder-2">
+                                            <table class="table table-bordered" style="width:96%;" id="d">
+                                                <tr>
+                                                    <td>Date d'operation</td>
+                                                    <td>Type d'operation</td>
+                                                    <td>Suivi</td>
+                                                    <td>Date du suivi</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>
+                                                        <input type="Date" id="dt" class="form-control"
+                                                               name="opere_date[]"
+                                                               required>
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" id="" placeholder="Type" class="form-control"
+                                                               name="opere_type[]" required>
+                                                    </td>
+                                                    <td>
+                                                        <select name="opere_suivi[]" id="opere_suivi"
+                                                                class="form-control opere_suivi">
+                                                            <option value="" selected disabled>Choisir...</option>
+                                                            <option value="Oui">Oui</option>
+                                                            <option value="Non">Non</option>
+                                                        </select>
+                                                    </td>
+                                                    <td>
+                                                        <input type="Date" id="dts" class="form-control"
+                                                               name="opere_suivi_date[]"
+                                                               required disabled>
+                                                    </td>
+                                                    <td>
+                                                        <button type="button" name="a" id="a" class="btn btn-success">
+                                                            <i class='bx bx-plus'
+                                                               aria-hidden="true"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                                <script>
+                                                    $(document).ready(function () {
+                                                        // When the value of the select element changes
+                                                        $('#opere_suivi').on('change', function () {
+                                                            // Check if the selected value is not "Oui"
+                                                            if ($(this).val() !== 'Oui') {
+                                                                $('#dts').prop('disabled', true);
+                                                            } else {
+                                                                $('#dts').prop('disabled', false);
+                                                            }
+                                                        });
+                                                    });
+                                                </script>
+                                                <script>
+                                                    $(document).ready(function () {
+                                                        var a = 1;
+                                                        $('#a').click(function () {
+                                                            a++;
+                                                            $('#d').append('<tr id="o' + a +
+                                                                '"><td><input type="Date" id="dt" class="form-control" name="opere_date[]" required></td>' +
+                                                                '<td><input type="text" placeholder="Type" class="form-control" name="opere_type[]" required></td>'
+                                                                + '<td>\n' +
+                                                                '<select name="opere_suivi[]" id="opere_suivi" class="form-control opere_suivi">\n' +
+                                                                '<option value="" selected disabled>Choisir...</option>\n' +
+                                                                '<option value="Oui">Oui</option>\n' +
+                                                                '<option value="Non">Non</option>\n' +
+                                                                '</select>\n' +
+                                                                '</td>'
+                                                                + '<td>' +
+                                                                '<input type="Date" id="dts" class="form-control dts" id="opere_suivi_date' + a + '" name="opere_suivi_date[]" disabled required>' +
+                                                                '</td>'
+                                                                + '<td><button type="button" name="remove" id="' + a + '" class="btn btn-danger btn_rem"><i class="bx bx-x"></i></button></td></tr>');
+                                                        });
+                                                        $(document).on('click', '.btn_rem', function () {
+                                                            var button_id = $(this).attr("id");
+                                                            $('#o' + button_id + '').remove();
+                                                        });
+                                                        $(document).on('change', '.opere_suivi', function () {
+                                                            var dateField = $(this).closest('tr').find('.dts');
+
+                                                            if ($(this).val() !== 'Oui') {
+                                                                dateField.prop('disabled', true);
+                                                            } else {
+                                                                dateField.prop('disabled', false);
+                                                            }
+                                                        });
+                                                    });
+                                                </script>
+                                            </table>
+                                        </div>
+                                        <script>
+                                            $('#OP').change(function () {
+                                                $('#other6').toggle($(this).val() == 'Oui');
+                                            }).change();
+                                        </script>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-holder form-holder-2">
+                                            <label for="cpc">Commentaire</label>
+                                            <textarea style="width:97%;" name="commentairePCardiaque" id="cpc" rows="10"
+                                                      cols="63"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                                <!--Pathologie endocrinienne-->
+                                <button type="button" id="col3" name="col3" class="collapsible">Pathologie
+                                    endocrinienne
+                                </button>
+                                <div class="ct">
+                                    <div class="form-row">
+                                        <div class="form-holder form-holder-2">
+                                            <label for="HY">Pathologie endocrinienne thyroïdienne</label>
+                                            <select name="pathologie_endocrinienne" id="HY" class="form-control">
+                                                <option value="" selected>Choisir...</option>
+                                                <option value="Hypothyroïdie">Hypothyroïdie</option>
+                                                <option value="Euthyroïdie">Euthyroïdie</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-row" id="other2">
+                                        <div class="form-holder">
+                                            <label for="HYa">Préciser l'âge (année): </label>
+                                            <input type="NUMBER" class="form-control" id="HYa" min="1"
+                                                   name="age_pathologie_endocrinienne" style="width: 80%;" required>
+                                        </div>
+                                        <script>
+                                            $('#HY').change(function () {
+                                                $('#other2').toggle($(this).val() == 'Hypothyroïdie');
+                                            }).change();
+                                        </script>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-holder form-holder-2">
+                                            <label for="DIA">Diabète</label>
+                                            <select name="diabete" id="DIA" class="form-control">
+                                                <option value="" selected>Choisir...</option>
+                                                <option value="Oui">Oui</option>
+                                                <option value="Non">Non</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-row" id="other3">
+                                        <div class="form-holder">
+                                            <label for="DIAa">Préciser l'âge (année): </label>
+                                            <input type="NUMBER" class="form-control" name="age_diabete" id="DIAa"
+                                                   min="1"
+                                                   style="width: 80%;" required>
+                                        </div>
+                                        <script>
+                                            $('#DIA').change(function () {
+                                                $('#other3').toggle($(this).val() == 'Oui');
+                                            }).change();
+                                        </script>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-holder form-holder-2">
+                                            <label for="OB">Obésité</label>
+                                            <select name="obesite" id="OB" class="form-control">
+                                                <option value="" selected>Choisir...</option>
+                                                <option value="Oui">Oui</option>
+                                                <option value="Non">Non</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-row" id="other4">
+                                        <div class="form-holder form-holder-2">
+                                            <table class="table table-bordered" style="width:96%;" id="dOB">
+                                                <tr>
+                                                    <td>
+                                                        <input type="Date" id="dtOB" class="form-control"
+                                                               name="obesite_date[]" required>
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" placeholder="Poids (Kg)"
+                                                               class="form-control"
+                                                               name="obesite_poids[]" required>
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" placeholder="Taille (cm)"
+                                                               class="form-control"
+                                                               name="obesite_taille[]" required>
+                                                    </td>
+                                                    <td>
+                                                        <button type="button" name="aa" id="aa" class="btn btn-success">
+                                                            <i class='bx bx-plus' style="float:right;margin-top:2.5px;"
+                                                               aria-hidden="true"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                                <script>
+                                                    $(document).ready(function () {
+                                                        var aa = 1;
+                                                        $('#aa').click(function () {
+                                                            aa++;
+                                                            $('#dOB').append('<tr id="oo' + aa + '">' +
+                                                                '<td><input type="Date" id="dtOB" class="form-control" name="obesite_date[]" required></td>' +
+                                                                '<td><input type="number" placeholder="Poids (Kg)" class="form-control" name="obesite_poids[]" required></td>' +
+                                                                '<td><input type="number" placeholder="Taille (cm)" class="form-control" name="obesite_taille[]" required></td>' +
+                                                                '<td><button type="button" name="remove" id="' + aa + '" class="btn btn-danger btn_rem"><i class="bx bx-x"></i></button></td></tr>');
+                                                        });
+                                                        $(document).on('click', '.btn_rem', function () {
+                                                            var button_id2 = $(this).attr("id");
+                                                            $('#oo' + button_id2 + '').remove();
+                                                        });
+                                                    });
+                                                </script>
+                                            </table>
+                                        </div>
+                                        <script>
+                                            $('#OB').change(function () {
+                                                $('#other4').toggle($(this).val() == 'Oui');
+                                            }).change();
+                                        </script>
+                                    </div>
+                                </div>
+                                <br>
+                                <!--Pathologie digestif-->
+                                <button type="button" name="col4" id="col4" class="collapsible">Pathologie
+                                    digestive
+                                </button>
+                                <div class="ct">
+                                    <div class="form-row">
+                                        <div class="form-holder form-holder-2">
+                                            <label for="RG">Reflux gastro-oesophagien</label>
+                                            <select name="reflux_gastro_oesophagien" id="RG" class="form-control">
+                                                <option value="" selected>Choisir...</option>
+                                                <option value="Oui">Oui</option>
+                                                <option value="Non">Non</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-holder form-holder-2">
+                                            <label for="MC">Maladie coeliaque</label>
+                                            <select name="maladie_coeliaque" id="MC" class="form-control">
+                                                <option value="" selected>Choisir...</option>
+                                                <option value="Oui">Oui</option>
+                                                <option value="Non">Non</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-row" id="other14">
+                                        <div class="form-holder">
+                                            <label for="MCa">Préciser l'âge (année): </label>
+                                            <input type="NUMBER" class="form-control" name="agedebut_maladie_coalique"
+                                                   id="MCa" min="1"
+                                                   style="width: 80%;" required>
+                                        </div>
+                                        <script>
+                                            $('#MC').change(function () {
+                                                $('#other14').toggle($(this).val() == 'Oui');
+                                            }).change();
+                                        </script>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-holder form-holder-2">
+                                            <label for="Muc">Mucoviscidose</label>
+                                            <select name="mucoviscidose" id="Muc" class="form-control">
+                                                <option value="" selected>Choisir...</option>
+                                                <option value="Oui">Oui</option>
+                                                <option value="Non">Non</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                                <!--Pathologie ophtalmologique-->
+                                <button type="button" id="col5" name="col5" class="collapsible">Pathologie
+                                    ophtalmologique
+                                </button>
+                                <div class="ct">
+                                    <div class="form-row">
+                                        <div class="form-holder form-holder-2">
+                                            <label for="OPH">Pathologie ophtalmologique:</label>
+                                            <textarea style="width:97%;" id="OPH" name="pathologie_ophtalmologique"
+                                                      rows="10" cols="63"></textarea>
+                                        </div>
+                                    </div>
+                                    <br>
+                                </div>
+                                <!--Pathologie ORL-->
+                                <button type="button" name="col14" id="col14" class="collapsible">Pathologie
+                                    ORL
+                                </button>
+                                <div class="ct">
+                                    <div class="form-row">
+                                        <div class="form-holder form-holder-2">
+                                            <label for="ORL">Pathologie ORL:</label>
+                                            <textarea style="width:97%;" name="pathologie_orl" id="ORL" rows="10"
+                                                      cols="63"></textarea>
+                                        </div>
+                                    </div>
+                                    <br>
+                                </div>
+                                <!--Pathologie suivi dentaire-->
+                                <button type="button" id="col6" name="col6" class="collapsible">Pathologie suivi
+                                    dentaire
+                                </button>
+                                <div class="ct">
+                                    <div class="form-row">
+                                        <div class="form-holder form-holder-2">
+                                            <label for="pathologie_suivie_dentaire">Suivi dentaire</label>
+                                            <select name="pathologie_suivie_dentaire" id="pathologie_suivie_dentaire"
+                                                    class="form-control">
+                                                <option value="" selected>Choisir...</option>
+                                                <option value="Oui">Oui</option>
+                                                <option value="Non">Non</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div id="other15">
+                                        <div class="form-row">
+                                            <img src="{% static 'images/Pediatre/pathologieDentaire.jpg' %}"
+                                                 alt="Pathologie Dentaire Bouche structure"
+                                                 width="400" height="500">
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-holder form-holder-2">
+                                                <table class="table table-bordered" style="width:96%;" id="PSD">
+                                                    <tr>
+                                                        <td>
+                                                            <input type="Date" id="dates_acts" class="form-control"
+                                                                   name="dates_acts[]" required>
+                                                        </td>
+                                                        <td>
+                                                            <select name="dent_GaucheDroit[]" id="dent_GaucheDroit"
+                                                                    class="form-control" required>
+                                                                <option value="" selected>Choisir...</option>
+                                                                <option value="D">D</option>
+                                                                <option value="G">G</option>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <select name="dent_HautBas[]" id="dent_HautBas"
+                                                                    class="form-control" required>
+                                                                <option value="" selected>Choisir...</option>
+                                                                <option value="H">H</option>
+                                                                <option value="B">B</option>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <select name="dent_num[]" id="dent_num" class="form-control"
+                                                                    required>
+                                                                <option value="" selected>Choisir...</option>
+                                                                <option value="1">1</option>
+                                                                <option value="2">2</option>
+                                                                <option value="3">3</option>
+                                                                <option value="4">4</option>
+                                                                <option value="5">5</option>
+                                                                <option value="6">6</option>
+                                                                <option value="7">7</option>
+                                                                <option value="8">8</option>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <input type="text" placeholder="Code d'act"
+                                                                   class="form-control"
+                                                                   name="codes_acts[]"
+                                                                   required>
+                                                        </td>
+                                                        <td>
+                                                            <button type="button" name="ll" id="ll"
+                                                                    class="btn btn-success">
+                                                                <i class='bx bx-plus'
+                                                                   aria-hidden="true"></i>
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                    <script>
+                                                        $(document).ready(function () {
+                                                            var ll = 1;
+                                                            $('#ll').click(function () {
+                                                                ll++;
+                                                                $('#PSD').append('<tr id="ll' + ll + '">' +
+                                                                    '<td><input type="Date" id="" class="form-control"  name="dates_acts[]" required></td>' +
+                                                                    `<td>
+														<select name="dent_GaucheDroit[]" id="dent_GaucheDroit" class="form-control" required>
+															<option value="" selected>Choisir...</option>
+															<option value="D">D</option>
+															<option value="G">G</option>
+														</select>
+													</td>
+													<td>
+														<select name="dent_HautBas[]" id="dent_HautBas" class="form-control" required>
+															<option value="" selected>Choisir...</option>
+															<option value="H">H</option>
+															<option value="B">B</option>
+														</select>
+													</td>
+													<td>
+														<select name="dent_num[]" id="dent_num" class="form-control" required>
+															<option value="" selected>Choisir...</option>
+															<option value="1">1</option>
+															<option value="2">2</option>
+															<option value="3">3</option>
+															<option value="4">4</option>
+															<option value="5">5</option>
+															<option value="6">6</option>
+															<option value="7">7</option>
+															<option value="8">8</option>
+														</select>
+													</td>` +
+                                                                    `<td><input type="text" placeholder="Code d'act" class="form-control" name="codes_acts[]" required></td>` +
+                                                                    '<td><button type="button" name="remove" id="' + ll + '" class="btn btn-danger btn_rem"><i class="bx bx-x"></i></button></td></tr>');
+                                                            });
+                                                            $(document).on('click', '.btn_rem', function () {
+                                                                var button_id15 = $(this).attr("id");
+                                                                $('#ll' + button_id15 + '').remove();
+                                                            });
+                                                        });
+                                                    </script>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <script>
+                                            $('#pathologie_suivie_dentaire').change(function () {
+                                                $('#other15').toggle($(this).val() == 'Oui');
+                                            }).change();
+                                        </script>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-holder form-holder-2">
+                                            <label for="Dt">Commentaire: </label>
+                                            <textarea style="width:97%;" id="Dt"
+                                                      name="pathologie_suivie_dentaire_Commentaire" rows="10"
+                                                      cols="63"></textarea>
+                                        </div>
+                                    </div>
+                                    <br>
+                                </div>
+                                <br>
+                                <!--Pathologie osteoarticulaire-->
+                                <button type="button" id="col18" name="col18" class="collapsible">Pathologie
+                                    osteoarticulaire
+                                </button>
+                                <div class="ct">
+                                    <div class="form-row">
+                                        <div class="form-holder form-holder-2">
+                                            <label for="Do">Pathologie osteoarticulaire: </label>
+                                            <textarea style="width:97%;" id="Do" name="pathologie_osteoarticulaire"
+                                                      rows="10"
+                                                      cols="63"></textarea>
+                                        </div>
+                                    </div>
+                                    <br>
+                                </div>
+                                <br>
+                                <!--Pathologie neurologique-->
+                                <button type="button" id="col19" name="col19" class="collapsible">Pathologie
+                                    neurologique
+                                </button>
+                                <div class="ct">
+                                    <div class="form-row">
+                                        <div class="form-holder form-holder-2">
+                                            <label for="Dn">Pathologie neurologique: </label>
+                                            <textarea style="width:97%;" id="Dn" name="pathologie_neurologique"
+                                                      rows="10"
+                                                      cols="63"></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-holder form-holder-2">
+                                            <label for="Ep">Epilepsie</label>
+                                            <select name="epilepsie" id="Ep" class="form-control">
+                                                <option value="" selected>Choisir...</option>
+                                                <option value="Oui">Oui</option>
+                                                <option value="Non">Non</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-holder form-holder-2">
+                                            <label for="IF">Imagerie faite</label>
+                                            <textarea style="width:97%;" name="imagerie_faite" id="IF" rows="10"
+                                                      cols="63"></textarea>
+                                        </div>
+                                        <br>
+                                    </div>
+                                    <br>
+                                </div>
+                                <br>
+                                <!----------------------------------------------------------------------------------------------->
+                                <button type="button" id="col7" name="col7" class="collapsible">Autre
+                                    Pathologie
+                                </button>
+                                <div class="ct">
+                                    <div class="form-row">
+                                        <div class="form-holder form-holder-2">
+                                            <label for="AP">Autre pathologie</label>
+                                            <textarea style="width:97%;" name="autre_pathologie" id="AP" rows="10"
+                                                      cols="63"></textarea>
+                                        </div>
+                                        <br><br>
+                                        <div class="form-holder form-holder-2">
+                                            <label for="T">Traitement</label>
+                                            <textarea style="width:97%;" name="traitement" id="T" rows="10"
+                                                      cols="63"></textarea>
+                                        </div>
+                                        <br><br>
+                                        <br>
+                                    </div>
+                                </div>
+                                <!------------------------------->
+                                <!--Hernies-->
+                                <button type="button" name="col8" id="col8" class="collapsible">Hernies</button>
+                                <div class="ct">
+                                    <div class="form-row">
+                                        <div class="formRadio form-holder-2">
+                                            <label for="HR">Hernies</label>
+                                            <div class="radio">
+                                                <input label="Ombilical" type="radio" id="Ombilical" name="hernies"
+                                                       value="Ombilical">
+                                                <input label="Inguinale" type="radio" id="Inguinale" name="hernies"
+                                                       value="Inguinale">
+                                                <input label="Inguino-scrotale" type="radio" id="Inguino-scrotale"
+                                                       name="hernies"
+                                                       value="Inguino-scrotale">
+                                                <input label="Aucune" type="radio" id="Aucune" name="hernies"
+                                                       value="Aucune"
+                                                       checked>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-holder form-holder-2" id="listeDesDirection"
+                                             style="display:none;">
+                                            <label for="typeHernie">Direction d'hernie *</label>
+                                            <select class="form-control" id="typeHernie" name="typeHernie_direction"
+                                                    required>
+                                                <option value="" selected disabled>Choisir...</option>
+                                                <option value="À droit">À droit</option>
+                                                <option value="À gauche">À gauche</option>
+                                                <option value="À droit et À gauche">À droit et À gauche</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <script>
+                                        $('#Inguinale').change(function () {
+                                            if ($(this).is(':checked')) {
+                                                $('#listeDesDirection').show();
+                                            } else {
+                                                $('#listeDesDirection').hide();
+                                            }
+                                        });
+                                        $('#Inguino-scrotale').change(function () {
+                                            if ($(this).is(':checked')) {
+                                                $('#listeDesDirection').show();
+                                            } else {
+                                                $('#listeDesDirection').hide();
+                                            }
+                                        });
+                                        $('#Ombilical').change(function () {
+                                            if ($(this).is(':checked')) {
+                                                $('#listeDesDirection').hide();
+                                            }
+                                        });
+                                        $('#Aucune').change(function () {
+                                            if ($(this).is(':checked')) {
+                                                $('#listeDesDirection').hide();
+                                            }
+                                        });
+                                    </script>
+                                </div>
+                            </div>
+                        </section>
+                        <!------------------------SECTION 4--------------------------------->
+                        <!--===================================================================-->
+                        <!--===================================================================-->
+                        <!--===================================================================-->
+                        <!--===================================================================-->
+                        <!--===================================================================-->
+                        <!--===================================================================-->
+                        <!--===================================================================-->
+                        <!--===================================================================-->
+                        <!--===================================================================-->
+                        <!--===================================================================-->
+                        <h2>
+                            <span class="step-icon"><i class='bx bx-list-ol'></i></span>
+                            <span class="step-number">4ème étape</span>
+                            <span class="step-text">Suivi paramédical</span>
+                        </h2>
+                        <section class="form-step">
+                            <div class="inner">
+                                <!----------------------------------------------------------------------------------------------->
+                                <button type="button" name="col9" id="col9" class="collapsible">Suivi paramédical :
+                                    Psychomotricien
+                                </button>
+                                <div class="ct">
+                                    <div class="form-row">
+                                        <div class="form-holder">
+                                            <label for="Psyc_ad">Âge de début :</label>
+                                            <input type="NUMBER" class="form-control" id="Psyc_ad"
+                                                   name="Psychomotricien_agedebut">
+                                        </div>
+                                        <div class="form-holder">
+                                            <label for="Psyc_type">Type :</label>
+                                            <select name="Psychomotricien_type" id="Psyc_type" class="form-control">
+                                                <option value="" selected>Choisir...</option>
+                                                <option value="Régulier">Régulier</option>
+                                                <option value="Non régulier">Non régulier</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-holder form-holder-2">
+                                            <label for="Psyc_fs">Fréquence au cours de la semaine :</label>
+                                            <input type="NUMBER" class="form-control" id="Psyc_fs"
+                                                   name="Psychomotricien_frequenceensemaine">
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-holder form-holder-2">
+                                            <label for="Psyc_c">Commentaire :</label>
+                                            <textarea style="width:97%;" name="Psychomotricien_commentaire" id="Psyc_c"
+                                                      rows="10"
+                                                      cols="63"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                                <!----------------------------------------------------------------------------------------------->
+                                <button type="button" name="col10" id="col10" class="collapsible">Suivi paramédical
+                                    :
+                                    Kinésithérapie fonctionnelle
+                                </button>
+                                <div class="ct">
+                                    <div class="form-row">
+                                        <div class="form-holder">
+                                            <label for="kf_ad">Âge de début :</label>
+                                            <input type="NUMBER" class="form-control" id="kf_ad"
+                                                   name="Kinesitherapie_fonctionnelle_agedebut">
+                                        </div>
+                                        <div class="form-holder ">
+                                            <label for="kf_type">Type :</label>
+                                            <select name="Kinesitherapie_fonctionnelle_type" id="kf_type"
+                                                    class="form-control">
+                                                <option value="" selected>Choisir...</option>
+                                                <option value="Régulier">Régulier</option>
+                                                <option value="Non régulier">Non régulier</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-holder form-holder-2">
+                                            <label for="kf_fs">Fréquence au cours de la semaine :</label>
+                                            <input type="NUMBER" class="form-control" id="kf_fs"
+                                                   name="Kinesitherapie_fonctionnelle_frequenceensemaine">
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-holder form-holder-2">
+                                            <label for="kf_c">Commentaire :</label>
+                                            <textarea style="width:97%;" name="Kinesitherapie_fonctionnelle_commentaire"
+                                                      id="kf_c" rows="10"
+                                                      cols="63"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                                <!----------------------------------------------------------------------------------------------->
+                                <button type="button" name="col11" id="col11" class="collapsible">Suivi paramédical
+                                    :
+                                    Psychologue
+                                </button>
+                                <div class="ct">
+                                    <div class="form-row">
+                                        <div class="form-holder ">
+                                            <label for="Psy_ad">Âge de début :</label>
+                                            <input type="NUMBER" class="form-control" id="Psy_ad"
+                                                   name="Psychologue_agedebut">
+                                        </div>
+                                        <div class="form-holder ">
+                                            <label for="Psy_type">Type :</label>
+                                            <select name="Psychologue_type" id="Psy_type" class="form-control">
+                                                <option value="" selected>Choisir...</option>
+                                                <option value="Régulier">Régulier</option>
+                                                <option value="Non régulier">Non régulier</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-holder form-holder-2">
+                                            <label for="Psy_fs">Fréquence au cours de la semaine :</label>
+                                            <input type="NUMBER" class="form-control" id="Psy_fs"
+                                                   name="Psychologue_frequenceensemaine">
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-holder form-holder-2">
+                                            <label for="Psy_c">Commentaire :</label>
+                                            <textarea style="width:97%;" name="Psychologue_commentaire" id="Psy_c"
+                                                      rows="10"
+                                                      cols="63"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                                <!----------------------------------------------------------------------------------------------->
+                                <button type="button" name="col12" id="col12" class="collapsible">Suivi paramédical
+                                    :
+                                    Orthophoniste
+                                </button>
+
+                                <div class="ct">
+                                    <div class="form-row">
+                                        <div class="form-holder ">
+                                            <label for="Ort_ad">Âge de début :</label>
+                                            <input type="NUMBER" class="form-control" id="Ort_ad"
+                                                   name="Orthophoniste_agedebut">
+                                        </div>
+                                        <div class="form-holder ">
+                                            <label for="Ort_type">Type :</label>
+                                            <select name="Orthophoniste_type" id="Ort_type" class="form-control">
+                                                <option value="" selected>Choisir...</option>
+                                                <option value="Régulier">Régulier</option>
+                                                <option value="Non régulier">Non régulier</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-holder form-holder-2">
+                                            <label for="Ort_fs">Fréquence en semaine :</label>
+                                            <input type="NUMBER" class="form-control" id="Ort_fs"
+                                                   name="Orthophoniste_frequenceensemaine">
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-holder form-holder-2">
+                                            <label for="Ort_c">Commentaire :</label>
+                                            <textarea style="width:97%;" name="Orthophoniste_commentaire" id="Ort_c"
+                                                      rows="10"
+                                                      cols="63"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br>
+                                <!----------------------------------------------------------------------------------------------->
+                                <button type="button" name="col13" id="col13" class="collapsible">Suivi paramédical
+                                    :
+                                    Orthoptiste
+                                </button>
+                                <div class="ct">
+                                    <div class="form-row">
+                                        <div class="form-holder ">
+                                            <label for="Ort1_ad">Âge de début :</label>
+                                            <input type="NUMBER" class="form-control" id="Ort1_ad"
+                                                   name="Orthoptiste_agedebut">
+                                        </div>
+                                        <div class="form-holder ">
+                                            <label for="Ort1_type">Type :</label>
+                                            <select name="Orthoptiste_type" id="Ort1_type" class="form-control">
+                                                <option value="" selected>Choisir...</option>
+                                                <option value="Régulier">Régulier</option>
+                                                <option value="Non régulier">Non régulier</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-holder form-holder-2">
+                                            <label for="Ort1_fs">Fréquence au cours de la semaine :</label>
+                                            <input type="NUMBER" class="form-control" id="Ort1_fs"
+                                                   name="Orthoptiste_frequenceensemaine">
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-holder form-holder-2">
+                                            <label for="Ort1_c">Commentaire :</label>
+                                            <textarea style="width:97%;" name="Orthoptiste_commentaire" id="Ort1_c"
+                                                      rows="10"
+                                                      cols="63"></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        <!------------------------SECTION 5--------------------------------->
+                        <!--===================================================================-->
+                        <!--===================================================================-->
+                        <!--===================================================================-->
+                        <!--===================================================================-->
+                        <!--===================================================================-->
+                        <!--===================================================================-->
+                        <!--===================================================================-->
+                        <!--===================================================================-->
+                        <!--===================================================================-->
+                        <!--===================================================================-->
+                        <h2>
+                            <span class="step-icon"><i class='bx bxs-school'></i></span>
+                            <span class="step-number">5ème étape</span>
+                            <span class="step-text">Scolarité et activités</span>
+                        </h2>
+                        <section>
+                            <div class="inner">
+                                <div class="inner">
+                                    <div class="form-row">
+                                        <div class="form-holder form-holder-2">
+                                            <label for="SCO">Scolarisé</label>
+                                            <select name="scolarise" id="SCO" class="form-control">
+                                                <option value="" selected>Choisir...</option>
+                                                <option value="Oui">Oui</option>
+                                                <option value="Non">Non</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-row" id="other7">
+                                        <br>
+                                        <div class="form-holder">
+                                            <label for="AD">Age de début (année) : </label>
+                                            <input name="scolarise_age_de_debut" type="number" min="1"
+                                                   class="form-control"
+                                                   id="AD">
+                                        </div>
+                                        <br>
+                                        <div class="form-holder">
+                                            <label for="CPre">Classe préparatoire </label>
+                                            <select name="scolarise_classe_préparatoire" id="CPre" class="form-control">
+                                                <option value="" disabled selected>Choisir...</option>
+                                                <optgroup label="Oui">
+                                                    <option label="Privé">Privé</option>
+                                                    <option label="Public">Public</option>
+                                                </optgroup>
+                                                <option value="Non">Non</option>
+                                            </select>
+                                        </div>
+                                        <br>
+                                        <!--------------------------------------------------------------------->
+                                        <div class="wrapper">
+                                            <div class="dflex">
+                                                <!--Classe primaire-->
+                                                <div class="custom_checkbox">
+                                                    <input type="checkbox" id="CPri" name="classe_primaire_choice"/>
+                                                    <label for="CPri">Classe primaire</label>
+                                                </div>
+                                                <div class="form-row " id="other11">
+                                                    <table class="table table-bordered"
+                                                           style="width:100%; margin-left:8px;"
+                                                           id="dyd">
+                                                        <tr>
+                                                            <td>
+                                                                <input name="classe_primaire[]" id="CPr[]" value="CP"
+                                                                       placeholder="CP" class="form-control"
+                                                                       style="width:90%; border: 2px solid #000;background: white;"/>
+                                                            </td>
+                                                            <td>
+                                                                <select class="form-control"
+                                                                        name="classe_primaire_year[]"
+                                                                        id="yearpi"
+                                                                        style="width:90%; border: 2px solid #000;background: white;"></select>
+                                                            </td>
+                                                            <script>
+                                                                let sta = 1989;
+                                                                let end = new Date().getFullYear() - 1;
+                                                                for (i = end; i > sta; i--) {
+                                                                    let b = i + 1;
+                                                                    $('#yearpi').append($('<option/>').val(i + "/" + b).html(i + "/" + b));
+                                                                }
+                                                            </script>
+                                                            <td>
+                                                                <button type="button" name="add3" id="add3"
+                                                                        class="btn btn-success">
+                                                                    <i class='bx bx-plus'
+                                                                       style="float:right;margin-top:2.5px;"
+                                                                       aria-hidden="true"></i>
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                    <script>
+                                                        //var tab = ["CP", "CE1", "CE2", "CM1", "CM2", "6ème"];
+                                                        var tab = [];
+                                                        var ta = [];
+                                                        $(document).ready(function () {
+                                                            $.ajax({
+                                                                url: '/pediatre/classes_ajax/',
+                                                                success: function (response) {
+                                                                    $.each(response.CPr, function (index, value) {
+                                                                        tab.push(value)
+                                                                    });
+                                                                    $.each(response.CSr, function (index, value) {
+                                                                        ta.push(value)
+                                                                    });
+                                                                }
+                                                            });
+                                                            var c = 0;
+                                                            var j = 1;
+                                                            console.log(tab);
+                                                            $('#add3').click(function () {
+                                                                if ($('#yearpi' + (j - 1)).val() != '') {
+                                                                    var optionsHtml = '';
+                                                                    for (i = 0; i < 6; i++) {
+                                                                        if (tab[i] == tab[c]) {
+                                                                            optionsHtml += '<option value="' + tab[i] + '" checked>' + tab[i] + '</option>';
+                                                                        } else {
+                                                                            optionsHtml += '<option value="' + tab[i] + '">' + tab[i] + '</option>';
+                                                                        }
+                                                                    }
+                                                                    $('#dyd').append('<tr id="roos' + j + '">' +
+                                                                        '<td>' +
+                                                                        '<select  class="form-control" id="CPr[]" style="width:90%; border: 2px solid #000;background: white;"  name="classe_primaire[]">' + optionsHtml + '</select>' +
+                                                                        '</td>' +
+                                                                        '<td>' +
+                                                                        '<select id="yearpi' + j + '" class="form-control" style="width:90%; border: 2px solid #000;background: white;"  name="classe_primaire_year[]"></select>' +
+                                                                        '</td>' +
+                                                                        '<td>' +
+                                                                        '<button type="button" name="remove" id="' + j + '" class="btn btn-danger btn_rem4"><i class="bx bx-x"></i></button>' +
+                                                                        '</td>' +
+                                                                        '</tr>');
+                                                                    let st = 1989;
+                                                                    let en = new Date().getFullYear() - 1;
+                                                                    for (i = en; i > st; i--) {
+                                                                        let b = i + 1;
+                                                                        let f = i + '/' + b;
+                                                                        $("#yearpi" + j).append($('<option/>').val(i + "/" + b).html(i + "/" + b));
+                                                                    }
+                                                                    j++;
+                                                                    c++;
+                                                                }
+                                                            });
+
+                                                            $(document).on('click', '.btn_rem4', function () {
+                                                                var button_id = $(this).attr("id");
+                                                                var w = button_id - 1;
+                                                                for (i = button_id; i <= j; i++) {
+                                                                    $('#roos' + i).remove();
+                                                                }
+                                                                j = w;
+                                                                c = w - 1;
+                                                            });
+                                                        });
+
+                                                    </script>
+
+                                                    <script>
+                                                        $('#CPri').change(function () {
+                                                            $('#other11').toggle($('#CPri').is(':checked'));
+                                                        }).change();
+                                                    </script>
+                                                </div>
+                                                <br>
+                                                <!--Classe secondaire-->
+                                                <div class="custom_checkbox">
+                                                    <input type="checkbox" id="CPse" name="classe_secondaires_choice"
+                                                           style="width: 715px;" disabled/>
+                                                    <label for="CPse">Classe secondaire</label>
+                                                </div>
+                                                <div class="form-row " id="other12">
+                                                    <table class="table table-bordered"
+                                                           style="width:100%; margin-left:8px;"
+                                                           id="ddy">
+                                                        <tr>
+                                                            <td>
+                                                                <input name="classe_secondaires[]" id="CPs[]"
+                                                                       value="1ère année" placeholder="1ère année"
+                                                                       class="form-control"
+                                                                       style="width:100%; border: 2px solid #000;background: white;"/>
+                                                            </td>
+                                                            <td>
+                                                                <select class="form-control"
+                                                                        name="classe_secondaire_years[]" id="yearp"
+                                                                        style="width:100%; border: 2px solid #000;background: white;"></select>
+                                                            </td>
+                                                            <script>
+                                                                let st = 1989;
+                                                                let en = new Date().getFullYear() - 1;
+                                                                for (i = en; i > st; i--) {
+                                                                    let b = i + 1;
+                                                                    $('#yearp').append($('<option/>').val(i + "/" + b).html(i + "/" + b));
+                                                                }
+                                                            </script>
+                                                            <td>
+                                                                <button type="button" name="add4" id="add4"
+                                                                        class="btn btn-success">
+                                                                    <i class='bx bx-plus'
+                                                                       style="float:right;margin-top:2.5px;"
+                                                                       aria-hidden="true"></i>
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                    <script>
+                                                        //var ta = new Array("1ère année", "2ème année", "3ème année", "4ème année", "5ème année");
+
+                                                        $(document).ready(function () {
+                                                            var n = 1;
+                                                            var d = 0;
+                                                            $('#add4').click(function () {
+                                                                if ($('#yearp[' + (n - 1) + ']').val() != '') {
+                                                                    n++;
+                                                                    var optionsHtml = '';
+                                                                    i = 0;
+                                                                    for (i = 0; i < 5; i++) {
+                                                                        if (ta[i] == ta[d]) {
+                                                                            optionsHtml += '<option value="' + ta[i] + '" checked>' + ta[i] + '</option>';
+                                                                        } else {
+                                                                            optionsHtml += '<option value="' + ta[i] + '">' + ta[i] + '</option>';
+                                                                        }
+                                                                    }
+                                                                    $('#ddy').append('<tr id="ros' + n + '">' +
+                                                                        '<td>' +
+                                                                        '<select  class="form-control" id="CPs[]" style="width:100%; border: 2px solid #000;background: white;" name="classe_secondaires[]">' + optionsHtml + '</select>' +
+                                                                        '</td>' +
+                                                                        '<td>' +
+                                                                        '<select id="yearp' + n + '" class="form-control" style="width:100%; border: 2px solid #000;background: white;" name="classe_secondaire_years[]"></select>' +
+                                                                        '</td>' +
+                                                                        '<td>' +
+                                                                        '<button type="button" name="remove" id="' + n + '" class="btn btn-danger btn_rem5"><i class="bx bx-x"></i></button>' +
+                                                                        '</td>' +
+                                                                        '</tr>');
+                                                                    let st = 1989;
+                                                                    let en = new Date().getFullYear() - 1;
+                                                                    for (i = en; i > st; i--) {
+                                                                        let b = i + 1;
+                                                                        let f = i + '/' + b;
+                                                                        $("#yearp" + n + "").append($('<option/>').val(i + "/" + b).html(i + "/" + b));
+                                                                    }
+                                                                    d++;
+                                                                }
+                                                            });
+
+                                                            $(document).on('click', '.btn_rem5', function () {
+                                                                var button_id = $(this).attr("id");
+                                                                var y = button_id - 1;
+                                                                for (i = button_id; i <= n; i++) {
+                                                                    $('#ros' + i + '').remove();
+                                                                }
+                                                                n = y;
+                                                                d = y - 1;
+                                                            });
+
+                                                        });
+                                                    </script>
+                                                    <script>
+                                                        $(document).ready(function () {
+                                                            $('#other12').hide();
+                                                            $('#CPri').click(function () {
+                                                                if ($(this).prop("checked") == true) {
+                                                                    $('#CPse').prop('disabled', false);
+                                                                    $('#CPse').change(function () {
+                                                                        $('#other12').toggle($('#CPse').is(':checked'))
+                                                                    }).change();
+                                                                } else {
+                                                                    $('#CPse').prop('disabled', true);
+                                                                    if ($('#CPse').prop("checked") == true) {
+                                                                        $("#CPse").prop("checked", false);
+                                                                        $('#CPse').change(function () {
+                                                                            $('#other12').toggle($('#CPse').is(':checked'))
+                                                                        }).change();
+                                                                    }
+                                                                    $('#b').prop('disabled', true);
+                                                                    if ($('#b').prop("checked") == true) {
+                                                                        $("#b").prop("checked", false);
+                                                                        $('#b').change(function () {
+                                                                            $('#other13').toggle($('#b').is(':checked'))
+                                                                        }).change();
+                                                                    }
+                                                                }
+                                                            });
+                                                        });
+                                                    </script>
+                                                </div>
+                                                <br>
+                                                <!--BAC-->
+                                                <div class="custom_checkbox">
+                                                    <input type="checkbox" id="b" name="bac_choice" disabled/>
+                                                    <label for="b">BAC</label>
+                                                </div>
+                                                <div class="form-row" id="other13">
+                                                    <table class="table table-bordered"
+                                                           style="width:100%; margin-left:8px;"
+                                                           id="ydd">
+                                                        <tr>
+                                                            <td>
+                                                                <select class="form-control" name="BAC[]"
+                                                                        id="yearpicker"
+                                                                        style="width:100%; border: 2px solid #000;background: white;"></select>
+                                                            </td>
+                                                            <td>
+                                                                <input type="text" class="form-control"
+                                                                       placeholder="Filière"
+                                                                       style="width:100%; border: 2px solid #000;background: white;"
+                                                                       name="filiere[]"/>
+                                                            </td>
+                                                            <script>
+                                                                let startYear = 1989;
+                                                                let endYear = new Date().getFullYear();
+                                                                for (i = endYear; i > startYear; i--) {
+                                                                    $('#yearpicker').append($('<option/>').val(i).html(i));
+                                                                }
+                                                            </script>
+                                                            <td style="width:10%;">
+                                                                <button type="button" name="add5" id="add5"
+                                                                        class="btn btn-success">
+                                                                    <i class='bx bx-plus'
+                                                                       style="float:right;margin-top:2.5px;"
+                                                                       aria-hidden="true"></i>
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                    <script>
+                                                        $(document).ready(function () {
+                                                            var q = 1;
+                                                            $('#add5').click(function () {
+                                                                q++;
+                                                                $('#ydd').append('<tr id="oo' + q + '"><td><select style="width:100%; border: 2px solid #000;background: white;" class="form-control" name="BAC[]" id="yearpicker' + q + '"></select></td><td><input type="text" style="width:100%; border: 2px solid #000;background: white;" class="form-control" placeholder="Filière" name="filiere[]" /></td><td style="width:10%;"><button type="button" name="remove" id="' + q + '" class="btn btn-danger btn_rem6"><i class="bx bx-x"></i></button></td></tr>');
+                                                                let startYear = 1989;
+                                                                let endYear = new Date().getFullYear();
+                                                                for (i = endYear; i > startYear; i--) {
+                                                                    $("#yearpicker" + q + "").append($('<option/>').val(i).html(i));
+                                                                }
+                                                            });
+
+                                                            $(document).on('click', '.btn_rem6', function () {
+                                                                var button_id = $(this).attr("id");
+                                                                $('#oo' + button_id + '').remove();
+                                                            });
+                                                        });
+                                                    </script>
+                                                    <script>
+                                                        $(document).ready(function () {
+                                                            $('#other13').hide();
+                                                            $('#CPse').click(function () {
+                                                                if ($(this).prop("checked") == true) {
+                                                                    $('#b').prop('disabled', false);
+                                                                    $('#b').change(function () {
+                                                                        $('#other13').toggle($('#b').is(':checked'))
+                                                                    }).change();
+                                                                } else {
+                                                                    $('#b').prop('disabled', true);
+                                                                    if ($('#b').prop("checked") == true) {
+                                                                        $("#b").prop("checked", false);
+                                                                        $('#b').change(function () {
+                                                                            $('#other13').toggle($('#b').is(':checked'))
+                                                                        }).change();
+                                                                    }
+                                                                }
+                                                            });
+                                                        });
+
+                                                    </script>
+                                                </div>
+                                                <script>
+                                                    $('#SCO').change(function () {
+                                                        $('#other7').toggle($(this).val() == 'Oui');
+                                                    }).change();
+                                                </script>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <!--Activité sportive-->
+                                        <div class="form-row">
+                                            <div class="form-holder form-holder-2">
+                                                <label for="ASpo">Activité sportive</label>
+                                                <select name="activite_sportive" id="ASpo" class="form-control">
+                                                    <option value="" selected>Choisir...</option>
+                                                    <option value="Oui">Oui</option>
+                                                    <option value="Non">Non</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-holder form-holder-2" id="other8" style="width: 715px;">
+                                                <table class="table table-bordered" style="width:500px;" id="dymi">
+                                                    <tr>
+                                                        <td style="width:350px">
+                                                            <input type="text" name="ASp[]"
+                                                                   placeholder="Entrer l'activité sportive"
+                                                                   style="width:90%; border: 2px solid #000;background: white;"
+                                                                   class="form-control name_list"/>
+                                                        </td>
+                                                        <td>
+                                                            <button type="button" style="width:100px" name="ad" id="ad"
+                                                                    class="btn btn-success">
+                                                                Ajouter
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                                <script>
+                                                    $(document).ready(function () {
+                                                        var l = 1;
+                                                        $('#ad').click(function () {
+                                                            l++;
+                                                            $('#dymi').append('<tr id="row' + l + '"><td><input type="text" name="ASp[]" placeholder="Entrer l\'activité sportive"  style="width:90%; border: 2px solid #000;background: white;" class="form-control name_list" /></td><td><button type="button" style="width:100px" name="remove" id="' + l + '" class="btn btn-danger btn_rem3">Annuler</button></td></tr>');
+                                                        });
+
+                                                        $(document).on('click', '.btn_rem3', function () {
+                                                            var button_id = $(this).attr("id");
+                                                            $('#row' + button_id + '').remove();
+                                                        });
+
+                                                    });
+                                                </script>
+                                            </div>
+                                            <script>
+                                                $('#ASpo').change(function () {
+                                                    $('#other8').toggle($(this).val() == 'Oui');
+                                                }).change();
+                                            </script>
+                                        </div>
+                                        <!--Activité artistique-->
+                                        <div class="form-row">
+                                            <div class="form-holder form-holder-2">
+                                                <label for="AArt">Activité artistique</label>
+                                                <select name="activite_artistique" id="AArt" class="form-control">
+                                                    <option value="" selected>Choisir...</option>
+                                                    <option value="Oui">Oui</option>
+                                                    <option value="Non">Non</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-holder form-holder-2" id="other9" style="width: 715px;">
+                                                <table class="table table-bordered" id="dyna" style="width:500px;">
+                                                    <tr>
+                                                        <td style="width:350px"><input type="text" name="AAr[]"
+                                                                                       style="width:90%; border: 2px solid #000;background: white;"
+                                                                                       placeholder="Entrer l'activité artistique"
+                                                                                       class="form-control name_list"/>
+                                                        </td>
+                                                        <td>
+                                                            <button type="button" style="width:100px" name="add1"
+                                                                    id="add1"
+                                                                    class="btn btn-success">
+                                                                Ajouter
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                                <script>
+                                                    $(document).ready(function () {
+                                                        var k = 1;
+                                                        $('#add1').click(function () {
+                                                            k++;
+                                                            $('#dyna').append('<tr id="rows' + k + '"><td><input type="text" name="AAr[]" placeholder="Entrer l\'activité artistique" style="width:90%; border: 2px solid #000;background: white;"class="form-control name_list" /></td><td><button type="button" style="width:100px" name="remove" id="' + k + '" class="btn btn-danger btn_rem2">Annuler</button></td></tr>');
+                                                        });
+
+                                                        $(document).on('click', '.btn_rem2', function () {
+                                                            var button_id = $(this).attr("id");
+                                                            $('#rows' + button_id + '').remove();
+                                                        });
+
+                                                    });
+                                                </script>
+                                            </div>
+                                        </div>
+                                        <script>
+                                            $('#AArt').change(function () {
+                                                $('#other9').toggle($(this).val() == 'Oui');
+                                            }).change();
+                                        </script>
+                                        <!--Activité professionnelle-->
+                                        <div class="form-row">
+                                            <div class="form-holder form-holder-2">
+                                                <label for="APro">Activité professionnelle</label>
+                                                <select name="activite_prof" id="APro" class="form-control">
+                                                    <option value="" selected>Choisir...</option>
+                                                    <option value="Oui">Oui</option>
+                                                    <option value="Non">Non</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="form-row" id="other10">
+                                            <div class="form-holder form-holder-2" style="width: 715px;">
+                                                <table class="table table-bordered" style="width:500px;" id="dyn">
+                                                    <tr>
+                                                        <td style="width:350px"><input type="text" name="APr[]"
+                                                                                       placeholder="Entrer l'activité professionnelle"
+                                                                                       style="width:90%; border: 2px solid #000;background: white;"
+                                                                                       class="form-control name_list"/>
+                                                        </td>
+                                                        <td>
+                                                            <button type="button" style="width:100px" name="da" id="da"
+                                                                    class="btn btn-success">
+                                                                Ajouter
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                            <script>
+                                                $(document).ready(function () {
+                                                    var m = 1;
+                                                    $('#da').click(function () {
+                                                        m++;
+                                                        $('#dyn').append('<tr id="w' + m + '"><td><input type="text" name="APr[]" placeholder="Entrer l\'activité professionnelle" style="width:90%; border: 2px solid #000;background: white;" class="form-control name_list" /></td><td><button type="button" style="width:100px" name="remove" id="' + m + '" class="btn btn-danger btn_rem1">Annuler</button></td></tr>');
+                                                    });
+
+                                                    $(document).on('click', '.btn_rem1', function () {
+                                                        var button_id = $(this).attr("id");
+                                                        $('#w' + button_id + '').remove();
+                                                    });
+
+                                                });
+                                            </script>
+                                        </div>
+                                        <script>
+                                            $('#APro').change(function () {
+                                                $('#other10').toggle($(this).val() == 'Oui');
+                                            }).change();
+                                        </script>
+                                    </div>
+                                </div>
+                            </div>
+                            <script>
+                                var coll = document.getElementsByClassName("collapsible");
+                                var i;
+                                for (i = 0; i < coll.length; i++) {
+                                    coll[i].addEventListener("click", function () {
+                                        this.classList.toggle("active");
+                                        var content = this.nextElementSibling;
+                                        if (content.style.display === "block") {
+                                            content.style.display = "none";
+                                            coll[i].val("n");
+                                        } else {
+                                            content.style.display = "block";
+                                            coll[i].val("");
+                                        }
+                                    });
+                                }
+                            </script>
+                        </section>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="{% static 'js/Pediatre/script.js' %}"></script>
+    <script src="{% static 'js/ajouterPatient.js' %}"></script>
+    <script src="{% static 'js/ajouterPatient1.js' %}"></script>
+
+    <script src="{% static 'js/js/main.js' %}"></script>
+    <script src="{% static 'js/js/jquery-3.3.1.min.js' %}"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
+    <script src="{% static 'js/js/jquery.steps.js' %}"></script>
+    <script>
+        datePickerId.max = new Date().toISOString().split("T")[0];
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#delegation').change(function () {
+                var selectedValue = $(this).val();
+                $.ajax({
+                    url: '/pediatre/delegationCities_ajax/',
+                    data: {'selectedValue': selectedValue},
+                    success: function (response) {
+                        $('#ville').empty();
+                        $('#ville').append('<option selected disabled>Choisir...</option>');
+                        $.each(response.cityNames, function (index, value) {
+                            $('#ville').append('<option value="' + value + '">' + value + '</option>');
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}
+</body>
+
+</html>

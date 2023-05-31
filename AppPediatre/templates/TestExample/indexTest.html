@@ -1,0 +1,19 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Index Test</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
+</head>
+<body>
+<h1 style="position: center">Menu des test</h1>
+<br>
+<a href="{% url 'selectAJAX' %}">selectAJAX</a><br>
+  <a href="{% url 'Pie_chart_1' %}">Pie_chart_1 (using template)</a><br>
+  <a href="{% url 'Pie_chart_2' %}">Pie_chart_2 (using chatGPT)</a><br>
+  <a href="{% url 'Pie_chart_3' %}">Pie_chart_3 (using chatGPT and View)</a><br>
+  <a href="{% url 'line_chart' %}">line_chart_Poids (using chatGPT and View)</a><br>
+  <a href="{% url 'line_chart_all' %}">line_chart_all (using chatGPT and View)</a><br>
+</body>
+</html>

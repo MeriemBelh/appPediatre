@@ -1,0 +1,115 @@
+{% extends 'header_footer.html' %}
+{% load static %}
+{% block import %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.css"
+      crossorigin="anonymous"/>
+
+<script src="https://code.jquery.com/jquery-1.12.4.js" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.js"
+        crossorigin="anonymous"></script>
+<link rel="stylesheet" href="{% static 'css/homePage.css' %}">
+<script defer src="{% static 'js/homePage.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<div class="about-section">
+    <div class="inner-container">
+        <h1>A prorpos de nous</h1>
+        <p class="text">
+            Notre mission est de fournir des soins médicaux de qualité supérieure aux enfants trisomiques au Maroc, en
+            offrant un accès équitable à des traitements innovants et personnalisés, tout en travaillant en étroite
+            collaboration avec les familles et les professionnels de la santé pour améliorer la qualité de vie des
+            enfants trisomiques et de leurs familles.
+        </p>
+    </div>
+</div>
+
+<div class="galle">
+
+    <h2 class="sub_title" style="font-size:35px;color:#fff; margin-bottom:50px;margin-top:100px;padding: 20px;">
+        Gallerie</h2>
+
+    <div class="card">
+        <div class="post">
+            <img class="post-image" src="{% static 'images/Patient/kids.jpg' %}"/>
+
+            <div class="post-content">
+                <p class="post-text">
+                    Découvrez notre gallerie de photos de nos petits
+                    trisomiques! </br>
+                    <span style="font-size:14px;font-weight:normal">Nous sommes fiers de voir leur joie de vivre et leur progrès, et nous
+        sommes déterminés à continuer à offrir les meilleurs soins de santé pour tous les enfants atteints de
+        trisomie, quel que soit leur milieu social ou leurs revenus.
+
+        </span>
+                </p>
+                <a href="{% url 'image' %}" class="bttn1" style="margin-left: 20px;padding:15px 25px;">Voir plus <i
+                        class="fas fa-angle-right"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
+<section>
+    <div class="row">
+        <div class="column" id="img1">
+            <div class="slideshow-container">
+
+                <div class="mySlides fade">
+                    <img src="{% static 'images/Patient/trisom1.jpg' %}" style="width:100%">
+                </div>
+
+                <div class="mySlides fade">
+                    <img src="{% static 'images/Patient/trisom2.png' %}" style="width:100%">
+                </div>
+
+                <div class="mySlides fade">
+                    <img src="{% static 'images/Patient/trisom3.jpg' %}" style="width:100%">
+                </div>
+            </div>
+            <br>
+        </div>
+        <div class="column" id="img2">
+            <img src="{% static 'images/Patient/citation.png' %}" alt="Forest" style="width:100%">
+        </div>
+    </div>
+</section>
+
+<section>
+    <h2 class="sub_title" style="font-size:35px;">Actualités</h2>
+    <div class="container_2">
+        <div class="row">
+            <div class="col-sm-12">
+                <div id="news-slider" class="owl-carousel">
+                    {% for x in actualite %}
+                    <!-- 1 -->
+                    <div class="news-grid">
+                        <div class="news-grid-image"><img src="{% static 'images/Patient/news.jpg' %}" alt="">
+                            <div class="news-grid-box">
+                                <h1>{{x.post_date.day}}</h1>
+                                <p>{{ x.post_date|date:"F" }}</p>
+                            </div>
+                        </div>
+                        <div class="news-grid-txt">
+                            <span>Actualite</span>
+                            <h2 style="overflow: hidden;display: -webkit-box;-webkit-line-clamp: 1;-webkit-box-orient: vertical;text-overflow: ellipsis;">
+                                {{x.titre}}</h2>
+                            <ul style="overflow: hidden;display: -webkit-box;-webkit-line-clamp: 1;-webkit-box-orient: vertical;text-overflow: ellipsis;">
+                                <li><i class="fa fa-calendar" aria-hidden="true"></i> {{x.post_date}}</li>
+                                <li><i class="fa fa-user" aria-hidden="true"></i>{{x.auteur}}</li>
+                            </ul>
+                            <p style="overflow: hidden;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;text-overflow: ellipsis;">
+                                {{x.texte}}</p>
+                            <a href="{% url 'actualite' actualite_id=x.actualite_id %}">En savoir plus...</a>
+                        </div>
+                    </div>
+                    <!-- fin 1 -->
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+</body>
+</html>

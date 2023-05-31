@@ -1,0 +1,27 @@
+{% extends 'Administrateur/baseAdmin.html' %}
+{% block title %}<title>Administrateurs</title>{% endblock %}
+
+{% block contenu %}
+<p>les administrateurs</p>
+<hr>
+<table>
+    <tr>
+        <th>idAdmin</th>
+        <th>nomAdmin</th>
+        <th>prenomAdmin</th>
+        <th>passwordAdmin</th>
+        <th>mailAdmin</th>
+    </tr>
+    {% for admin in adminList %}
+    <tr>
+        <td>{{admin.idAdmin}}</td>
+        <td>{{admin.nomAdmin}}</td>
+        <td>{{admin.prenomAdmin}}</td>
+        <td>{{admin.passwordAdmin}}</td>
+        <td>{{admin.mailAdmin}}</td>
+    </tr>
+    {% empty %}
+    <h1>Exécuté lorsque l’itrable est vide</h1>
+    {% endfor %}
+</table>
+{% endblock %}

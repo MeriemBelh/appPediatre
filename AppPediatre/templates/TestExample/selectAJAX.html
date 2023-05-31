@@ -1,0 +1,51 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Select AJAX</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
+
+</head>
+<body>
+<h1 style="position: center">selectAJAX</h1>
+<br>
+<form action="#" method="post">
+    <label for="delegation">Délégation *</label>
+    <select name="delegation" id="delegation">
+        <option selected disabled>Choisir...</option>
+        <option value="Tanger - Tétouan - Al Hoceima">Tanger - Tétouan - Al Hoceima</option>
+        <option value="L'Oriental">L'Oriental</option>
+        <option value="Fès - Meknès">Fès - Meknès</option>
+    </select>
+    <br>
+    <label for="ville">Ville *</label>
+    <select name="ville" id="ville" required>
+        <option selected disabled>Choisir...</option>
+        <option value="Aousserd">Option1</option>
+        <option value="Bir Gandouz">Option2</option>
+        <option value="Dakhla">Option3</option>
+    </select>
+</form>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#delegation').change(function () {
+            var selectedValue = $(this).val();
+            $.ajax({
+                url: '/test/selectAJAX_view/',
+                data: {'selectedValue': selectedValue},
+                success: function (response) {
+                    $('#ville').empty();
+                    $('#ville').append('<option selected disabled>Choisir...</option>');
+                    $.each(response.cityNames, function (index, value) {
+                        $('#ville').append('<option value="' + value + '">' + value + '</option>');
+                    });
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

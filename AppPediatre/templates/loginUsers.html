@@ -1,0 +1,105 @@
+{% extends 'header_footer.html' %}
+{% load static %}
+{% block import %}
+<link rel="stylesheet" href="{% static 'css/loginUsers.css' %}">
+<script defer src="{% static 'js/loginUsers.js' %}"></script>
+{% endblock %}
+
+{% block styleCss %}
+<style>
+    .error-message {
+    color: red;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+</style>
+{% endblock %}
+{% block logo%}
+<a href="{% url 'homPage' %}" class="logo">
+    <img class="logo__img" src="{% static 'images/Patient/logo.jpeg' %}">
+</a>
+{% endblock logo%}
+{% block nav%}
+<nav class="nav">
+    <ul class="nav__list">
+        <li class="nav__item">
+            <a class="btn" href="{% url 'homPage' %}">Accueil</a>
+        </li>
+        <li class="nav__item">
+            <a class="btn" href="{% url 'image' %}">Media</a>
+        </li>
+        <li class="nav__item">
+            <a class="btn" href="{% url 'actualites' %}">Actualités</a>
+        </li>
+        <li class="nav__item">
+            <a class="btn" href="{% url 'about' %}">A propos de nous</a>
+        </li>
+        <li class="nav__item">
+            <a class="btn" id="focus">login</a>
+        </li>
+    </ul>
+</nav>
+{% endblock nav%}
+{% block section%}{% endblock section%}
+{% block content %}
+<br>
+<br>
+<br>
+<div class="container">
+    <div class="cover">
+        <div class="front">
+            <img src="{% static 'images/Patient/kid.jpg' %}" alt=""/>
+            <div class="text">
+                <span class="text-1">"La trisomie n'est pas une malédiction, c'est simplement une différence"</span>
+                <span class="text-2">Sophie Rabhi-Bouquet</span>
+            </div>
+        </div>
+
+    </div>
+    <div class="forms">
+        <div class="form-content">
+            <div class="login-form">
+                <div class="title">Connexion</div>
+                <form action="{% url 'loginUsers' %}" method="POST">
+                    {% csrf_token %}
+                    <div class="input-boxes">
+                        <div class="input-box">
+                            <i class="fas fa-envelope"></i>
+                            <input type="text" name="username" placeholder="Entrer votre identifiant" required>
+                        </div>
+                        <div class="input-box">
+                            <input type="password" name="password" placeholder="Entrer votre mot de passe" required>
+                            <i class="far fa-eye-slash toggle-password" style="cursor: pointer;"></i>
+                        </div>
+                        <!--<div class="text"><a href="#">Mot de passe oublié?</a></div>-->
+
+                        <div style="width:100%" class="form-group" >
+                            <select name="is_user" class="form-control" required>
+                                <option value="">Se connecter en tant que</option>
+                                <option value="is_patient">Patient</option>
+                                <option value="is_pediatre">Pediatre</option>
+                                <option value="is_admin">Admin</option>
+                            </select>
+                        </div>
+                        {% if errorValue %}
+                            <p class="error-message">{{ error }}</p>
+                        {% endif %}
+                        <div class="button input-box">
+                            <input type="submit" value="Se connecter">
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block contact %}{% endblock %}
+{% block footer %}{% endblock %}
+
+</body>
+</html>

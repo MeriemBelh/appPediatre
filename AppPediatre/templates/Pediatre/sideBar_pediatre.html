@@ -1,0 +1,124 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {% block import %}{% endblock %}
+    {% block styleCss %}{% endblock %}
+
+    <!----======== CSS ======== -->
+    <link rel="stylesheet" href="{% static 'css/Pediatre/style.css' %}">
+
+    <!----===== Boxicons CSS ===== -->
+    <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v4.0.0/css/line.css">
+
+    <!----===== Jquery and D3.js ===== -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    {% block title %}<title>Tableau de bord</title>{% endblock %}
+
+</head>
+{% block scroll %}
+<body>{% endblock %}
+<nav class="sidebar close">
+    <header>
+        <div class="image-text">
+                <span class="image">
+                    <img src="{% static 'images/Pediatre/logo.jpg' %}" alt="">
+                </span>
+            <div class="text logo-text">
+                    <span class="name">
+                        <span style="color: #38a8dc;font-family: 'Lucida Handwriting';">T</span><span
+                            style="color: #c18cc5;font-family: 'Lucida Handwriting';">r</span><span
+                            style="color: #f6d24d;font-family: 'Lucida Handwriting';">i</span><span
+                            style="color: #4b55b6;font-family: 'Lucida Handwriting';">s</span><span
+                            style="color: #c93747;font-family: 'Lucida Handwriting';">o</span><span
+                            style="color: #eda774;font-family: 'Lucida Handwriting';">m</span><span
+                            style="color: #e29fac;font-family: 'Lucida Handwriting';">i</span><span
+                            style="color: #43c2e6;font-family: 'Lucida Handwriting';">e </span><span
+                            style="color: green;font-family: 'Lucida Handwriting';">2</span><span
+                            style="color: greenyellow;font-family: 'Lucida Handwriting';">1</span>
+                    </span>
+            </div>
+        </div>
+        <i class='bx bx-chevron-right toggle'></i>
+    </header>
+    <div class="menu-bar">
+        <div class="menu">
+            <ul class="menu-links">
+                <img src="{% static 'images/Pediatre/doctor.jpg' %}" alt="Profile photo of the doctor"
+                     class="imageProfile">
+                <span class="text doctorName">Dr. {{request.user.first_name}} {{request.user.last_name}}</span>
+                <span class="text doctorHospital">Hôpital Moulay Youssef</span><br><br>
+                {% block nav%}
+                <li class="nav-link">
+                    <a href="{% url 'index_pediatre' %}" style="background-color:#194ca7;">
+                        <i class='bx bxs-user icon' style="color:#f1f2f4;"></i>
+                        <span class="text nav-text" style="color:#f1f2f4;">Mes Patients</span>
+                    </a>
+                </li>
+                <li class="nav-link">
+                    <a href="{% url 'recherche_patient' %}">
+                        <i class='bx bxs-search-alt-2 icon'></i>
+                        <span class="text nav-text">Rechercher</span>
+                    </a>
+                </li>
+                <li class="nav-link">
+                    <a href="{% url 'corbeille_patient' %}">
+                        <i class='bx bxs-trash-alt icon'></i>
+                        <span class="text nav-text">Corbeille</span>
+                    </a>
+                </li>
+                <li class="nav-link">
+                    <a href="{% url 'messagerie_pediatre' %}">
+                        <i class='bx bxs-message icon'></i>
+                        <span class="text nav-text">Messagerie</span>
+                    </a>
+                </li>
+                {% endblock nav%}
+                <!--
+                <li class="nav-link">
+                    <a href="#">
+                        <i class='bx bxs-calendar icon' ></i>
+                        <span class="text nav-text">Calendrier</span>
+                    </a>
+                </li>
+                <li class="nav-link">
+                    <a href="#">
+                        <i class='bx bxs-message-alt-detail icon'></i>
+                        <span class="text nav-text">Messagerie</span>
+                    </a>
+                </li>
+                -->
+            </ul>
+        </div>
+
+        <div class="bottom-content">
+            <hr>
+            <li class="">
+                <a href="{% url 'logout_pediatre' %}">
+                    <i class='bx bxs-log-out icon'></i>
+                    <span class="text nav-text">Se Deconnecter</span>
+                </a>
+            </li>
+        </div>
+    </div>
+</nav>
+<div class="home">
+    {% block content %}
+    {% if errorValue == True %}
+    <div class="alert alert-danger" role="alert">
+        {{error}}
+    </div>
+    {% endif %}
+    {% endblock %}
+
+    <script src="{% static 'js/Pediatre/script.js' %}"></script>
+</div>
+</body>
+</html>

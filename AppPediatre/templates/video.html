@@ -1,0 +1,128 @@
+{% extends 'header_footer.html' %}
+{% load static %}
+{% block import %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+<link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+
+<link rel="stylesheet" href="{% static 'css/video.css' %}">
+<script defer src="{% static 'js/video.js' %}"></script>
+{% endblock %}
+{% block styleCss %}{% endblock %}
+{% block logo%}
+<a href="{% url 'homPage' %}" class="logo">
+    <img class="logo__img" src="{% static 'images/Patient/logo.jpeg' %}">
+</a>
+{% endblock logo%}
+
+{% block nav %}
+{% if user.is_authenticated %}
+<nav class="nav">
+    <ul class="nav__list">
+        <li class="nav__item">
+            <a class="btn" href="{% url 'homPage' %}">Accueil</a>
+        </li>
+        <li class="nav__item">
+            <a class="btn" id="focus">Media</a>
+        </li>
+        <li class="nav__item">
+            <a class="btn" href="{% url 'actualites' %}">Actualités</a>
+        </li>
+        <!-- Dossier -->
+        <li class="nav__item">
+            <a class="btn" href="{% url 'info_patient' %}">Consulter Dossier</a>
+        </li>
+        <li class="nav__item">
+            <div class="action">
+                <div class="profile" onclick="menuToggle();">
+                    {% if imgPatient %}
+                    <img src="{{imgPatient}}" alt="">
+                    {% else %}
+                    <img src="{% static 'images/Patient/user.jpg' %}" alt="">
+                    {% endif %}
+                </div>
+
+                <div class="menu">
+                    <h3>
+                        {{patient.nomPatient}} {{patient.prenomPatient}}
+                        <div>
+                            {{patient.mailPatient}}
+                        </div>
+                    </h3>
+                    <ul>
+                        <li>
+                            <a href="{% url 'profile' %}">modifier le compte</a>
+                        </li>
+                        <!--<li>
+                            <a href="#">Messagerie</a>
+                        </li>-->
+                        <li>
+                            <a href="{% url 'logout_patient' %}">Se deconnecter</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </li>
+    </ul>
+</nav>
+{% else %}
+<nav class="nav">
+    <ul class="nav__list">
+        <li class="nav__item">
+            <a class="btn" href="{% url 'homPage' %}">Accueil</a>
+        </li>
+        <li class="nav__item">
+            <a class="btn" id="focus">Media</a>
+        </li>
+        <li class="nav__item">
+            <a class="btn" href="{% url 'actualites' %}">Actualités</a>
+        </li>
+        <li class="nav__item">
+            <a class="btn" href="{% url 'about' %}">A propos de nous</a>
+        </li>
+        <li class="nav__item">
+            <a class="btn" href="{% url 'loginUsers' %}">login</a>
+        </li>
+    </ul>
+</nav>
+{% endif %}
+{% endblock nav%}
+
+{% block bare %}
+<div class="bottom-bar" style="background-color: var(--purple);height:40px;">
+    <div class="bottom-bar__content" style="min-height:40px;">
+        <nav class="nav">
+            <ul class="nav__list">
+                <li class="nav__item">
+                    <a class="btn" href="{% url 'image' %}"
+                       Style="background-color: var(--purple);color:#fff;">Images</a>
+                </li>
+                <li class="nav__item">
+                    <a class="btn" Style="background-color: var(--white);color:#1a1a1a">Videos</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+{% endblock %}
+{% block section%}{% endblock section%}
+{% block content %}
+<section>
+    <h1 style="text-align:center;color:#262424;margin-bottom:30px;padding-top:30px;">Approfondir sa Connaissance de la Trisomie21!</h1>
+    <div class="container">
+        {% for x in video %}
+        <div class="link">
+            <h3 style="padding: 15px;">{{x.titre}}</h3>
+            <p style="padding: 10px;">{{x.description}}</p>
+            <p style="padding: 15px;"><a href="{{x.lien}}" target="_blank" style="color:var(--purple);"><span style="font-weight:bold">Lien:</span>
+                {{x.lien}}</a></p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+
+{% endblock %}
+
+{% block contact %}{% endblock %}
+{% block footer %}{% endblock %}
+</body>
+</html>

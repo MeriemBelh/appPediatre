@@ -1,0 +1,96 @@
+{% extends 'Pediatre/sideBar_pediatre.html' %}
+{% load static %}
+{% block import %}
+<link rel="stylesheet" href="{% static 'css/Pediatre/recherchePatient.css' %}">
+{% endblock %}
+
+{% block title %}<title>Corbeille Patient</title>{% endblock %}
+{% block nav%}
+<li class="nav-link">
+    <a href="{% url 'index_pediatre' %}">
+        <i class='bx bxs-user icon'></i>
+        <span class="text nav-text">Mes Patients</span>
+    </a>
+</li>
+<li class="nav-link">
+    <a href="{% url 'recherche_patient' %}">
+        <i class='bx bxs-search-alt-2 icon'></i>
+        <span class="text nav-text">Rechercher</span>
+    </a>
+</li>
+<li class="nav-link">
+    <a href="{% url 'corbeille_patient' %}" style="background-color:#194ca7;">
+        <i class='bx bxs-trash-alt icon' style="color:#f1f2f4;"></i>
+        <span class="text nav-text" style="color:#f1f2f4;">Corbeille</span>
+    </a>
+</li>
+<li class="nav-link">
+    <a href="{% url 'messagerie_pediatre' %}">
+        <i class='bx bxs-message icon'></i>
+        <span class="text nav-text">Messagerie</span>
+    </a>
+</li>
+{% endblock nav%}
+{% block content %}
+<span class="text">Supprimer Patients</span>
+<br><br>
+{% if errorValue == True %}
+<div class="alert alert-danger" role="alert">
+    {{error}}
+</div>
+{% endif %}
+<style>
+    .form-control {
+        color: #212529;
+        background-color: #fff;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+        width: 200px;
+        min-width: 100px;
+    }
+
+    .center {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+</style>
+<!--Barre de recherche-->
+<br>
+<table class="table">
+    <thead>
+    <tr class="headTable">
+        <th>NOM COMPLET</th>
+        <th>IDPATIENT</th>
+        <th>D.NAISSANCE</th>
+        <th>ADRESSE</th>
+        <th>EMAIL</th>
+        <th>ACTIONS</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for patient in patientDeleteds %}
+    <tr style="background-color: white;">
+        <td style="border-top-left-radius: 8px;font-weight: bold;">{{patient.patient.nomPatient}}
+            {{patient.patient.prenomPatient}}
+        </td>
+        <td>{{patient.patient.idPatient}}</td>
+        <td>{{patient.patient.dateNaissancePatient}}</td>
+        <td>{{patient.patient.delegationPatient}}, {{patient.patient.villePatient}},
+            {{patient.patient.adressePatient}}
+        </td>
+        <td>{{patient.patient.mailPatient}}</td>
+        <td style="border-top-right-radius: 8px;width: 10%;">
+            <a href="{% url 'afficher_infos_patient' patient_id=patient.patient.idPatient %}"><i
+                    class='bx bxs-spreadsheet iconPrint' style="color: #3cb7f1;"></i></a>
+            <a href="{% url 'supprimer_patient' patient_id=patient.patient.idPatient %}"><i
+                    class='bx bxs-trash iconPrint' style="color: #f80018;"></i></a>
+            <a href="{% url 'restore_patient_corbeille' patient_id=patient.patient.idPatient %}"><i
+                    class='bx bx-recycle iconPrint' style="color: #59ea4e;"></i></a>
+        </td>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+</body>
+</html>

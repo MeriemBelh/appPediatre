@@ -1,0 +1,272 @@
+{% extends 'header_footer.html' %}
+{% load static %}
+{% block import %}
+<link rel="stylesheet" href="{% static 'css/Patient/infosPatient.css' %}">
+<script defer src="{% static 'js/Patient/infoPatient.js' %}"></script>
+{% endblock %}
+{% block styleCss %}
+{% if patient.sexePatient == 'Masculin' %}
+<style>
+        .bttn:hover {
+          background-color: #6cb9e0;
+        }
+        #focus {
+          background-color: #6cb9e0;
+        }
+
+        .bar {
+          background-color: #6cb9e0;
+        }
+
+        .action .menu ul li:hover a{
+            color:#6cb9e0;
+        }
+
+        table th {
+          background-color: #6cb9e0;
+        }
+
+        .bouton {
+          background-color: #6cb9e0;
+        }
+        ::-webkit-scrollbar-thumb {
+            background-color: #6cb9e0;
+        }
+
+
+</style>
+{% elif patient.sexePatient == 'Féminin' %}
+<style>
+        .bttn:hover {
+          background-color: #f07598;
+        }
+        #focus {
+          background-color: #f07598;
+        }
+
+        .bar {
+          background-color: #f07598;
+        }
+
+        .action .menu ul li:hover a{
+            color:#f07598;
+        }
+
+        table th {
+          background-color: #f07598;
+        }
+
+        .bouton {
+          background-color: #f07598;
+        }
+        ::-webkit-scrollbar-thumb {
+            background-color: #f07598;
+        }
+
+</style>
+{% else %}
+<style>
+        .bttn:hover {
+          background-color: #a4bc25;
+        }
+        #focus {
+          background-color: #a4bc25;
+        }
+
+        .bar {
+          background-color: #a4bc25;
+        }
+
+        .action .menu ul li:hover a{
+            color:#a4bc25;
+        }
+
+        table th {
+          background-color: #a4bc25;
+        }
+
+        .bouton {
+          background-color: #a4bc25;
+        }
+        ::-webkit-scrollbar-thumb {
+            background-color: #a4bc25;
+        }
+
+</style>
+{% endif %}
+{% endblock %}
+{% block section%}{% endblock %}
+{% block logo%}
+<a href="{% url 'home_patient' %}" class="logo">
+    <img class="logo__img" src="{% static 'images/Patient/logo.jpeg' %}">
+</a>
+{% endblock logo%}
+{% block nav%}
+<nav class="nav">
+    <ul class="nav__list">
+        <li class="nav__item">
+            <a class="bttn" href="{% url 'home_patient' %}">Accueil</a>
+        </li>
+        <li class="nav__item">
+            <a class="bttn" href="{% url 'image' %}">Media</a>
+        </li>
+        <li class="nav__item">
+            <a class="bttn" href="{% url 'actualites' %}">Actualités</a>
+        </li>
+        <!-- Dossier -->
+        <li class="nav__item">
+            <a class="bttn" id="focus">Consulter Dossier</a>
+        </li>
+        <li class="nav__item">
+            <div class="action">
+                <div class="profile" onclick="menuToggle();">
+                    {% if imgPatient %}
+                    <img src="{{imgPatient}}" alt="">
+                    {% else %}
+                    <img src="{% static 'images/Patient/user.jpg' %}" alt="">
+                    {% endif %}
+                </div>
+
+                <div class="menu">
+                    <h3>
+                        {{patient.nomPatient}} {{patient.prenomPatient}}
+                        <div>
+                            {{patient.mailPatient}}
+                        </div>
+                    </h3>
+                    <ul>
+                        <li>
+                            <a href="{% url 'profile' %}">modifier le compte</a>
+                        </li>
+                        <!--<li>
+                            <a href="#">Messagerie</a>
+                        </li>-->
+                        <li>
+                            <a href="{% url 'logout_patient' %}">Se deconnecter</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </li>
+    </ul>
+</nav>
+{% endblock nav%}
+{% block content %}
+<h2 style="text-align: center;margin-top:20px;">Dossier médical -{{patient.idPatient}}</h2>
+<div class="container">
+
+    <table>
+        <tr>
+            <th colspan="2" style="text-align: center">Identité Patient</th>
+        </tr>
+        <tr>
+            <td><strong>Nom:</strong></td>
+            <td>{{ patient.nomPatient }}</td>
+        </tr>
+        <tr>
+            <td><strong>Prénom:</strong></td>
+            <td>{{ patient.prenomPatient }}</td>
+        </tr>
+        <tr>
+            <td><strong>Sexe:</strong></td>
+            <td>{{ patient.sexePatient }}</td>
+        </tr>
+        <tr>
+            <td><strong>Date de naissance:</strong></td>
+            <td>{{ patient.dateNaissancePatient }}</td>
+        </tr>
+        <tr>
+            <td><strong>Adresse e-mail:</strong></td>
+            <td>{{ patient.mailPatient }}</td>
+        </tr>
+        <tr>
+            <td><strong>Adresse:</strong></td>
+            <td>{{ patient.adressePatient }}</td>
+        </tr>
+        <tr>
+            <td><strong>Numéro de téléphone (mère):</strong></td>
+            <td>{{ patient.numTelephoneMere }}</td>
+        </tr>
+        <tr>
+            <td><strong>Numéro de téléphone (père):</strong></td>
+            <td>{{ patient.numTelephonePere }}</td>
+        </tr>
+        <tr>
+            <td><strong>Ville:</strong></td>
+            <td>{{ patient.villePatient }}</td>
+        </tr>
+        <tr>
+            <td><strong>Délégation:</strong></td>
+            <td>{{ patient.delegationPatient }}</td>
+        </tr>
+        <tr>
+            <td><strong>Couverture médicale:</strong></td>
+            <td>{{ patient.couvertureMedical }}</td>
+        </tr>
+        <tr>
+            <th colspan="2" style="text-align: center">Dossier Antécédent</th>
+        </tr>
+        <tr>
+            <td><strong>Parents Consanguins:</strong></td>
+            <td>{{ info.parents_Consanguins }}</td>
+        </tr>
+        <tr>
+            <td><strong>Âge maternel à l'accouchement:</strong></td>
+            <td>{{ info.age_maternel_accouchement }}</td>
+        </tr>
+        <tr>
+            <td><strong>Grossesse suivie:</strong></td>
+            <td>{{ info.grossesse_suivi }}</td>
+        </tr>
+        <tr>
+            <td><strong>Terme de la grossesse:</strong></td>
+            <td>{{ info.terme_grossesse }}</td>
+        </tr>
+        <tr>
+            <td><strong>Accouchement par voie:</strong></td>
+            <td>{{ info.accouchement_par_voie }}</td>
+        </tr>
+        <tr>
+            <td><strong>Souffrance Néonatale:</strong></td>
+            <td>{{ info.souffrance_neonatal }}</td>
+        </tr>
+        <tr>
+            <td><strong>Poids de naissance:</strong></td>
+            <td>{{ info.poids_de_naissance }}</td>
+        </tr>
+        <tr>
+            <td><strong>Taille à la Naissance:</strong></td>
+            <td>{{ info.taille_de_naissance }}</td>
+        </tr>
+        <tr>
+            <td><strong>Notion d'hospitalisation à l'âge Néonatal:</strong></td>
+            <td>{{ info.Notion_hospitalisation_age_neonatal }}</td>
+        </tr>
+        <tr>
+            <td><strong>Allaitement:</strong></td>
+            <td>{{ info.allaitement }}</td>
+        </tr>
+        <tr>
+            <td><strong>Diversification Alimentaire à l'âge de:</strong></td>
+            <td>{{ info.diversification_alimentaire }}</td>
+        </tr>
+        <tr>
+            <td><strong>Retentissement Staturo-Pondérale:</strong></td>
+            <td>{{ info.retentissement_staturo_ponderale }}</td>
+        </tr>
+        <!-- <tr>
+             <th colspan="2" style="text-align: center">Dossier médical </th>
+         </tr>
+         <tr>
+             <th colspan="2" style="text-align: center;background-color:green">Développement psychomoteur </th>
+         </tr>-->
+    </table>
+</div>
+<div style="text-align: center;margin-top:20px;margin-bottom:30px"><a href="{% url 'imprimer_dossier_patient_pdf' %}"
+                                                                      class="bouton">Dossier médical PDF</a></div>
+{% endblock %}
+
+{% block contact %}{% endblock %}
+{% block footer %}{% endblock %}
+</body>
+</html>

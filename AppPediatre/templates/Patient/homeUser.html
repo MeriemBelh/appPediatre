@@ -1,0 +1,69 @@
+{% extends 'homePage.html' %}
+{% load static %}
+{% block import %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.css"
+      crossorigin="anonymous"/>
+
+<script src="https://code.jquery.com/jquery-1.12.4.js" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/owl-carousel/1.3.3/owl.carousel.min.js"
+        crossorigin="anonymous"></script>
+<link rel="stylesheet" href="{% static 'css/Patient/homeUser.css' %}">
+<script defer src="{% static 'js/Patient/homeUser.js' %}"></script>
+{% endblock %}
+
+{% block bouton%}{% endblock bouton%}
+{% block nav%}
+<nav class="nav">
+    <ul class="nav__list">
+        <li class="nav__item">
+            <a class="bttn" id="focus">Accueil</a>
+        </li>
+        <li class="nav__item">
+            <a class="bttn" href="{% url 'image' %}">Media</a>
+        </li>
+        <li class="nav__item">
+            <a class="bttn" href="{% url 'actualites' %}">Actualités</a>
+        </li>
+        <!-- Dossier -->
+        <li class="nav__item">
+            <a class="bttn" href="{% url 'info_patient' %}">Consulter Dossier</a>
+        </li>
+        <li class="nav__item">
+            <div class="action">
+                <div class="profile" onclick="menuToggle();">
+                    {% if imgPatient %}
+                    <img src="{{imgPatient}}" alt="">
+                    {% else %}
+                    <img src="{% static 'images/Patient/user.jpg' %}" alt="">
+                    {% endif %}
+                </div>
+
+                <div class="menu">
+                    <h3>
+                        {{patient.nomPatient}} {{patient.prenomPatient}}
+                        <div>
+                            {{patient.mailPatient}}
+                        </div>
+                    </h3>
+                    <ul>
+                        <li>
+                            <a href="{% url 'profile' %}">modifier le compte</a>
+                        </li>
+                        <!--<li>
+                            <a href="#">Messagerie</a>
+                        </li>-->
+                        <li>
+                            <a href="{% url 'logout_patient' %}">Se deconnecter</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </li>
+    </ul>
+</nav>
+{% endblock nav%}
+
+</body>
+
+</html>

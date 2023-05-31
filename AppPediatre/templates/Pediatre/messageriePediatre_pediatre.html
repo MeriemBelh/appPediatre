@@ -1,0 +1,225 @@
+{% extends 'Pediatre/sideBar_pediatre.html' %}
+{% load static %}
+{% block import %}
+<link rel="stylesheet" href="{% static 'css/Pediatre/recherchePatient.css' %}">
+<link rel="stylesheet" href="{% static 'css/Pediatre/messageriePediatre.css' %}">
+{% endblock %}
+{% block nav%}
+<li class="nav-link">
+    <a href="{% url 'index_pediatre' %}">
+        <i class='bx bxs-user icon'></i>
+        <span class="text nav-text">Mes Patients</span>
+    </a>
+</li>
+<li class="nav-link">
+    <a href="{% url 'recherche_patient' %}">
+        <i class='bx bxs-search-alt-2 icon'></i>
+        <span class="text nav-text">Rechercher</span>
+    </a>
+</li>
+<li class="nav-link">
+    <a href="{% url 'corbeille_patient' %}">
+        <i class='bx bxs-trash-alt icon'></i>
+        <span class="text nav-text">Corbeille</span>
+    </a>
+</li>
+<li class="nav-link">
+    <a href="{% url 'messagerie_pediatre' %}" style="background-color:#194ca7;">
+        <i class='bx bxs-message icon' style="color:#f1f2f4;"></i>
+        <span class="text nav-text" style="color:#f1f2f4;">Messagerie</span>
+    </a>
+</li>
+{% endblock nav%}
+{% block title %}<title>Messagerie</title>{% endblock %}
+
+{% block content %}
+<style>
+    .btn1 {
+    display: inline-block;
+    font-weight: 400;
+    color: #212529;
+    text-align: center;
+    vertical-align: middle;
+    -webkit-user-select: none;
+       -moz-user-select: none;
+        -ms-user-select: none;
+            user-select: none;
+    background-color: transparent;
+    border: 1px solid transparent;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border-radius: 0.25rem;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    list-style: none;
+    height: 50px;
+    width: 230px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    text-decoration: none;
+
+}
+  .btn-primary1 {
+    color: #fff;
+    background-color: #194ca7;
+    border-color: #194ca7;
+  }
+</style>
+<span class="text">Messagerie</span>
+<a class="btn1 btn-primary1" href="{% url 'new_conversation_pediatre' %}" role="button" style="float: right;">
+            <span class="text-center"><i class='bx bxs-message-rounded-add'></i> Nouvelle Conversation </span>
+        </a>
+
+<br><br>
+{% if errorValue == True %}
+<div class="alert alert-danger" role="alert">
+    {{error}}
+</div>
+{% endif %}
+
+<style>
+    .form-control {
+        color: #212529;
+        background-color: #fff;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+        width: 200px;
+        min-width: 100px;
+    }
+
+    .center {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+</style>
+<!--Barre de recherche-->
+<form action="{% url 'recherche_conversation_pediatre' %}" method="POST" class="">
+    <div class="table center">
+        {% csrf_token %}
+        <input type="text" class="form-control" name="convSearch" id="I"
+               placeholder="Recherche conversation" style="width: 70%;">
+        <button type="submit" class="btn btn-primary">
+            <i class='bx bx-search-alt-2'></i>
+        </button>
+    </div>
+</form>
+<br><br>
+<style>
+    a {
+        color: inherit;
+        text-decoration: none;
+    }
+
+    .image-wrapper {
+        position: relative;
+        display: inline-block;
+    }
+        .date-updated {
+            margin-left: auto;
+        }
+.image-wrapper::before {
+            content: "{{nbrVu}}";
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            width: 20px;
+            height: 20px;
+            background-color: red;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .date-updated1 {
+            color: red;
+            font-weight: bold;
+        }
+</style>
+<table class="table" style="width: 80%;">
+    <tbody>
+    {% for c, msg_is_vu, nbrVu, truncated_msg,last_message in boite_reception %}
+    {% if msg_is_vu == False %}
+        <style>
+            .image-wrapper::before {
+            content: "{{nbrVu}}";
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            width: 20px;
+            height: 20px;
+            background-color: red;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        </style>
+    {% endif %}
+    <tr style="background-color: #97DEFF;">
+        <td style="border-radius: 8px;"><a href="{% url 'conversation_pediatre' conversation_id=c.idConversation %}" style="text-decoration: none;">
+            <div class="image-text1">
+                <span class="image1">
+                    <span class="{% if msg_is_vu == False %}image-wrapper{% endif %}">
+                    <img src="{% static 'images/Pediatre/user-img.png' %}" alt="">
+                    </span>
+                </span>
+                <div class="text1 logo-text1">
+                    {% if c.receiver == request.user %}
+                    <span class="name1">{{c.sender.last_name}} {{c.sender.first_name}}</span>
+                    {% else %}
+                    <span class="name1">{{c.receiver.last_name}} {{c.receiver.first_name}}</span>
+                    {% endif %}
+                    <span >Sujet : {{c.sujet}}</span>
+                </div>
+                <div class="text1 date-updated {% if msg_is_vu == False %}date-updated1{% endif %}">
+                    {{c.dateUpdated}}
+                </div>
+            </div>
+            <div style="color: #646464;width:100px;" class="text1 logo-text1">
+                {{truncated_msg}}
+            </div>
+        </a></td>
+    </tr>
+    <tr>
+        <td style="border-radius: 8px; opacity: 0"></td>
+    </tr>
+    {% empty %}
+    <P style="text-align: center;font-weight: bold;font-style: italic;font-size: 40px;color: #868686;">Aucun conversation</P>
+    {% endfor %}
+
+    </tbody>
+</table>
+{% endblock %}
+
+</body>
+</html>
+
+<!--
+<tr style="background-color: white;">
+    <td style="border-radius: 8px;">
+            <div class="image-text1">
+                <span class="image1">
+                    <img src="{% static 'images/Pediatre/user-img.png' %}" alt="">
+                </span>
+                <div class="text1 logo-text1">
+                    <span class="name1" style="font-weight: bold;">CHAKIR Majdouline</span>
+                </div>
+            </div>
+            <div style="">
+                Le Brésil, vaste pays d'Amérique du Sud, s'étend du bassin amazonien au nord à des vignobles et aux chutes d'Iguaçu au sud. La ville de Rio de Janeiro, caractérisée par sa statue du Christ Rédempteur de 38 mètres de haut située au sommet du Corcovado, est réputée pour ses plages très fréquentées de Copacabana et d'Ipanema, ainsi que pour son énorme carnaval animé, avec défilés de chars, costumes flamboyants, et musique et danse samba.
+            </div>
+        </td>
+    </tr>
+    <tr>
+        <td style="border-radius: 8px; opacity: 0"></td>
+    </tr>
+-->

@@ -1,0 +1,47 @@
+{% extends 'Pediatre/sideBar_pediatre.html' %}
+{% load static %}
+{% block import %}
+    <link rel="stylesheet" href="{% static 'css/Pediatre/mesPatients.css' %}">
+{% endblock %}
+{% block title %}<title>Mes Patients</title>{% endblock %}
+    {% block content %}
+        <span class="text">Patients</span>
+        {% if errorValue == True %}
+            <div class="alert alert-danger" role="alert">
+              {{error}}
+            </div>
+        {% endif %}
+
+        <a class="btn btn-primary" href="{% url 'ajouter_patient' %}" role="button" style="float: right;">
+            <span class="text-center"> <i class='bx bxs-plus-circle'></i> Ajouter patient</span>
+        </a>
+        <br><br>
+        <table class="table">
+            <thead>
+              <tr class="headTable">
+                <th >NOM COMPLET</th>
+                <th >IDPATIENT</th>
+                <th >D.NAISSANCE</th>
+                <th >ADRESSE</th>
+                <th >EMAIL</th>
+                <th >ACTIONS</th>
+              </tr>
+            </thead>
+            <tbody >
+            {% for patient in patients %}
+              <tr style="background-color: white;">
+                <td style="border-top-left-radius: 8px;font-weight: bold;">{{patient.nomPatient}} {{patient.prenomPatient}}</td>
+                <td>{{patient.idPatient}}</td>
+                <td>{{patient.dateNaissancePatient}}</td>
+                <td>{{patient.delegationPatient}}, {{patient.villePatient}}, {{patient.adressePatient}}</td>
+                <td>{{patient.mailPatient}}</td>
+                <td style="border-top-right-radius: 8px;width: 10%;">
+                    <a href="{% url 'imprimer_dossier_patient_pdf' patient_id=patient.idPatient %}"><i class='bx bxs-printer iconPrint' style="color: #056705;"></i></a>
+                    <a href="{% url 'afficher_infos_patient' patient_id=patient.idPatient %}"><i class='bx bxs-spreadsheet iconPrint' style="color: #3cb7f1;"></i></a>
+                    <a href="{% url 'add_patient_corbeille' patient_id=patient.idPatient %}"><i class='bx bxs-trash iconPrint' style="color: #f80018;"></i></a>
+                    <a href="{% url 'modifier_patient' patient_id=patient.idPatient %}"><i class='bx bxs-edit-alt iconPrint' style="color: #decb00;"></i></a>
+               </td>
+            {% endfor %}
+            </tbody>
+          </table>
+    {% endblock %}

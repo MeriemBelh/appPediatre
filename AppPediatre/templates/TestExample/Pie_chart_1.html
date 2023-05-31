@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pie_chart_1</title>
+    <link rel="stylesheet" href="{% static 'plugins/c3-chart/c3.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.20/c3.min.css">
+</head>
+<body>
+<div class="page-wrapper">
+    <div class="content container-fluid">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Pie Chart</div>
+                    </div>
+                    <div class="card-body">
+                        <div id="chart-pie"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'js/jquery-3.6.0.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'js/feather.min.js' %}"></script>
+<script src="{% static 'plugins/slimscroll/jquery.slimscroll.min.js' %}"></script>
+<script src="{% static 'plugins/c3-chart/d3.v5.min.js' %}"></script>
+<script src="{% static 'plugins/c3-chart/c3.min.js' %}"></script>
+<script src="{% static 'plugins/c3-chart/chart-data.js' %}"></script>
+</body>
+</html>

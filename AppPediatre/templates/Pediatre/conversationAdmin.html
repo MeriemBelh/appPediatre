@@ -1,0 +1,218 @@
+{% extends 'Administrateur/base_admin.html' %}
+{% load static %}
+{% block title %}<title>Administrateurs</title>{% endblock %}
+{% block sideBar %}
+    <ul>
+        <li class="menu-title"><span>Menu</span></li>
+        <li>
+            <a href="{% url 'index_admin' %}"><i data-feather="home"></i> <span>Dashboard</span></a>
+        </li>
+        <li>
+            <a href="{% url 'gestion_administrateurs' %}"><i data-feather="lock"></i> <span> Administrateurs </span></a>
+        </li>
+        <li>
+            <a href="{% url 'gestion_patients' %}"><i data-feather="users"></i> <span>Patients</span></a>
+        </li>
+        <li class="submenu">
+            <a href="#"><i data-feather="clipboard"></i> <span> Spécialistes</span> <span
+                    class="menu-arrow"></span></a>
+            <ul>
+                <li><a href="">Pediatre</a></li>
+                <li><a href="">Dentiste</a></li>
+            </ul>
+        </li>
+        <li class="active">
+            <a href="{% url 'chatAdmin' %}"><i data-feather="mail"></i> <span>Messagerie</span></a>
+        </li>
+        <li>
+            <a href="{% url 'statistiques' %}"><i data-feather="pie-chart"></i> <span> Statistiques</span> </a>
+        </li>
+        <li class="menu-title">
+            <span>Media</span>
+        </li>
+        <li>
+            <a href="#"><i data-feather="video"></i> <span>Videos</span></a>
+        </li>
+        <li>
+            <a href="#"><i data-feather="image"></i> <span>Slides</span></a>
+        </li>
+        <li>
+            <a href="#"><i data-feather="bell"></i> <span>Actualités</span></a>
+        </li>
+        <li>
+            <a href="#"><i data-feather="file"></i> <span>Rapports</span></a>
+        </li>
+        <li class="menu-title">
+            <span>Réglages</span>
+        </li>
+        <li>
+            <a href="profile.html"><i data-feather="user-plus"></i> <span>Profile</span></a>
+        </li>
+        <li>
+            <a href="settings.html"><i data-feather="settings"></i> <span>Paramètres</span></a>
+        </li>
+    </ul>
+{% endblock %}
+{% block contenu %}
+    {% if error == True %}
+        <div class="row">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ errorMsg }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="chat-window">
+                <div class="chat-cont-left">
+                    <div class="chat-header">
+                        <span>Messagerie</span>
+                        <a href="javascript:void(0)" class="chat-compose">
+                            <i class="material-icons"><i class="fas fa-plus"></i></i>
+                        </a>
+                    </div>
+                    <form class="chat-search">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <i class="fas fa-search"></i>
+                            </div>
+                            <input type="text" class="form-control" placeholder="Search">
+                        </div>
+                    </form>
+                    <div class="chat-users-list">
+                        <div class="chat-scroll">
+                            {% for c, msg_is_vu, nbrVu, truncated_msg, message in boite_reception %}
+                                <a href="{% url 'conversation_admin' conversation_id=c.idConversation %}"
+                                   class="media d-flex">
+                                    <div class="media-img-wrap">
+                                        <div class="avatar">
+                                            <img src="{% static 'images/default-user-image-admin.jpg' %}" alt="User Image"
+                                                 class="avatar-img rounded-circle">
+                                        </div>
+                                    </div>
+                                    <div class="media-body">
+                                        <div>
+                                            <div class="user-name">{{ c.sujet }}</div>
+                                            {% if c.receiver == request.user %}
+                                                <div class="user-last-chat">{{ c.sender.last_name }} {{ c.sender.first_name }}</div>
+                                            {% else %}
+                                                <div class="user-last-chat">{{ c.receiver.last_name }} {{ c.receiver.first_name }}</div>
+                                            {% endif %}
+                                        </div>
+                                        <div>
+                                            <div class="last-chat-time block">{{ dateUpdated }}</div>
+                                            {% if msg_is_vu == False %}
+                                                <div class="badge badge-success badge-pill">{{ nbrVu }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-cont-right">
+                    <div class="chat-header">
+                        <a id="back_user_list" href="javascript:void(0)" class="back-user-list">
+                            <i class="material-icons">chevron_left</i>
+                        </a>
+                        <div class="media d-flex">
+                            <div class="media-img-wrap">
+                                <div class="avatar">
+                                    <img src="{% static 'images/default-user-image-admin.jpg' %}" alt="User Image"
+                                         class="avatar-img rounded-circle">
+                                </div>
+                            </div>
+                            <div class="media-body">
+                                {% if conversation.receiver == request.user %}
+                                    <div class="user-name">{{ conversation.sender.last_name }} {{ conversation.sender.first_name }}</div>
+                                {% else %}
+                                    <div class="user-name">{{ conversation.receiver.last_name }} {{ conversation.receiver.first_name }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="chat-body">
+                        <div class="chat-scroll">
+                            <ul class="list-unstyled">
+                                {% for m in messages %}
+                                    {% if m.receiver == request.user %}
+                                        <li class="media d-flex received">
+                                            <div class="avatar">
+                                                <img src="{% static 'images/Admin/user-5.jpg' %}" alt="User Image"
+                                                     class="avatar-img rounded-circle">
+                                            </div>
+                                            <div class="media-body">
+                                                <div class="msg-box">
+                                                    <div>
+                                                        <p>{{ m.message }}</p>
+                                                        <ul class="chat-msg-info">
+                                                            <li>
+                                                                <div class="chat-time">
+                                                                    <span>{{ m.dateEnvoie }}</span>
+                                                                </div>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    {% else %}
+                                        <li class="media sent">
+                                            <div class="media-body">
+                                                <div class="msg-box">
+                                                    <div>
+                                                        <p>{{ m.message }}</p>
+                                                        <ul class="chat-msg-info">
+                                                            <li>
+                                                                <div class="chat-time">
+                                                                    <span>{{ m.dateEnvoie }}</span>
+                                                                </div>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="chat-footer">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <div class="btn-file btn">
+                                    <i class="fas fa-paperclip"></i>
+                                    <input type="file">
+                                </div>
+                            </div>
+                            <input type="text" class="input-msg-send form-control"
+                                   placeholder="Type something">
+                            <div class="input-group-append">
+                                <button type="button" class="btn msg-send-btn"><i
+                                        class="fas fa-paper-plane"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </div>
+
+    <script src="{% static 'js/Admin/bootstrap.bundle.min.js' %}"></script>
+
+    <script src="{% static 'js/Admin/feather.min.js' %}"></script>
+
+    <script src="{% static 'plugins/slimscroll/jquery.slimscroll.min.js' %}"></script>
+
+    <script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'plugins/datatables/datatables.min.js' %}"></script>
+
+    <script src="{% static 'js/Admin/script.js' %}"></script>
+{% endblock %}

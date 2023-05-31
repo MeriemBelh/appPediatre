@@ -1,0 +1,281 @@
+{% extends 'Administrateur/base_admin.html' %}
+{% load static %}
+{% block title %}<title>Afficher patient</title>{% endblock %}
+
+{% block sideBar %}
+    <ul>
+        <li class="menu-title"><span>Menu</span></li>
+        <li>
+            <a href="{% url 'index_admin' %}"><i data-feather="home"></i> <span>Dashboard</span></a>
+        </li>
+        <li>
+            <a href="#"><i data-feather="lock"></i> <span> Administrateurs </span></a>
+        </li>
+        <li class="active">
+            <a href="{% url 'gestion_patients' %}"><i data-feather="users"></i> <span>Patients</span></a>
+        </li>
+        <li class="submenu">
+            <a href="#"><i data-feather="clipboard"></i> <span> Spécialistes</span> <span
+                    class="menu-arrow"></span></a>
+            <ul>
+                <li><a href="">Pediatre</a></li>
+                <li><a href="">Dentiste</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="#"><i data-feather="mail"></i> <span>Messagerie</span></a>
+        </li>
+        <li>
+            <a href="{% url 'statistiques' %}"><i data-feather="pie-chart"></i> <span> Statistiques</span> </a>
+        </li>
+        <li class="menu-title">
+            <span>Media</span>
+        </li>
+        <li>
+            <a href="#"><i data-feather="video"></i> <span>Videos</span></a>
+        </li>
+        <li>
+            <a href="#"><i data-feather="image"></i> <span>Slides</span></a>
+        </li>
+        <li>
+            <a href="#"><i data-feather="bell"></i> <span>Actualités</span></a>
+        </li>
+        <li>
+            <a href="#"><i data-feather="file"></i> <span>Rapports</span></a>
+        </li>
+        <li class="menu-title">
+            <span>Réglages</span>
+        </li>
+        <li>
+            <a href="profile.html"><i data-feather="user-plus"></i> <span>Profile</span></a>
+        </li>
+        <li>
+            <a href="settings.html"><i data-feather="settings"></i> <span>Paramètres</span></a>
+        </li>
+    </ul>
+{% endblock %}
+
+{% block contenu %}
+    {% if error == True %}
+        <div class="row">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ errorMsg }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+    {% endif %}
+    <div class="row justify-content-lg-center">
+        <div class="col-lg-10">
+
+            <div class="page-header">
+                <div class="row">
+                    <div class="col">
+                        <h3 class="page-title">Profile</h3>
+                        <ul class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="{% url 'index_admin' %}">Tableau de bord</a>
+                            </li>
+                            <li class="breadcrumb-item active">Profile</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-cover">
+                <div class="profile-cover-wrap">
+                    <div class="cover-content">
+                        <div class="custom-file-btn">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="text-center mb-5">
+                <label class="avatar avatar-xxl profile-cover-avatar" for="avatar_upload">
+                    <img class="avatar-img" src="{{ img }}" alt="Profile Image">
+                </label>
+                <h2>{{ p.nomPatient }} {{ p.prenomPatient }}</h2>
+                <ul class="list-inline">
+                    <li class="list-inline-item">
+                        <i class="far fa-building"></i> <span>{{ p.adressePatient }}</span>
+                    </li>
+                    <li class="list-inline-item">
+                        <i class="fas fa-map-marker-alt"></i> {{ p.delegationPatient }}, {{ p.villePatient }}
+                    </li>
+                    <li class="list-inline-item">
+                        <i class="far fa-calendar-alt"></i> <span>{{ p.dateNaissancePatient }}</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title">Courbe d'Obesite</h5>
+                        </div>
+                        <div class="card-body">
+                            <div id="chart"></div>
+                            <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.15.1/d3.min.js"></script>
+                            <script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.20/c3.min.js"></script>
+                            <script>
+                                // Retrieve the chart data from the server
+                                fetch('/administrateur/line_chart_Obesite/{{ p.idPatient }}/')
+                                    .then(response => response.json())
+                                    .then(data => {
+                                        // Render the chart using C3.js
+                                        var chart = c3.generate({
+                                            bindto: '#chart',
+                                            data: {
+                                                x: 'x',
+                                                columns: data.columns,
+                                                types: {
+                                                    'obesite poids': 'line',
+                                                    'obesite taille': 'line',
+                                                    'imc': 'line'
+                                                }
+                                            },
+                                            axis: {
+                                                x: {
+                                                    label: 'Age',
+                                                    tick: {
+                                                        fit: false
+                                                    }
+                                                },
+                                                y: {
+                                                    label: 'Value'
+                                                }
+                                            }
+                                        });
+                                    });
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title">Identité Patient</h5>
+                        </div>
+                        <div class="card-body card-body-height">
+                            <ul class="activity-feed">
+                                <li class="feed-item">
+                                    <div class="feed-date">Nom complet</div>
+                                    <span class="feed-text">{{ p.nomPatient }} {{ p.prenomPatient }}</span>
+                                </li>
+                                <li class="feed-item">
+                                    <div class="feed-date">Date de naissance</div>
+                                    <span class="feed-text">{{ p.dateNaissancePatient }}</span>
+                                </li>
+                                <li class="feed-item">
+                                    <div class="feed-date">Sexe</div>
+                                    <span class="feed-text">{{ p.sexePatient }}</span>
+                                </li>
+                                <li class="feed-item">
+                                    <div class="feed-date">N° de télèphone de la mère</div>
+                                    <span class="feed-text">0{{ p.numTelephoneMere }}</span>
+                                </li>
+                                <li class="feed-item">
+                                    <div class="feed-date">N° de télèphone du père</div>
+                                    <span class="feed-text">0{{ p.numTelephonePere }}</span>
+                                </li>
+                                <li class="feed-item">
+                                    <div class="feed-date">Email</div>
+                                    <span class="feed-text">{{ p.mailPatient }}</span>
+                                </li>
+                                <li class="feed-item">
+                                    <div class="feed-date">Adresse</div>
+                                    <span class="feed-text">{{ p.adressePatient }}</span>
+                                </li>
+                                <li class="feed-item">
+                                    <div class="feed-date">Région</div>
+                                    <span class="feed-text">{{ p.delegationPatient }}</span>
+                                </li>
+                                <li class="feed-item">
+                                    <div class="feed-date">Ville</div>
+                                    <span class="feed-text">{{ p.villePatient }}</span>
+                                </li>
+                                <li class="feed-item">
+                                    <div class="feed-date">Couverture Médicale</div>
+                                    <span class="feed-text">{{ p.couvertureMedical }}</span>
+                                </li>
+                                <li class="feed-item">
+                                    <div class="feed-date">Mutuelle</div>
+                                    <span class="feed-text">{{ p.nomCouvertureMedical }}</span>
+                                </li>
+                                <li class="feed-item">
+                                    <div class="feed-date">Pediatre</div>
+                                    <span class="feed-text">{{ p.inpe.inpe }}-{{ p.inpe.nomPediatre }} {{ p.inpe.prenomPediatre }}</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title">Dossier Antécédent</h5>
+                        </div>
+                        <div class="card-body card-body-height">
+                            <ul class="activity-feed">
+                                <li class="feed-item">
+                                    <div class="feed-date">Parents Consanguins</div>
+                                    <span class="feed-text">{{ infopatient.parents_Consanguins }}</span>
+                                </li>
+                                <li class="feed-item">
+                                    <div class="feed-date">Age maternel à l'accouchement (en année)</div>
+                                    <span class="feed-text">{{ infopatient.age_maternel_accouchement }}</span>
+                                </li>
+                                <li class="feed-item">
+                                    <div class="feed-date">Grossesse suivi</div>
+                                    <span class="feed-text">{{ infopatient.grossesse_suivi }}</span>
+                                </li>
+                                <li class="feed-item">
+                                    <div class="feed-date">Terme de la grossesse</div>
+                                    <span class="feed-text">{{ infopatient.terme_grossesse }}</span>
+                                </li>
+                                <li class="feed-item">
+                                    <div class="feed-date">Préciser le terme de la grossesse</div>
+                                    <span class="feed-text">{{ infopatient.precisionTerme }}</span>
+                                </li>
+                                <li class="feed-item">
+                                    <div class="feed-date">Accouchement par voie</div>
+                                    <span class="feed-text">{{ infopatient.accouchement_par_voie }}</span>
+                                </li>
+                                <li class="feed-item">
+                                    <div class="feed-date">Poids de naissance (en Kg)</div>
+                                    <span class="feed-text">{{ infopatient.poids_de_naissance }}</span>
+                                </li>
+                                <li class="feed-item">
+                                    <div class="feed-date">Hospitalisation à l'âge Néonatal</div>
+                                    <span class="feed-text">{{ infopatient.Notion_hospitalisation_age_neonatal }}</span>
+                                </li>
+                                <li class="feed-item">
+                                    <div class="feed-date">Diversification Alimentaire à l’âge de (en mois)</div>
+                                    <span class="feed-text">{{ infopatient.diversification_alimentaire }}</span>
+                                </li>
+                                <li class="feed-item">
+                                    <div class="feed-date">Souffrance Néonatale</div>
+                                    <span class="feed-text">{{ infopatient.souffrance_neonatal }}</span>
+                                </li>
+                                <li class="feed-item">
+                                    <div class="feed-date">Taille à la naissance (en cm)</div>
+                                    <span class="feed-text">{{ infopatient.taille_de_naissance }}</span>
+                                </li>
+                                <li class="feed-item">
+                                    <div class="feed-date">Allaitement</div>
+                                    <span class="feed-text">{{ infopatient.allaitement }}</span>
+                                </li>
+                                <li class="feed-item">
+                                    <div class="feed-date">Retentissement Staturo-Pondérale</div>
+                                    <span class="feed-text">{{ infopatient.retentissement_staturo_ponderale }}</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,1728 @@
+{% extends 'Pediatre/sideBar_pediatre.html' %}
+{% load static %}
+{% block import %}
+    <link rel="stylesheet" href="{% static 'css/Pediatre/afficherDossierMedical.css' %}">
+
+{% endblock %}
+{% block title %}<title>Dossier Medicale</title>{% endblock %}
+{% block content %}
+
+    {% if errorValue == True %}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
+    {% endif %}
+
+    <span class="text">Dossier Medicale - {{ patient_id }}</span>
+    <a class="btn btn-primary" href="{% url 'imprimer_dossier_patient_pdf' patient_id=patient_id %}" role="button"
+       style="float: right;">
+        <span class="text-center"> <i class='bx bxs-printer'></i> Imprimer dossier</span>
+    </a>
+    <div style="float: right;">
+        <span class="text-center">&emsp;&emsp;</span>
+    </div>
+    <a class="btn btn-primary" href="{% url 'modifier_patient' patient_id=patient_id %}" role="button"
+       style="float: right;">
+        <span><i class='bx bxs-edit-alt'></i> Modifier Dossier</span>
+    </a>
+    <div class="inner">
+        <!--Les informations personnels-->
+        {% if sexe == 'Masculin' %}
+            <style>
+                .imageProfileStyle {
+                    background-color: #B0DAFF;
+                    border-radius: 2%;
+                    border: none;
+                }
+
+                .tdTitre {
+                    width: 25%;
+                    background-color: #B0DAFF;
+                    font-weight: bold;
+                }
+
+                .tdTitre1 {
+                    background-color: #B0DAFF;
+                    font-weight: bold;
+                }
+
+                .grandTitre1 {
+                    background-color: #3C486B;
+                    height: 40px;
+                    color: #f1f2f4;
+                }
+
+                .grandTitre2 {
+                    background-color: #0081C9;
+                    height: 20px;
+                    color: #f1f2f4;
+                }
+            </style>
+        {% elif sexe == "Féminin" %}
+            <style>
+                .imageProfileStyle {
+                    background-color: #FCC8D1;
+                    border-radius: 2%;
+                    border: none;
+                }
+
+                .tdTitre {
+                    width: 25%;
+                    background-color: #FCC8D1;
+                    font-weight: bold;
+                }
+
+                .tdTitre1 {
+                    background-color: #FCC8D1;
+                    font-weight: bold;
+                }
+
+                .grandTitre1 {
+                    background-color: #D14D72;
+                    height: 40px;
+                    color: #FEF2F4;
+                }
+
+                .grandTitre2 {
+                    background-color: #FFABAB;
+                    height: 20px;
+                    color: #FEF2F4;
+                }
+            </style>
+        {% else %}
+            <style>
+                .imageProfileStyle {
+                    background-color: #ADE792;
+                    border-radius: 2%;
+                    border: none;
+                }
+
+                .tdTitre {
+                    width: 25%;
+                    background-color: #ADE792;
+                    font-weight: bold;
+                }
+
+                .tdTitre1 {
+                    background-color: #ADE792;
+                    font-weight: bold;
+                }
+
+                .grandTitre1 {
+                    background-color: #3A6351;
+                    height: 40px;
+                    color: #F6E3C5;
+                }
+
+                .grandTitre2 {
+                    background-color: #019267;
+                    height: 20px;
+                    color: #F6E3C5;
+                }
+            </style>
+        {% endif %}
+        <table class="table1">
+            <tr>
+                <td class="td1 imageProfileStyle" width="30%" rowspan="11">
+                    {% if imgPatient %}
+                        <img class="imgPatient" style="height:460px;" src="{{ imgPatient }}">
+                    {% else %}
+                        <p>No image available.</p>
+                    {% endif %}
+                </td>
+                <td width="2%" rowspan="11" class="espaceEntreImg"></td>
+                <td class="td1 tdTitre">Nom Prenom</td>
+                <td class="td1">{{ nom }} {{ prenom }}</td>
+            </tr>
+            <tr>
+                <td class="td1 tdTitre">Sexe</td>
+                <td class="td1">{{ sexe }}</td>
+            </tr>
+            <tr>
+                <td class="td1 tdTitre">Date de naissance</td>
+                <td class="td1">{{ datenaissance }}</td>
+            </tr>
+            <tr>
+                <td class="td1 tdTitre">N° de télèphone de la mère</td>
+                <td class="td1">0{{ teleMom }}</td>
+            </tr>
+            <tr>
+                <td class="td1 tdTitre">N° de télèphone du père</td>
+                <td class="td1">0{{ teleDad }}</td>
+            </tr>
+            <tr>
+                <td class="td1 tdTitre">Email</td>
+                <td class="td1">{{ mailPatient }}</td>
+            </tr>
+            <tr>
+                <td class="td1 tdTitre">Adresse</td>
+                <td class="td1">{{ adresse }}</td>
+            </tr>
+            <tr>
+                <td class="td1 tdTitre">Ville</td>
+                <td class="td1">{{ ville }}</td>
+            </tr>
+            <tr>
+                <td class="td1 tdTitre">Région</td>
+                <td class="td1">{{ delegation }}</td>
+            </tr>
+            <tr>
+                <td class="td1 tdTitre">Couverture Médicale</td>
+                <td class="td1">{{ couvertureMedicale }}</td>
+            </tr>
+            <tr>
+                <td class="td1 tdTitre">Mutuelle</td>
+                <td class="td1">{{ nomCouvertureMedical }}</td>
+            </tr>
+        </table>
+        <br>
+        <!--Dossier Antécédent-->
+        <table class="table1">
+            <tr style="border: none;">
+                <td class="td1 grandTitre1">Dossier Antécédent</td>
+            </tr>
+        </table>
+        <br>
+        <table class="table2">
+            <tr>
+                <td class="td1 tdTitre1">Parents Consanguins</td>
+                <td class="td1" width="30%">{{ parents_Consanguins }}</td>
+            </tr>
+            <tr>
+                <td class="td1 tdTitre1">Age maternel à l'accouchement (en
+                    année)
+                </td>
+                <td class="td1">{{ age_maternel_accouchement }}</td>
+            </tr>
+            <tr>
+                <td class="td1 tdTitre1">Grossesse suivi</td>
+                <td class="td1">{{ grossesse_suivi }}</td>
+            </tr>
+            <tr>
+                <td class="td1 tdTitre1">Terme de la grossesse</td>
+                <td class="td1">{{ terme_grossesse }}</td>
+            </tr>
+            <tr>
+                <td class="td1 tdTitre1">Précision du terme de la grossesse</td>
+                <td class="td1">{{ precisionTerme }}</td>
+            </tr>
+            <tr>
+                <td class="td1 tdTitre1">Accouchement par voie</td>
+                <td class="td1">{{ accouchement_par_voie }}</td>
+            </tr>
+            <tr>
+                <td class="td1 tdTitre1">Souffrance Néonatale</td>
+                <td class="td1">{{ souffrance_neonatal }}</td>
+            </tr>
+            <tr>
+                <td class="td1 tdTitre1">Poids de naissance (en Kg)</td>
+                <td class="td1">{{ poids_de_naissance }}</td>
+            </tr>
+            <tr>
+                <td class="td1 tdTitre1">Taille à la naissance (en cm)</td>
+                <td class="td1">{{ taille_de_naissance }}</td>
+            </tr>
+            <tr>
+                <td class="td1 tdTitre1">Hospitalisation à l'âge
+                    Néonatal
+                </td>
+                <td class="td1">{{ Notion_hospitalisation_age_neonatal }}</td>
+            </tr>
+            <tr>
+                <td class="td1 tdTitre1">Allaitement</td>
+                <td class="td1">{{ allaitement }}</td>
+            </tr>
+            <tr>
+                <td class="td1 tdTitre1">Diversification Alimentaire à l’âge de
+                    (en mois)
+                </td>
+                <td class="td1">{{ diversification_alimentaire }}</td>
+            </tr>
+            <tr>
+                <td class="td1 tdTitre1">Retentissement Staturo-Pondérale</td>
+                <td class="td1">{{ retentissement_staturo_ponderale }}</td>
+            </tr>
+        </table>
+        <br>
+        <!--Pathologies-->
+        <table class="table1">
+            <tr style="border: none;">
+                <td class="td1 grandTitre1">Dossier médical</td>
+            </tr>
+        </table>
+        <br>
+        <!--Developement Psychomoteur-->
+        <table class="table1">
+            <tr style="border: none;height: 20px;">
+                <td class="td1 grandTitre2">Développement psychomoteur
+                </td>
+            </tr>
+        </table>
+        <br>
+        <table class="table1">
+            <tr>
+                <td width="25%" class="td1 tdTitre1">Assis avec appui (en
+                    mois)
+                </td>
+                <td width="14%" class="td1">{{ assis_avec_appui }}</td>
+                <td width="4%" rowspan="3" style="border: none;"></td>
+                <td width="25%" class="td1 tdTitre1">Assis sans appui (en
+                    mois)
+                </td>
+                <td width="14%" class="td1">{{ assis_sans_appui }}</td>
+            </tr>
+            <tr>
+                <td class="td1 tdTitre1">Marche au serpent (en mois)</td>
+                <td class="td1">{{ marche_serpant }}</td>
+                <td class="td1 tdTitre1">Marche à 4 pattes (en mois)</td>
+                <td class="td1">{{ marche_4_pattes }}</td>
+            </tr>
+            <tr>
+                <td class="td1 tdTitre1">Debout avec appui (en mois)</td>
+                <td class="td1">{{ debout_avec_appui }}</td>
+                <td class="td1 tdTitre1">Debout sans appui (en mois)</td>
+                <td class="td1">{{ debout_sans_appui }}</td>
+            </tr>
+        </table>
+        <br>
+        <table class="table1">
+            <tr>
+                <td class="td1 tdTitre1" width="30%">Parole : Syllabe (en mois)</td>
+                <td class="td1">{{ parole_syllabe }}</td>
+                <td width="30%" style="border: none;"></td>
+            </tr>
+            <tr>
+                <td class="td1 tdTitre1" width="30%">Parole : Mots (en mois)</td>
+                <td class="td1">{{ parole_mots }}</td>
+                <td width="30%" style="border: none;"></td>
+            </tr>
+            <tr>
+                <td class="td1 tdTitre1" width="30%">Parole : Phrase (en mois)</td>
+                <td class="td1">{{ parole_phrase }}</td>
+                <td width="30%" style="border: none;"></td>
+            </tr>
+        </table>
+        <br>
+        <table class="table1">
+            <tr>
+                <td class="td1 tdTitre1" width="30%">Trouble de comportement</td>
+                <td class="td1">{{ trouble_de_comportement }}</td>
+                <td width="4%" rowspan="3" style="border: none;"></td>
+                <td class="td1 tdTitre1" width="30%">Trouble de concentration
+                </td>
+                <td class="td1">{{ trouble_de_concentration }}</td>
+            </tr>
+            <tr>
+                <td class="td1 tdTitre1" width="30%">Interaction avec entourage</td>
+                <td class="td1">{{ interaction_avec_entourage }}</td>
+                <td class="td1 tdTitre1" width="30%">Spectre autiste</td>
+                <td class="td1">{{ spectre_autisme }}</td>
+            </tr>
+            <tr>
+                <td class="td1 tdTitre1" width="30%">Potentiel évoqué auditif fait</td>
+                <td class="td1">{{ potentiel_evoque_auditif }}</td>
+                <td class="td1 tdTitre1" width="30%">Caryotype</td>
+                <td class="td1">{{ caryotype }}</td>
+            </tr>
+        </table>
+        <br>
+        <table class="table1">
+            <tr>
+                <td class="td1 tdTitre1" width="30%">Bilan thyroïdien fait</td>
+                <td class="td1">{{ bilan_thyroidien }}</td>
+                <td width="30%" style="border: none;"></td>
+            </tr>
+        </table>
+        <br>
+        <!--Pathologie cardiaque-->
+        <table class="table1">
+            <tr style="border: none;height: 20px;">
+                <td class="td1 grandTitre2">Pathologie cardiaque</td>
+            </tr>
+        </table>
+        <br>
+        <table class="table1">
+            <tr>
+                <td class="td1 tdTitre1" width="30%">Dernier echocoeur</td>
+                <td class="td1">{{ echo_coeur_fait }}</td>
+                <td width="30%" style="border: none;"></td>
+            </tr>
+            <tr>
+                <td class="td1 tdTitre1" width="30%">Précision de type d'echocoeur</td>
+                <td class="td1">{{ echo_coeur_type }}</td>
+                <td width="30%" style="border: none;"></td>
+            </tr>
+        </table>
+        <br>
+        <style>
+            .row {
+                display: flex;
+                margin-left: 10px;
+                margin-right: 10px;
+                width: 80%;
+            }
+
+            .column {
+                flex: 50%;
+            }
+
+            .column1 {
+                flex: 30%;
+            }
+
+            th, td {
+                text-align: center;
+                padding: 16px;
+                border: 1px solid black;
+            }
+        </style>
+        <table class="table1">
+            <tr>
+                <td class="td1 tdTitre1" width="30%">Opéré</td>
+                <td class="td1">{{ opere }}</td>
+                <td width="30%" style="border: none;"></td>
+            </tr>
+        </table>
+        <br>
+        <div class="row">
+            <div class="column">
+                <table style="border-collapse: collapse;border-spacing: 0; width: 100%;border: 1px solid #ddd;">
+                    <tr>
+                        <td class="td1 tdTitre1" width="20%">Date d'opération</td>
+                    </tr>
+                    {% for x in opere_dates %}
+                        <tr>
+                            <td>{{ x }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <div class="column">
+                <table style="border-collapse: collapse;border-spacing: 0; width: 100%;border: 1px solid #ddd;">
+                    <tr>
+                        <td class="td1 tdTitre1" width="20%">Type d'opération</td>
+                    </tr>
+                    {% for x in opere_types %}
+                        <tr>
+                            <td>{{ x }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <div class="column">
+                <table style="border-collapse: collapse;border-spacing: 0; width: 100%;border: 1px solid #ddd;">
+                    <tr>
+                        <td class="td1 tdTitre1" width="20%">Suivi d'opération</td>
+                    </tr>
+                    {% for x in opere_suivis %}
+                        <tr>
+                            <td>{{ x }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <div class="column">
+                <table style="border-collapse: collapse;border-spacing: 0; width: 100%;border: 1px solid #ddd;">
+                    <tr>
+                        <td class="td1 tdTitre1" width="20%">Date du suivi</td>
+                    </tr>
+                    {% for x in opere_suivi_dates %}
+                        {% if x == '' %}
+                            <tr>
+                                <td>_</td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td>{{ x }}</td>
+                            </tr>
+                        {% endif %}
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+        <br>
+        <table class="table1">
+            <tr style="border: none;height: 20px;">
+                <td class="td1 tdTitre1">Commentaire</td>
+                <td class="td1" width="65%" height="100px">{{ commentairePCardiaque }}</td>
+            </tr>
+        </table>
+        <br>
+        <!--Pathologie endocrinienne-->
+        <table class="table1">
+            <tr style="border: none;height: 20px;">
+                <td class="td1 grandTitre2">Pathologie endocrinienne</td>
+            </tr>
+        </table>
+        <br>
+        <table class="table1">
+            <tr>
+                <td class="td1 tdTitre1" width="40%">Pathologie endocrinienne
+                    thyroïdienne
+                </td>
+                <td class="td1">{{ pathologie_endocrinienne }}</td>
+                <td width="30%" style="border: none;"></td>
+            </tr>
+            <tr>
+                <td class="td1 tdTitre1" width="30%">Précision d'âge</td>
+                <td class="td1">{{ age_pathologie_endocrinienne }}</td>
+                <td width="30%" style="border: none;"></td>
+            </tr>
+        </table>
+        <br>
+        <table class="table1">
+            <tr>
+                <td class="td1 tdTitre1" width="30%">Diabète</td>
+                <td class="td1">{{ diabete }}</td>
+                <td width="30%" style="border: none;"></td>
+            </tr>
+            <tr>
+                <td class="td1 tdTitre1" width="30%">Précision d'âge</td>
+                <td class="td1">{{ age_diabete }}</td>
+                <td width="30%" style="border: none;"></td>
+            </tr>
+        </table>
+        <br>
+        <table class="table1">
+            <tr>
+                <td class="td1 tdTitre1" width="30%">Obésité</td>
+                <td class="td1">{{ obesite }}</td>
+                <td width="30%" style="border: none;"></td>
+            </tr>
+        </table>
+        <br>
+        <div class="row">
+            <div class="column1">
+                <table style="border-collapse: collapse;border-spacing: 0; width: 100%;border: 1px solid #ddd;">
+                    <tr>
+                        <td class="td1 tdTitre1" width="20%">Date</td>
+                    </tr>
+                    {% for x in obesite_dates %}
+                        <tr>
+                            <td>{{ x }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <div class="column1">
+                <table style="border-collapse: collapse;border-spacing: 0; width: 100%;border: 1px solid #ddd;">
+                    <tr>
+                        <td class="td1 tdTitre1" width="20%">Poids (en Kg)</td>
+                    </tr>
+                    {% for x in obesite_poids %}
+                        <tr>
+                            <td>{{ x }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <div class="column1">
+                <table style="border-collapse: collapse;border-spacing: 0; width: 100%;border: 1px solid #ddd;">
+                    <tr>
+                        <td class="td1 tdTitre1" width="20%">Taille (en cm)</td>
+                    </tr>
+                    {% for x in obesite_taille %}
+                        <tr>
+                            <td>{{ x }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <div class="column1">
+                <table style="border-collapse: collapse;border-spacing: 0; width: 100%;border: 1px solid #ddd;">
+                    <tr>
+                        <td class="td1 tdTitre1" width="20%">IMC</td>
+                    </tr>
+                    {% for x in imcs %}
+                        <tr>
+                            <td>{{ x }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+        <!--------------------------------Courbe presentation ------------------------------->
+        {% if sexe == 'Masculin' %}
+            <style>
+                svg {
+                    background-color: #e6f2ff;
+                }
+
+                path {
+                    fill: none;
+                    stroke: steelblue;
+                    stroke-width: 2px;
+                }
+
+                /* Style for the chart line */
+                .chart-line {
+                    fill: none;
+                    stroke: #007bff; /* blue color */
+                    stroke-width: 2px;
+                }
+
+                /* Style for the chart points */
+                .chart-point {
+                    fill: #007bff; /* blue color */
+                    stroke: #fff; /* white color */
+                    stroke-width: 2px;
+                }
+
+                /* Style for the X and Y axis */
+                .axis path,
+                .axis line {
+                    fill: none;
+                    stroke: #000;
+                    shape-rendering: crispEdges;
+                }
+
+                /* Style for the X and Y axis labels */
+                .axis text {
+                    font-family: Arial, sans-serif;
+                    font-size: 12px;
+                }
+
+                /* Style for the X and Y axes */
+                .axis path,
+                .axis line {
+                    fill: none;
+                    stroke: #000;
+                    shape-rendering: crispEdges;
+                }
+
+                /* Style for the X and Y axis ticks */
+                .axis text {
+                    font-family: Arial, sans-serif;
+                    font-size: 12px;
+                }
+
+                /* Style for the X and Y axis labels */
+                .axis-label {
+                    font-family: Arial, sans-serif;
+                    fill: #013064; /* Color of the axis label */
+                    font-size: 14px; /* Font size of the axis label */
+                    text-anchor: middle; /* Text alignment */
+                }
+
+
+                /* Style for the X axis arrow marker */
+                #x-axis-arrow-marker path {
+                    fill: none;
+                    stroke: #000;
+                }
+            </style>
+            <style>
+                .radio input {
+                    width: 15%;
+                    height: 30px;
+                    -webkit-appearance: none;
+                    -moz-appearance: none;
+                    appearance: none;
+                    outline: none;
+                    cursor: pointer;
+                    border-radius: 2px;
+                    padding: 4px 8px;
+                    background: #99ccff;
+                    color: #595959;
+                    font-size: 16px;
+                    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                    "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji",
+                    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+                    transition: all 100ms linear;
+                }
+
+                .radio input:checked {
+                    background-image: linear-gradient(180deg, #0059b3, #004d99);
+                    color: #fff;
+                }
+
+                .radio input:before {
+                    content: attr(label);
+                    display: inline-block;
+                    text-align: center;
+                    width: 100%;
+                }
+            </style>
+        {% elif sexe == "Féminin" %}
+            <style>
+                svg {
+                    background-color: #ffe6e6;
+                }
+
+                path {
+                    fill: none;
+                    stroke: #4d0026;
+                    stroke-width: 2px;
+                }
+
+                /* Style for the chart line */
+                .chart-line {
+                    fill: none;
+                    stroke: #ff1a8c; /* blue color */
+                    stroke-width: 2px;
+                }
+
+                /* Style for the chart points */
+                .chart-point {
+                    fill: #4d0026;
+                    stroke: #ffe6f3;
+                    stroke-width: 2px;
+                }
+
+                /* Style for the X and Y axis */
+                .axis path,
+                .axis line {
+                    fill: none;
+                    stroke: #000;
+                    shape-rendering: crispEdges;
+                }
+
+                /* Style for the X and Y axis labels */
+                .axis text {
+                    font-family: Arial, sans-serif;
+                    font-size: 12px;
+                }
+
+                /* Style for the X and Y axes */
+                .axis path,
+                .axis line {
+                    fill: none;
+                    stroke: #000;
+                    shape-rendering: crispEdges;
+                }
+
+                /* Style for the X and Y axis ticks */
+                .axis text {
+                    font-family: Arial, sans-serif;
+                    font-size: 12px;
+                }
+
+                /* Style for the X axis arrow marker */
+                #x-axis-arrow-marker path {
+                    fill: none;
+                    stroke: #000;
+                }
+            </style>
+            <style>
+                .radio input {
+                    width: 15%;
+                    height: 30px;
+                    -webkit-appearance: none;
+                    -moz-appearance: none;
+                    appearance: none;
+                    outline: none;
+                    cursor: pointer;
+                    border-radius: 2px;
+                    padding: 4px 8px;
+                    background: #ffcccc;
+                    color: #595959;
+                    font-size: 16px;
+                    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                    "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji",
+                    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+                    transition: all 100ms linear;
+                }
+
+                .radio input:checked {
+                    background-image: linear-gradient(180deg, #99004d, #800040);
+                    color: #fff;
+                }
+
+                .radio input:before {
+                    content: attr(label);
+                    display: inline-block;
+                    text-align: center;
+                    width: 100%;
+                }
+
+            </style>
+        {% else %}
+            <style>
+                svg {
+                    background-color: #f2ffe6;
+                }
+
+                path {
+                    fill: none;
+                    stroke: #336600;
+                    stroke-width: 2px;
+                }
+
+                /* Style for the chart line */
+                .chart-line {
+                    fill: none;
+                    stroke: #59b300; /* blue color */
+                    stroke-width: 2px;
+                }
+
+                /* Style for the chart points */
+                .chart-point {
+                    fill: #264d00; /* blue color */
+                    stroke: #fff; /* white color */
+                    stroke-width: 2px;
+                }
+
+                /* Style for the X and Y axis */
+                .axis path,
+                .axis line {
+                    fill: none;
+                    stroke: #000;
+                    shape-rendering: crispEdges;
+                }
+
+                /* Style for the X and Y axis labels */
+                .axis text {
+                    font-family: Arial, sans-serif;
+                    font-size: 12px;
+                }
+
+                /* Style for the X and Y axes */
+                .axis path,
+                .axis line {
+                    fill: none;
+                    stroke: #000;
+                    shape-rendering: crispEdges;
+                }
+
+                /* Style for the X and Y axis ticks */
+                .axis text {
+                    font-family: Arial, sans-serif;
+                    font-size: 12px;
+                }
+
+                /* Style for the X and Y axis labels */
+                .axis-label {
+                    font-family: Arial, sans-serif;
+                    fill: #013064; /* Color of the axis label */
+                    font-size: 14px; /* Font size of the axis label */
+                    text-anchor: middle; /* Text alignment */
+                }
+
+
+                /* Style for the X axis arrow marker */
+                #x-axis-arrow-marker path {
+                    fill: none;
+                    stroke: #000;
+                }
+            </style>
+            <style>
+                .radio input {
+                    width: 15%;
+                    height: 30px;
+                    -webkit-appearance: none;
+                    -moz-appearance: none;
+                    appearance: none;
+                    outline: none;
+                    cursor: pointer;
+                    border-radius: 2px;
+                    padding: 4px 8px;
+                    background: #bfff80;
+                    color: #595959;
+                    font-size: 16px;
+                    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                    "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji",
+                    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+                    transition: all 100ms linear;
+                }
+
+                .radio input:checked {
+                    background-image: linear-gradient(180deg, #66cc00, #4d9900);
+                    color: #fff;
+                }
+
+                .radio input:before {
+                    content: attr(label);
+                    display: inline-block;
+                    text-align: center;
+                    width: 100%;
+                }
+            </style>
+        {% endif %}
+        <br>
+        <div class="radio">
+            <input label="Poids" type="radio" id="poids" name="chart" checked>
+            <input label="Taille" type="radio" id="taille" name="chart">
+            <input label="IMC" type="radio" id="imc" name="chart">
+        </div>
+        <br>
+        <div id="chart-container"></div>
+        <script>
+            $(document).ready(function () {
+                $("input[name='chart']").on("change", function () {
+                    var selectedChart = $(this).attr("id");
+                    $("#chart-container").empty();
+                    if (selectedChart === "poids") {
+                        // Clear the existing chart
+                        $("#chart-container").empty();
+
+                        // Get the data from the template context
+                        const data = JSON.parse('{{ data_poids|safe }}');
+
+                        // Set the dimensions and margins of the chart
+                        const margin = {top: 20, right: 30, bottom: 50, left: 50};
+                        const width = 800 - margin.left - margin.right;
+                        const height = 400 - margin.top - margin.bottom;
+
+                        // Format the data
+                        data.forEach((d) => {
+                            d[0] = +d[0];
+                            d[1] = +d[1];
+                        });
+
+                        // Set the scales for X and Y axes
+                        const xScale = d3.scaleLinear()
+                            .domain(d3.extent(data, (d) => d[0]))
+                            .range([0, width]);
+
+                        const yScale = d3.scaleLinear()
+                            .domain([0, d3.max(data, (d) => d[1])])
+                            .range([height, 0]);
+
+                        // Create the chart SVG element
+                        const svg = d3.select("#chart-container")
+                            .append("svg")
+                            .attr("width", width + margin.left + margin.right)
+                            .attr("height", height + margin.top + margin.bottom)
+                            .append("g")
+                            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+                        // Define the line
+                        const line = d3.line()
+                            .x((d) => xScale(d[0]))
+                            .y((d) => yScale(d[1]));
+
+                        // Add the line path
+                        svg.append("path")
+                            .datum(data)
+                            .attr("class", "chart-line")
+                            .attr("d", line);
+
+                        // Add the X axis
+                        svg.append("g")
+                            .attr("transform", "translate(0," + height + ")")
+                            .call(d3.axisBottom(xScale));
+
+                        // Add X axis label
+                        svg.append("text")
+                            .attr("transform", "translate(" + (width / 2) + " ," + (height + margin.top + 20) + ")")
+                            .style("text-anchor", "middle")
+                            .text("Age (année)");
+
+                        // Add the Y axis
+                        svg.append("g")
+                            .call(d3.axisLeft(yScale));
+
+                        // Add Y axis label
+                        svg.append("text")
+                            .attr("transform", "rotate(-90)")
+                            .attr("y", 0 - margin.left)
+                            .attr("x", 0 - (height / 2))
+                            .attr("dy", "1em")
+                            .style("text-anchor", "middle")
+                            .text("Poids (Kg)");
+
+                        // Add points to the line
+                        svg.selectAll(".chart-point")
+                            .data(data)
+                            .enter()
+                            .append("circle")
+                            .attr("class", "chart-point")
+                            .attr("cx", (d) => xScale(d[0]))
+                            .attr("cy", (d) => yScale(d[1]))
+                            .attr("r", 4);
+                    } else if (selectedChart === "taille") {
+                        // Clear the existing chart
+                        $("#chart-container").empty();
+                        // Get the data from the template context
+                        const data = JSON.parse('{{ data_taille|safe }}');
+
+                        // Set the dimensions and margins of the chart
+                        const margin = {top: 20, right: 30, bottom: 50, left: 50};
+                        const width = 800 - margin.left - margin.right;
+                        const height = 400 - margin.top - margin.bottom;
+
+                        // Format the data
+                        data.forEach((d) => {
+                            d[0] = +d[0];
+                            d[1] = +d[1];
+                        });
+
+                        // Set the scales for X and Y axes
+                        const xScale = d3.scaleLinear()
+                            .domain(d3.extent(data, (d) => d[0]))
+                            .range([0, width]);
+
+                        const yScale = d3.scaleLinear()
+                            .domain([0, d3.max(data, (d) => d[1])])
+                            .range([height, 0]);
+
+                        // Create the chart SVG element
+                        const svg = d3.select("#chart-container")
+                            .append("svg")
+                            .attr("width", width + margin.left + margin.right)
+                            .attr("height", height + margin.top + margin.bottom)
+                            .append("g")
+                            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+                        // Define the line
+                        const line = d3.line()
+                            .x((d) => xScale(d[0]))
+                            .y((d) => yScale(d[1]));
+
+                        // Add the line path
+                        svg.append("path")
+                            .datum(data)
+                            .attr("class", "chart-line")
+                            .attr("d", line);
+
+                        // Add the X axis
+                        svg.append("g")
+                            .attr("transform", "translate(0," + height + ")")
+                            .call(d3.axisBottom(xScale));
+
+                        // Add X axis label
+                        svg.append("text")
+                            .attr("transform", "translate(" + (width / 2) + " ," + (height + margin.top + 20) + ")")
+                            .style("text-anchor", "middle")
+                            .text("Age (année)");
+
+                        // Add the Y axis
+                        svg.append("g")
+                            .call(d3.axisLeft(yScale));
+
+                        // Add Y axis label
+                        svg.append("text")
+                            .attr("transform", "rotate(-90)")
+                            .attr("y", 0 - margin.left)
+                            .attr("x", 0 - (height / 2))
+                            .attr("dy", "1em")
+                            .style("text-anchor", "middle")
+                            .text("Taille (cm)");
+
+                        // Add points to the line
+                        svg.selectAll(".chart-point")
+                            .data(data)
+                            .enter()
+                            .append("circle")
+                            .attr("class", "chart-point")
+                            .attr("cx", (d) => xScale(d[0]))
+                            .attr("cy", (d) => yScale(d[1]))
+                            .attr("r", 4);
+                    } else if (selectedChart === "imc") {
+                        // Clear the existing chart
+                        $("#chart-container").empty();
+                        // Get the data from the template context
+                        const data = JSON.parse('{{ data_imc|safe }}');
+
+                        // Set the dimensions and margins of the chart
+                        const margin = {top: 20, right: 30, bottom: 50, left: 50};
+                        const width = 800 - margin.left - margin.right;
+                        const height = 400 - margin.top - margin.bottom;
+
+                        // Format the data
+                        data.forEach((d) => {
+                            d[0] = +d[0];
+                            d[1] = +d[1];
+                        });
+
+                        // Set the scales for X and Y axes
+                        const xScale = d3.scaleLinear()
+                            .domain(d3.extent(data, (d) => d[0]))
+                            .range([0, width]);
+
+                        const yScale = d3.scaleLinear()
+                            .domain([0, d3.max(data, (d) => d[1])])
+                            .range([height, 0]);
+
+                        // Create the chart SVG element
+                        const svg = d3.select("#chart-container")
+                            .append("svg")
+                            .attr("width", width + margin.left + margin.right)
+                            .attr("height", height + margin.top + margin.bottom)
+                            .append("g")
+                            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+                        // Define the line
+                        const line = d3.line()
+                            .x((d) => xScale(d[0]))
+                            .y((d) => yScale(d[1]));
+
+                        // Add the line path
+                        svg.append("path")
+                            .datum(data)
+                            .attr("class", "chart-line")
+                            .attr("d", line);
+
+                        // Add the X axis
+                        svg.append("g")
+                            .attr("transform", "translate(0," + height + ")")
+                            .call(d3.axisBottom(xScale));
+
+                        // Add X axis label
+                        svg.append("text")
+                            .attr("transform", "translate(" + (width / 2) + " ," + (height + margin.top + 20) + ")")
+                            .style("text-anchor", "middle")
+                            .text("Age (année)");
+
+                        // Add the Y axis
+                        svg.append("g")
+                            .call(d3.axisLeft(yScale));
+
+                        // Add Y axis label
+                        svg.append("text")
+                            .attr("transform", "rotate(-90)")
+                            .attr("y", 0 - margin.left)
+                            .attr("x", 0 - (height / 2))
+                            .attr("dy", "1em")
+                            .style("text-anchor", "middle")
+                            .text("IMC (kg/cm²)");
+
+                        // Add points to the line
+                        svg.selectAll(".chart-point")
+                            .data(data)
+                            .enter()
+                            .append("circle")
+                            .attr("class", "chart-point")
+                            .attr("cx", (d) => xScale(d[0]))
+                            .attr("cy", (d) => yScale(d[1]))
+                            .attr("r", 4);
+                    } else {
+                        $("#chart-container").innerText("Une erreur c'est produite")
+                    }
+                });
+                var poidsRadioButton = $("#poids");
+                if (poidsRadioButton.is(":checked")) {
+                    // Clear the existing chart
+                    $("#chart-container").empty();
+
+                    // Get the data from the template context
+                    const data = JSON.parse('{{ data_poids|safe }}');
+
+                    // Set the dimensions and margins of the chart
+                    const margin = {top: 20, right: 30, bottom: 50, left: 50};
+                    const width = 800 - margin.left - margin.right;
+                    const height = 400 - margin.top - margin.bottom;
+
+                    // Format the data
+                    data.forEach((d) => {
+                        d[0] = +d[0];
+                        d[1] = +d[1];
+                    });
+
+                    // Set the scales for X and Y axes
+                    const xScale = d3.scaleLinear()
+                        .domain(d3.extent(data, (d) => d[0]))
+                        .range([0, width]);
+
+                    const yScale = d3.scaleLinear()
+                        .domain([0, d3.max(data, (d) => d[1])])
+                        .range([height, 0]);
+
+                    // Create the chart SVG element
+                    const svg = d3.select("#chart-container")
+                        .append("svg")
+                        .attr("width", width + margin.left + margin.right)
+                        .attr("height", height + margin.top + margin.bottom)
+                        .append("g")
+                        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+                    // Define the line
+                    const line = d3.line()
+                        .x((d) => xScale(d[0]))
+                        .y((d) => yScale(d[1]));
+
+                    // Add the line path
+                    svg.append("path")
+                        .datum(data)
+                        .attr("class", "chart-line")
+                        .attr("d", line);
+
+                    // Add the X axis
+                    svg.append("g")
+                        .attr("transform", "translate(0," + height + ")")
+                        .call(d3.axisBottom(xScale));
+
+                    // Add X axis label
+                    svg.append("text")
+                        .attr("transform", "translate(" + (width / 2) + " ," + (height + margin.top + 20) + ")")
+                        .style("text-anchor", "middle")
+                        .text("Age (année)");
+
+                    // Add the Y axis
+                    svg.append("g")
+                        .call(d3.axisLeft(yScale));
+
+                    // Add Y axis label
+                    svg.append("text")
+                        .attr("transform", "rotate(-90)")
+                        .attr("y", 0 - margin.left)
+                        .attr("x", 0 - (height / 2))
+                        .attr("dy", "1em")
+                        .style("text-anchor", "middle")
+                        .text("Poids (Kg)");
+
+                    // Add points to the line
+                    svg.selectAll(".chart-point")
+                        .data(data)
+                        .enter()
+                        .append("circle")
+                        .attr("class", "chart-point")
+                        .attr("cx", (d) => xScale(d[0]))
+                        .attr("cy", (d) => yScale(d[1]))
+                        .attr("r", 4);
+                }
+            });
+        </script>
+        <!--------------------------------Courbe presentation ------------------------------->
+        <br>
+        <!--Pathologie digestif-->
+        <table class="table1">
+            <tr style="border: none;height: 20px;">
+                <td class="td1 grandTitre2">Pathologie digestif</td>
+            </tr>
+        </table>
+        <br>
+        <table class="table2">
+            <tr>
+                <td class="td1 tdTitre1" width="43%">Reflux gastro-oesophagien
+                </td>
+                <td class="td1">{{ reflux_gastro_oesophagien }}</td>
+            </tr>
+            <tr>
+                <td class="td1 tdTitre1">Maladie coeliaque
+                </td>
+                <td class="td1">{{ maladie_coeliaque }}</td>
+            </tr>
+            <tr>
+                <td class="td1 tdTitre1">Age de la maladie coeliaque
+                </td>
+                <td class="td1">{{ agedebut_maladie_coalique }}</td>
+            </tr>
+            <tr>
+                <td class="td1 tdTitre1">Mucoviscidose
+                </td>
+                <td class="td1">{{ mucoviscidose }}</td>
+            </tr>
+        </table>
+        <br>
+        <!--Pathologie ophtalmologique-->
+        <table class="table1">
+            <tr style="border: none;height: 20px;">
+                <td class="td1 grandTitre2">Pathologie ophtalmologique
+                </td>
+            </tr>
+        </table>
+        <br>
+        <table class="table1">
+            <tr>
+                <td class="td1 tdTitre1">Pathologie ophtalmologique
+                </td>
+                <td class="td1" width="65%" height="100px">{{ pathologie_ophtalmologique }}</td>
+            </tr>
+        </table>
+        <br>
+        <!--Pathologie ORL-->
+        <table class="table1">
+            <tr style="border: none;height: 20px;">
+                <td class="td1 grandTitre2">Pathologie ORL</td>
+            </tr>
+        </table>
+        <br>
+        <table class="table1">
+            <tr>
+                <td class="td1 tdTitre1">Pathologie ORL
+                </td>
+                <td class="td1" width="65%" height="100px">{{ pathologie_orl }}</td>
+            </tr>
+        </table>
+        <br>
+        <!--Pathologie suivi dentaire-->
+        <table class="table1">
+            <tr style="border: none;height: 20px;">
+                <td class="td1 grandTitre2">Pathologie suivi dentaire
+                </td>
+            </tr>
+        </table>
+        <br>
+        <table class="table1">
+            <tr>
+                <td class="td1 tdTitre1">Pathologie suivi dentaire
+                </td>
+                <td class="td1" style="width:43%;">{{ pathologie_suivie_dentaire }}</td>
+            </tr>
+        </table>
+        <br>
+        <div class="row">
+            <div class="column">
+                <table style="border-collapse: collapse;border-spacing: 0; width: 100%;border: 1px solid #ddd;">
+                    <tr>
+                        <td class="td1 tdTitre1" width="20%">Dates des acts</td>
+                    </tr>
+                    {% for x in dates_acts %}
+                        <tr>
+                            <td>{{ x }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <div class="column">
+                <table style="border-collapse: collapse;border-spacing: 0; width: 100%;border: 1px solid #ddd;">
+                    <tr>
+                        <td class="td1 tdTitre1" width="20%">Dents G/D</td>
+                    </tr>
+                    {% for x in dent_GaucheDroits %}
+                        <tr>
+                            <td>{{ x }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <div class="column">
+                <table style="border-collapse: collapse;border-spacing: 0; width: 100%;border: 1px solid #ddd;">
+                    <tr>
+                        <td class="td1 tdTitre1" width="20%">Dents H/B</td>
+                    </tr>
+                    {% for x in dent_HautBass %}
+                        <tr>
+                            <td>{{ x }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <div class="column">
+                <table style="border-collapse: collapse;border-spacing: 0; width: 100%;border: 1px solid #ddd;">
+                    <tr>
+                        <td class="td1 tdTitre1" width="20%">Dents num</td>
+                    </tr>
+                    {% for x in dent_nums %}
+                        <tr>
+                            <td>{{ x }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            <div class="column">
+                <table style="border-collapse: collapse;border-spacing: 0; width: 100%;border: 1px solid #ddd;">
+                    <tr>
+                        <td class="td1 tdTitre1" width="20%">Codes des acts</td>
+                    </tr>
+                    {% for x in codes_acts %}
+                        <tr>
+                            <td>{{ x }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
+        <br>
+        <table class="table1">
+            <tr>
+                <td class="td1 tdTitre1">Commentaire
+                </td>
+                <td class="td1" width="65%" height="100px">{{ pathologie_suivie_dentaire_Commentaire }}</td>
+            </tr>
+        </table>
+        <br>
+        <!--Pathologie Osteoarticulaire-->
+        <table class="table1">
+            <tr style="border: none;height: 20px;">
+                <td class="td1 grandTitre2">Pathologie osteoarticulaire
+                </td>
+            </tr>
+        </table>
+        <br>
+        <table class="table1">
+            <tr>
+                <td class="td1 tdTitre1">Pathologie osteoarticulaire
+                </td>
+                <td class="td1" width="65%" height="100px">{{ pathologie_osteoarticulaire }}</td>
+            </tr>
+        </table>
+        <br>
+        <!--Pathologie neurologique-->
+        <table class="table1">
+            <tr style="border: none;height: 20px;">
+                <td class="td1 grandTitre2">Pathologie neurologique
+                </td>
+            </tr>
+        </table>
+        <br>
+        <table class="table1">
+            <tr>
+                <td class="td1 tdTitre1">Pathologie neurologique
+                </td>
+                <td class="td1" width="65%" height="100px">{{ pathologie_neurologique }}</td>
+            </tr>
+        </table>
+        <br>
+        <table class="table1">
+            <tr>
+                <td class="td1 tdTitre1">Epilepsie
+                </td>
+                <td class="td1" width="65%">{{ epilepsie }}</td>
+            </tr>
+        </table>
+        <br>
+        <table class="table1">
+            <tr>
+                <td class="td1 tdTitre1">Imagerie faite
+                </td>
+                <td class="td1" width="65%" height="100px">{{ imagerie_faite }}</td>
+            </tr>
+        </table>
+        <br>
+        <!--Autre Pathologie-->
+        <table class="table1">
+            <tr style="border: none;height: 20px;">
+                <td class="td1 grandTitre2">Autre Pathologie</td>
+            </tr>
+        </table>
+        <br>
+        <table class="table1">
+            <tr>
+                <td class="td1 tdTitre1">Autre Pathologie
+                </td>
+                <td class="td1" width="65%" height="100px">{{ autre_pathologie }}</td>
+            </tr>
+            <tr>
+                <td class="td1 tdTitre1">Traitement
+                </td>
+                <td class="td1" width="65%" height="100px">{{ traitement }}</td>
+            </tr>
+        </table>
+        <br>
+        <!--Hernies-->
+        <table class="table1">
+            <tr style="border: none;height: 20px;">
+                <td class="td1 grandTitre2">Hernies</td>
+            </tr>
+        </table>
+        <br>
+        <table class="table2">
+            <tr>
+                <td class="td1 tdTitre1">Hernies
+                </td>
+                <td class="td1" width="65%">{{ hernies }}</td>
+            </tr>
+            <tr>
+                <td class="td1 tdTitre1">Type d'hernies
+                </td>
+                <td class="td1" width="65%">{{ typeHernie_direction }}</td>
+            </tr>
+        </table>
+        <br>
+        <!------------------------------Suivi paraclinique----------------->
+        <table class="table1">
+            <tr style="border: none;">
+                <td class="td1 grandTitre1">Suivi médical
+                </td>
+            </tr>
+        </table>
+        <br>
+        <!--Suivi paraclinique : Psychomotricien-->
+        <table class="table1">
+            <tr style="border: none;height: 20px;">
+                <td class="td1 grandTitre2">Suivi médical :
+                    Psychomotricien
+                </td>
+            </tr>
+        </table>
+        <br>
+        <table class="table1">
+            <tr>
+                <td class="td1 tdTitre1" width="20%">Type</td>
+                <td class="td1 tdTitre1" width="20%">Âge de début</td>
+                <td class="td1 tdTitre1" width="20%">Fréquence en semaine</td>
+                <td class="td1 tdTitre1" width="40%">Commentaire</td>
+
+            </tr>
+            <tr>
+                <td class="td1">{{ Psychomotricien_type }}</td>
+                <td class="td1">{{ Psychomotricien_agedebut }}</td>
+                <td class="td1">{{ Psychomotricien_frequenceensemaine }}</td>
+                <td class="td1">{{ Psychomotricien_commentaire }}</td>
+            </tr>
+        </table>
+        <br>
+        <!--Suivi paraclinique : Kinésithérapie fonctionnelle-->
+        <table class="table1">
+            <tr style="border: none;height: 20px;">
+                <td class="td1 grandTitre2">Suivi médical :
+                    Kinésithérapie fonctionnelle
+                </td>
+            </tr>
+        </table>
+        <br>
+        <table class="table1">
+            <tr>
+                <td class="td1 tdTitre1" width="20%">Type</td>
+                <td class="td1 tdTitre1" width="20%">Âge de début</td>
+                <td class="td1 tdTitre1" width="20%">Fréquence en semaine</td>
+                <td class="td1 tdTitre1" width="40%">Commentaire</td>
+
+            </tr>
+            <tr>
+                <td class="td1">{{ Kinesitherapie_fonctionnelle_type }}</td>
+                <td class="td1">{{ Kinesitherapie_fonctionnelle_agedebut }}</td>
+                <td class="td1">{{ Kinesitherapie_fonctionnelle_frequenceensemaine }}</td>
+                <td class="td1">{{ Kinesitherapie_fonctionnelle_commentaire }}</td>
+            </tr>
+        </table>
+        <br>
+        <!--Suivi paraclinique : Psychologue-->
+        <table class="table1">
+            <tr style="border: none;height: 20px;">
+                <td class="td1 grandTitre2">Suivi médical :
+                    Psychologue
+                </td>
+            </tr>
+        </table>
+        <br>
+        <table class="table1">
+            <tr>
+                <td class="td1 tdTitre1" width="20%">Type</td>
+                <td class="td1 tdTitre1" width="20%">Âge de début</td>
+                <td class="td1 tdTitre1" width="20%">Fréquence en semaine</td>
+                <td class="td1 tdTitre1" width="40%">Commentaire</td>
+
+            </tr>
+            <tr>
+                <td class="td1">{{ Psychologue_type }}</td>
+                <td class="td1">{{ Psychologue_agedebut }}</td>
+                <td class="td1">{{ Psychologue_frequenceensemaine }}</td>
+                <td class="td1">{{ Psychologue_commentaire }}</td>
+            </tr>
+        </table>
+        <br>
+        <!--Suivi paraclinique : Orthophoniste-->
+        <table class="table1">
+            <tr style="border: none;height: 20px;">
+                <td class="td1 grandTitre2">Suivi médical :
+                    Orthophoniste
+                </td>
+            </tr>
+        </table>
+        <br>
+        <table class="table1">
+            <tr>
+                <td class="td1 tdTitre1" width="20%">Type</td>
+                <td class="td1 tdTitre1" width="20%">Âge de début</td>
+                <td class="td1 tdTitre1" width="20%">Fréquence en semaine</td>
+                <td class="td1 tdTitre1" width="40%">Commentaire</td>
+
+            </tr>
+            <tr>
+                <td class="td1">{{ Orthophoniste_type }}</td>
+                <td class="td1">{{ Orthophoniste_agedebut }}</td>
+                <td class="td1">{{ Orthophoniste_frequenceensemaine }}</td>
+                <td class="td1">{{ Orthophoniste_commentaire }}</td>
+            </tr>
+        </table>
+        <br>
+        <!--Suivi paraclinique : Orthoptiste-->
+        <table class="table1">
+            <tr style="border: none;height: 20px;">
+                <td class="td1 grandTitre2">Suivi médical :
+                    Orthoptiste
+                </td>
+            </tr>
+        </table>
+        <br>
+        <table class="table1">
+            <tr>
+                <td class="td1 tdTitre1" width="20%">Type</td>
+                <td class="td1 tdTitre1" width="20%">Âge de début</td>
+                <td class="td1 tdTitre1" width="20%">Fréquence en semaine</td>
+                <td class="td1 tdTitre1" width="40%">Commentaire</td>
+
+            </tr>
+            <tr>
+                <td class="td1">{{ Orthoptiste_type }}</td>
+                <td class="td1">{{ Orthoptiste_agedebut }}</td>
+                <td class="td1">{{ Orthoptiste_frequenceensemaine }}</td>
+                <td class="td1">{{ Orthoptiste_commentaire }}</td>
+            </tr>
+        </table>
+        <br>
+        <!------------------------------Scolarité et activités----------------->
+        <table class="table1">
+            <tr style="border: none;">
+                <td class="td1 grandTitre1">Scolarité et activités
+                </td>
+            </tr>
+        </table>
+        <br>
+        <table class="table2">
+            <tr>
+                <td class="td1 tdTitre1" width="30%">Scolarisé</td>
+                <td class="td1">{{ scolarise }}</td>
+            </tr>
+            <tr>
+                <td class="td1 tdTitre1" width="30%">Age de début (année)</td>
+                <td class="td1">{{ scolarise_age_de_début}}</td>
+            </tr>
+            <tr>
+                <td class="td1 tdTitre1" width="30%">Classe préparatoire</td>
+                <td class="td1">{{ scolarise_classe_préparatoire}}</td>
+            </tr>
+        </table>
+        <br>
+        <!------------------------------------------------------------------------------------------>
+        <style>
+            .row {
+                display: flex;
+                margin-left: -5px;
+                margin-right: -5px;
+            }
+
+            .column {
+                flex: 50%;
+            }
+
+            .column1 {
+                flex: 30%;
+            }
+
+            th, td {
+                text-align: left;
+                padding: 16px;
+                border: 1px solid black;
+            }
+        </style>
+        {% if scolarise_classe_primaire_choice == "on" %}
+            <div class="row">
+                <div class="column1">
+                    Classes primaires :
+                </div>
+                <div class="column">
+                    <table style="border-collapse: collapse;border-spacing: 0; width: 100%;border: 1px solid #ddd;">
+                        <tr>
+                            <td class="td1 tdTitre1" width="30%">Niveau</td>
+                        </tr>
+                        {% for x in classe_primaires %}
+                            <tr>
+                                <td>{{ x }}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+                <div class="column">
+                    <table style="border-collapse: collapse;border-spacing: 0; width: 100%;border: 1px solid #ddd;">
+                        <tr>
+                            <td class="td1 tdTitre1" width="30%">Année scolaire</td>
+                        </tr>
+                        {% for x in classe_primaire_years %}
+                            <tr>
+                                <td class="">{{ x }}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        {% endif %}
+        <!------------------------------------------------------------------------------------------>
+        <br>
+        {% if scolarise_classe_secondaires_choice == "on" %}
+            <div class="row">
+                <div class="column1">
+                    Classes secondaires :
+                </div>
+                <div class="column">
+                    <table style="border-collapse: collapse;border-spacing: 0; width: 100%;border: 1px solid #ddd;">
+                        <tr>
+                            <td class="td1 tdTitre1" width="30%">Niveau</td>
+                        </tr>
+                        {% for x in classe_secondaires %}
+                            <tr>
+                                <td class="">{{ x }}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+                <div class="column">
+                    <table style="border-collapse: collapse;border-spacing: 0; width: 100%;border: 1px solid #ddd;">
+                        <tr>
+                            <td class="td1 tdTitre1" width="30%">Année scolaire</td>
+                        </tr>
+                        {% for x in classe_secondaire_years %}
+                            <tr>
+                                <td>{{ x }}</td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+
+                </div>
+            </div>
+        {% endif %}
+        <!------------------------------------------------------------------------------------------>
+        <br>
+        {% if scolarise_bac_choice == "on" %}
+            <div class="row">
+                <div class="column1">
+                    BAC :
+                </div>
+                <div class="column">
+                    <table style="border-collapse: collapse;border-spacing: 0; width: 100%;border: 1px solid #ddd;">
+                        <tr>
+                            <td class="tdTitre1">Filiere</td>
+                        </tr>
+
+                        {% for x in bac_filieres %}
+                            <tr>
+                                <td class="">{{ x }}</td>
+                            </tr>
+                        {% endfor %}
+
+                    </table>
+                </div>
+                <div class="column">
+                    <table style="border-collapse: collapse;border-spacing: 0; width: 100%;border: 1px solid #ddd;">
+                        <tr>
+                            <td class="tdTitre1">Année scolaire</td>
+                        </tr>
+
+                        {% for x in bac_years %}
+                            <tr>
+                                <td class="">{{ x }}</td>
+                            </tr>
+                        {% endfor %}
+
+                    </table>
+
+                </div>
+
+            </div>
+        {% endif %}
+        <br>
+        <table class="table1">
+            <tr>
+                <td class="td1 tdTitre1" width="30%">Type d'activité</td>
+                <td class="td1 tdTitre1" width="30%">Description d'activité</td>
+            </tr>
+            {% if activite_sportive == "Oui" %}
+                {% for x in ASp %}
+                    <tr>
+                        <td class="td1 ">Activité sportive</td>
+                        <td class="td1">{{ x }}</td>
+                    </tr>
+                {% endfor %}
+            {% endif %}
+            {% if activite_artistique == "Oui" %}
+                {% for x in AAr %}
+                    <tr>
+                        <td class="td1">Activité artistique</td>
+                        <td class="td1">{{ x }}</td>
+                    </tr>
+                {% endfor %}
+            {% endif %}
+            {% if activite_prof == "Oui" %}
+                {% for x in APr %}
+                    <tr>
+                        <td class="td1">Activité professionnelle</td>
+                        <td class="td1">{{ x }}</td>
+                    </tr>
+                {% endfor %}
+            {% endif %}
+        </table>
+    </div>
+{% endblock %}

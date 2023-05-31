@@ -1,0 +1,558 @@
+{% extends 'Administrateur/base_admin.html' %}
+{% load static %}
+{% block title %}<title>Editer patient</title>{% endblock %}
+{% block sideBar %}
+    <ul>
+        <li class="menu-title"><span>Menu</span></li>
+        <li>
+            <a href="{% url 'index_admin' %}"><i data-feather="home"></i> <span>Dashboard</span></a>
+        </li>
+        <li>
+            <a href="#"><i data-feather="lock"></i> <span> Administrateurs </span></a>
+        </li>
+        <li class="active">
+            <a href="{% url 'gestion_patients' %}"><i data-feather="users"></i> <span>Patients</span></a>
+        </li>
+        <li class="submenu">
+            <a href="#"><i data-feather="clipboard"></i> <span> Spécialistes</span> <span
+                    class="menu-arrow"></span></a>
+            <ul>
+                <li><a href="">Pediatre</a></li>
+                <li><a href="">Dentiste</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="#"><i data-feather="mail"></i> <span>Messagerie</span></a>
+        </li>
+        <li>
+            <a href="{% url 'statistiques' %}"><i data-feather="pie-chart"></i> <span> Statistiques</span> </a>
+        </li>
+        <li class="menu-title">
+            <span>Media</span>
+        </li>
+        <li>
+            <a href="#"><i data-feather="video"></i> <span>Videos</span></a>
+        </li>
+        <li>
+            <a href="#"><i data-feather="image"></i> <span>Slides</span></a>
+        </li>
+        <li>
+            <a href="#"><i data-feather="bell"></i> <span>Actualités</span></a>
+        </li>
+        <li>
+            <a href="#"><i data-feather="file"></i> <span>Rapports</span></a>
+        </li>
+        <li class="menu-title">
+            <span>Réglages</span>
+        </li>
+        <li>
+            <a href="profile.html"><i data-feather="user-plus"></i> <span>Profile</span></a>
+        </li>
+        <li>
+            <a href="settings.html"><i data-feather="settings"></i> <span>Paramètres</span></a>
+        </li>
+    </ul>
+{% endblock %}
+{% block contenu %}
+    {% if error == True %}
+        <div class="row">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ errorMsg }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+    {% endif %}
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col">
+                <h3 class="page-title">Patients</h3>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'index_admin' %}">Tableau de bord</a>
+                    </li>
+                    <li class="breadcrumb-item active"><a href="{% url 'gestion_patients' %}">Patients</a></li></li>
+                    <li class="breadcrumb-item active">{{ patient_id }}</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Identité Patient</h4>
+                    <form action="{% url 'editer_patient' patient_id=patient_id %}" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Nom du patient</label>
+                                    <input type="text" value="{{ p.nomPatient }}" name="nompatient" class="form-control"
+                                           required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Date de naissance</label>
+                                    <input type="date" value="{{ dateNaissancePatient }}" name="dateNaissancePatient"
+                                           class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>N° de télèphone de la mère</label>
+                                    <input type="number" value="0{{ p.numTelephoneMere }}" name="telemaman"
+                                           class="form-control"
+                                           pattern="^0[5-6-7]\d{8}$" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Prenom du patient</label>
+                                    <input type="text" value="{{ p.prenomPatient }}" class="form-control"
+                                           name="prenompatient" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Sexe</label>
+                                    <select class="form-control select" name="sexepatient" required>
+                                        {% if p.sexePatient == 'Masculin' %}
+                                            <option disabled>Choisir...</option>
+                                            <option value="Masculin" selected>Masculin</option>
+                                            <option value="Féminin">Féminin</option>
+                                            <option value="Autre">Autre</option>
+                                        {% elif p.sexePatient == 'Féminin' %}
+                                            <option disabled>Choisir...</option>
+                                            <option value="Masculin">Masculin</option>
+                                            <option value="Féminin" selected>Féminin</option>
+                                            <option value="Autre">Autre</option>
+                                        {% elif p.sexePatient == 'Autre' %}
+                                            <option disabled>Choisir...</option>
+                                            <option value="Masculin">Masculin</option>
+                                            <option value="Féminin">Féminin</option>
+                                            <option value="Autre" selected>Autre</option>
+                                        {% else %}
+                                            <option selected disabled>Choisir...</option>
+                                            <option value="Masculin">Masculin</option>
+                                            <option value="Féminin">Féminin</option>
+                                            <option value="Autre">Autre</option>
+                                        {% endif %}
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>N° de télèphone du père </label>
+                                    <input type="number" value="0{{ p.numTelephonePere }}" name="telepapa"
+                                           class="form-control" pattern="^0[5-6-7]\d{8}$" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Email</label>
+                                    <input type="email" value="{{ p.mailPatient }}" name="mailpatient"
+                                           class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Adresse</label>
+                                    <input type="text" value="{{ p.adressePatient }}" name="adressepatient"
+                                           class="form-control" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Région</label>
+                                    <select id="delegation" class="form-control select" name="regionpatient" required>
+                                        <option selected disabled>Choisir...</option>
+                                        {% for d in delegations %}
+                                            {% if d == p.delegationPatient %}
+                                                <option value="{{ d }}" selected>{{ d }}</option>
+                                            {% else %}
+                                                <option value="{{ d }}">{{ d }}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="form-group">
+                                        <label>Ville</label>
+                                        <select id="ville" class="form-control select" name="villepatient" required>
+                                            {% for v in villes %}
+                                                {% if v == p.villePatient %}
+                                                    <option value="{{ v }}" selected>{{ v }}</option>
+                                                {% else %}
+                                                    <option value="{{ v }}">{{ v }}</option>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Couverture Médicale</label>
+                                    {% if p.couvertureMedical == 'Mutualiste' %}
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" name="mutualiste" id="mutualiste" checked>
+                                            <label class="form-check-label"
+                                                   for="flexSwitchCheckDefault">Mutualiste</label>
+                                        </div>
+                                    {% else %}
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" name="mutualiste" id="mutualiste">
+                                            <label class="form-check-label"
+                                                   for="flexSwitchCheckDefault">Mutualiste</label>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label >Mutuelle</label>
+                                    <select id="mutuele" class="form-control select" name="mutuelepatient" required>
+                                        <option value="" selected disabled>Choisir...</option>
+                                        {% for m in mutuelles %}
+                                            {% if m == p.nomCouvertureMedical %}
+                                                <option value="{{ m }}" selected>{{ m }}</option>
+                                            {% else %}
+                                                <option value="{{ m }}">{{ m }}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                        <option value="Autre">Autre</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Pediatre</label>
+                                <select id="pediatre" class="form-control select" name="pediatre" required>
+                                    <option value="" selected disabled>Choisir...</option>
+                                    {% for pe in pediatres %}
+                                        {% if p.inpe == pe %}
+                                            <option value="{{ pe.inpe }}"
+                                                    selected>{{ pe.inpe }}-{{ pe.nomPediatre }} {{ pe.prenomPediatre }}</option>
+                                        {% else %}
+                                            <option value="{{ pe.inpe }}">{{ pe.inpe }}-{{ pe.nomPediatre }} {{ pe.prenomPediatre }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="passwordpatient">Mot de passe</label>
+                                <div class="input-group">
+                                    <input type="password" value="{{ p.passwordPatient }}" id="passwordpatient"
+                                           name="passwordpatient"
+                                           class="form-control" min="8" required>
+                                    <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <script>
+                                const togglePassword = document.querySelector('#togglePassword');
+                                const password = document.querySelector('#passwordpatient');
+
+                                togglePassword.addEventListener('click', () => {
+                                    const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+                                    password.setAttribute('type', type);
+                                    togglePassword.querySelector('i').classList.toggle('fa-eye');
+                                    togglePassword.querySelector('i').classList.toggle('fa-eye-slash');
+                                });
+                            </script>
+                        </div>
+                        <br>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="form-group">
+                                    <label for="imgPatient">Image du patient</label>
+                                    <input type="file" class="form-control"
+                                           id="imgPatient" name="imgPatient"
+                                           accept="image/png, image/jpeg, image/jpg">
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <h4 class="card-title">Dossier Antécédent</h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Parents Consanguins </label>
+                                    <select id="parents_Consanguins" class="form-control select"
+                                            name="parents_Consanguins" required>
+                                        <option value="" selected disabled>Choisir...</option>
+                                        {% if infopatient.parents_Consanguins == 'Oui' %}
+                                            <option value="Oui" selected>Oui</option>
+                                        {% else %}
+                                            <option value="Oui">Oui</option>
+                                        {% endif %}
+                                        {% if parents_Consanguins == 'Non' %}
+                                            <option value="Non" selected>Non</option>
+                                        {% else %}
+                                            <option value="Non">Non</option>
+                                        {% endif %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Age maternel à l'accouchement (en année)</label>
+                                    <input type="number" value="{{ infopatient.age_maternel_accouchement }}"
+                                           name="age_maternel_accouchement" class="form-control" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Grossesse suivi</label>
+                                    <select id="grossesse_suivi" class="form-control select" name="grossesse_suivi"
+                                            required>
+                                        <option value="" selected disabled>Choisir...</option>
+                                        {% if infopatient.grossesse_suivi == 'Oui' %}
+                                            <option value="Oui" selected>Oui</option>
+                                        {% else %}
+                                            <option value="Oui">Oui</option>
+                                        {% endif %}
+                                        {% if grossesse_suivi == 'Non' %}
+                                            <option value="Non" selected>Non</option>
+                                        {% else %}
+                                            <option value="Non">Non</option>
+                                        {% endif %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Terme de la grossesse</label>
+                                    {% if infopatient.terme_grossesse == 'Prematuré' or  infopatient.terme_grossesse == 'Prématuré'%}
+                                        <select id="terme_grossesse" class="form-control select" name="terme_grossesse"
+                                                required>
+                                            <option value="" disabled>Choisir...</option>
+                                            <option value="A terme">A terme</option>
+                                            <option value="Prématuré" selected>Prématuré</option>
+                                        </select>
+                                    {% elif infopatient.terme_grossesse == 'A terme' %}
+                                        <select id="terme_grossesse" class="form-control select" name="terme_grossesse"
+                                                required>
+                                            <option value="" disabled>Choisir...</option>
+                                            <option value="A terme" selected>A terme</option>
+                                            <option value="Prématuré">Prématuré</option>
+                                        </select>
+                                    {% else %}
+                                        <select id="terme_grossesse" class="form-control select" name="terme_grossesse"
+                                                required>
+                                            <option value="" selected disabled>Choisir...</option>
+                                            <option value="A terme">A terme</option>
+                                            <option value="Prématuré">Prématuré</option>
+                                        </select>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                {% if infopatient.terme_grossesse == 'Prematuré' or  infopatient.terme_grossesse == 'Prématuré' %}
+                                    <label>Préciser le terme de la grossesse</label>
+                                    <input type="number" id="precisionTerme" value="{{ infopatient.precisionTerme }}"
+                                           class="form-control" min="6" max="9" name="precisionTerme">
+                                {% else %}
+                                    <label>Préciser le terme de la grossesse</label>
+                                    <input type="number" id="precisionTerme" class="form-control" min="6" max="9"
+                                           name="precisionTerme" disabled>
+                                {% endif %}
+                            </div>
+                            <script>
+                                document.addEventListener('DOMContentLoaded', function () {
+                                    var termeGrossesse = document.getElementById('terme_grossesse');
+                                    var precisionTermeInput = document.getElementById('precisionTerme');
+
+                                    termeGrossesse.addEventListener('change', function () {
+                                        var selectedValue = termeGrossesse.value;
+
+                                        if (selectedValue === 'Prematuré' || selectedValue === 'Prématuré') {
+                                            precisionTermeInput.disabled = false;
+                                        } else {
+                                            precisionTermeInput.disabled = true;
+                                            precisionTermeInput.required = true;
+                                        }
+                                    });
+                                });
+                            </script>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Accouchement par voie</label>
+                                        <select id="accouchement_par_voie" class="form-control select"
+                                                name="accouchement_par_voie" required>
+                                            <option value="" selected disabled>Choisir...</option>
+                                            {% if infopatient.accouchement_par_voie == 'Basse' %}
+                                                <option value="Basse" selected>Basse</option>
+                                            {% else %}
+                                                <option value="Basse">Basse</option>
+                                            {% endif %}
+                                            {% if infopatient.accouchement_par_voie == 'Césarienne' %}
+                                                <option value="Césarienne" selected>Césarienne</option>
+                                            {% else %}
+                                                <option value="Césarienne">Césarienne</option>
+                                            {% endif %}
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Poids de naissance (en Kg)</label>
+                                        <select name="poids_de_naissance" id="poids_de_naissance" class="form-control"
+                                                required>
+                                            <option value="" selected disabled>Choisir...</option>
+                                            {% for poid in POIDSNAISSANCE %}
+                                                {% if poid == infopatient.poids_de_naissance %}
+                                                    <option value="{{ poid }}" selected>{{ poid }}</option>
+                                                {% else %}
+                                                    <option value="{{ poid }}">{{ poid }}</option>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="NHA">Hospitalisation à l'âge Néonatal</label>
+                                        <select name="Notion_hospitalisation_age_neonatal" id="NHA" class="form-control"
+                                                required>
+                                            <option value="" selected disabled>Choisir...</option>
+                                            {% if infopatient.Notion_hospitalisation_age_neonatal == 'Oui' %}
+                                                <option value="Oui" selected>Oui</option>
+                                            {% else %}
+                                                <option value="Oui">Oui</option>
+                                            {% endif %}
+                                            {% if infopatient.Notion_hospitalisation_age_neonatal == 'Non' %}
+                                                <option value="Non" selected>Non</option>
+                                            {% else %}
+                                                <option value="Non">Non</option>
+                                            {% endif %}
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="DA">Diversification Alimentaire à l’âge de (en mois)</label>
+                                        <input type="NUMBER" value="{{ infopatient.diversification_alimentaire }}"
+                                               class="form-control" min="4" id="DA"
+                                               name="diversification_alimentaire" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Souffrance Néonatale</label>
+                                        <select name="souffrance_neonatal" id="souffrance_neonatal" class="form-control"
+                                                required>
+                                            <option value="" selected disabled>Choisir...</option>
+                                            {% if infopatient.souffrance_neonatal == 'Oui' %}
+                                                <option value="Oui" selected>Oui</option>
+                                            {% else %}
+                                                <option value="Oui">Oui</option>
+                                            {% endif %}
+                                            {% if infopatient.souffrance_neonatal == 'Non' %}
+                                                <option value="Non" selected>Non</option>
+                                            {% else %}
+                                                <option value="Non">Non</option>
+                                            {% endif %}
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Taille à la naissance (en cm)</label>
+                                        <input type="NUMBER" value="{{ infopatient.taille_de_naissance }}"
+                                               class="form-control" min="45" id="taille_de_naissance"
+                                               name="taille_de_naissance" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="All">Allaitement</label>
+                                        <select name="allaitement" id="All" class="form-control" required>
+                                            <option value="" selected disabled>Choisir...</option>
+                                            {% for a in ALLAITEMENT %}
+                                                {% if a == infopatient.allaitement %}
+                                                    <option value="{{ a }}" selected>{{ a }}</option>
+                                                {% else %}
+                                                    <option value="{{ a }}">{{ a }}</option>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="RSP">Retentissement Staturo-Pondérale</label>
+                                        <select name="retentissement_staturo_ponderale" id="RSP" class="form-control"
+                                                required>
+                                            <option value="" disabled selected>Choisir...</option>
+                                            {% for r in RETENTISSEMENT %}
+                                                {% if r == infopatient.retentissement_staturo_ponderale %}
+                                                    <option value="{{ r }}" selected>{{ r }}</option>
+                                                {% else %}
+                                                    <option value="{{ r }}">{{ r }}</option>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="text-end mt-4">
+                                <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+                            </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
+    <script src="{% static 'js/js/jquery.steps.js' %}"></script>
+    <script src="{% static 'js/js/main.js' %}"></script>
+    <script src="{% static 'js/js/jquery-3.3.1.min.js' %}"></script>
+    <script>
+        $(document).ready(function () {
+            $('#delegation').change(function () {
+                var selectedValue = $(this).val();
+                $.ajax({
+                    url: '/administrateur/delegationCities_ajax/',
+                    data: {'selectedValue': selectedValue},
+                    success: function (response) {
+                        $('#ville').empty();
+                        $('#ville').append('<option selected disabled>Choisir...</option>');
+                        $.each(response.cityNames, function (index, value) {
+                            $('#ville').append('<option value="' + value + '">' + value + '</option>');
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            // Initial state
+            toggleDropdown();
+
+            // Listen for changes in the checkbox state
+            $('#mutualiste').change(function () {
+                toggleDropdown();
+            });
+
+            function toggleDropdown() {
+                if ($('#mutualiste').is(':checked')) {
+                    // Enable the dropdown
+                    $('#mutuele').prop('disabled', false);
+                    $('#mutuele').prop('required', true);
+                } else {
+                    // Disable the dropdown
+                    $('#mutuele').prop('disabled', true);
+                    $('#mutuele').prop('required', false);
+                }
+            }
+        });
+    </script>
+    <script src="{% static 'js/Admin/bootstrap.bundle.min.js' %}"></script>
+
+    <script src="{% static 'js/Admin/feather.min.js' %}"></script>
+
+    <script src="{% static 'plugins/slimscroll/jquery.slimscroll.min.js' %}"></script>
+
+    <script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'plugins/datatables/datatables.min.js' %}"></script>
+
+    <script src="{% static 'js/Admin/script.js' %}"></script>
+{% endblock %}

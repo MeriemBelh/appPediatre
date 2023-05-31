@@ -1,0 +1,133 @@
+{% extends 'header_footer.html' %}
+{% load static %}
+{% block import %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"/>
+<link rel="stylesheet" href="{% static 'css/image.css' %}">
+<script defer src="{% static 'js/image.js' %}"></script>
+{% endblock %}
+{% block styleCss %}{% endblock %}
+{% block logo%}
+<a href="{% url 'homPage' %}" class="logo">
+    <img class="logo__img" src="{% static 'images/Patient/logo.jpeg' %}">
+</a>
+{% endblock logo%}
+
+{% block nav %}
+{% if user.is_authenticated %}
+<nav class="nav">
+    <ul class="nav__list">
+        <li class="nav__item">
+            <a class="btn" href="{% url 'homPage' %}">Accueil</a>
+        </li>
+        <li class="nav__item">
+            <a class="btn" id="focus">Media</a>
+        </li>
+        <li class="nav__item">
+            <a class="btn" href="{% url 'actualites' %}">Actualités</a>
+        </li>
+        <!-- Dossier -->
+        <li class="nav__item">
+            <a class="btn" href="{% url 'info_patient' %}">Consulter Dossier</a>
+        </li>
+        <li class="nav__item">
+            <div class="action">
+                <div class="profile" onclick="menuToggle();">
+                    {% if imgPatient %}
+                    <img src="{{imgPatient}}" alt="">
+                    {% else %}
+                    <img src="{% static 'images/Patient/user.jpg' %}" alt="">
+                    {% endif %}
+                </div>
+
+                <div class="menu">
+                    <h3>
+                        {{patient.nomPatient}} {{patient.prenomPatient}}
+                        <div>
+                            {{patient.mailPatient}}
+                        </div>
+                    </h3>
+                    <ul>
+                        <li>
+                            <a href="{% url 'profile' %}">modifier le compte</a>
+                        </li>
+                        <!--<li>
+                            <a href="#">Messagerie</a>
+                        </li>-->
+                        <li>
+                            <a href="{% url 'logout_patient' %}">Se deconnecter</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </li>
+    </ul>
+</nav>
+{% else %}
+<nav class="nav">
+    <ul class="nav__list">
+        <li class="nav__item">
+            <a class="btn" href="{% url 'homPage' %}">Accueil</a>
+        </li>
+        <li class="nav__item">
+            <a class="btn" id="focus">Media</a>
+        </li>
+        <li class="nav__item">
+            <a class="btn" href="{% url 'actualites' %}">Actualités</a>
+        </li>
+        <li class="nav__item">
+            <a class="btn" href="{% url 'about' %}">A propos de nous</a>
+        </li>
+        <li class="nav__item">
+            <a class="btn" href="{% url 'loginUsers' %}">login</a>
+        </li>
+    </ul>
+</nav>
+{% endif %}
+{% endblock nav%}
+
+{% block bare %}
+<div class="bottom-bar" style="background-color: var(--purple);height:40px;">
+    <div class="bottom-bar__content" style="min-height:40px;">
+        <nav class="nav">
+            <ul class="nav__list">
+                <li class="nav__item">
+                    <a class="btn" Style="background-color: var(--white);color:#1a1a1a">Images</a>
+                </li>
+                <li class="nav__item">
+                    <a class="btn" href="{% url 'video' %}" Style="background-color: var(--purple);color:#fff;
+                                         ">Videos</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+{% endblock %}
+{% block section%}{% endblock section%}
+{% block content %}
+<div class="wrapper">
+    <div class="gallery">
+        {% for x in img %}
+        <div class="image"><span><img src="{{x.image.url}}" alt=""></span></div>
+        {% endfor %}
+    </div>
+</div>
+</div>
+<div class="preview-box">
+    <div class="details">
+        <span class="title">Image <p class="current-img"></p> sur <p class="total-img"></p></span>
+        <span class="icon fas fa-times"></span>
+    </div>
+    <div class="image-box">
+        <div class="slide prev"><i class="fas fa-angle-left"></i></div>
+        <div class="slide next"><i class="fas fa-angle-right"></i></div>
+        <img src="" alt="">
+    </div>
+</div>
+<div class="shadow"></div>
+{% endblock %}
+
+{% block contact %}{% endblock %}
+{% block footer %}{% endblock %}
+
+</body>
+</html>

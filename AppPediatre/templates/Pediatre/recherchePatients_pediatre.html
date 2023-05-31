@@ -1,0 +1,111 @@
+{% extends 'Pediatre/sideBar_pediatre.html' %}
+{% load static %}
+{% block import %}
+<link rel="stylesheet" href="{% static 'css/Pediatre/recherchePatient.css' %}">
+{% endblock %}
+{% block nav%}
+<li class="nav-link">
+    <a href="{% url 'index_pediatre' %}">
+        <i class='bx bxs-user icon'></i>
+        <span class="text nav-text">Mes Patients</span>
+    </a>
+</li>
+<li class="nav-link">
+    <a href="{% url 'recherche_patient' %}" style="background-color:#194ca7;">
+        <i class='bx bxs-search-alt-2 icon' style="color:#f1f2f4;"></i>
+        <span class="text nav-text" style="color:#f1f2f4;">Rechercher</span>
+    </a>
+</li>
+<li class="nav-link">
+    <a href="{% url 'corbeille_patient' %}">
+        <i class='bx bxs-trash-alt icon'></i>
+        <span class="text nav-text">Corbeille</span>
+    </a>
+</li>
+<li class="nav-link">
+    <a href="{% url 'messagerie_pediatre' %}">
+        <i class='bx bxs-message icon'></i>
+        <span class="text nav-text">Messagerie</span>
+    </a>
+</li>
+{% endblock nav%}
+{% block title %}<title>Recherche Patient</title>{% endblock %}
+{% block content %}
+<span class="text">Rechercher Patients</span>
+<br><br>
+{% if errorValue == True %}
+<div class="alert alert-danger" role="alert">
+    {{error}}
+</div>
+{% endif %}
+<style>
+    .form-control {
+        color: #212529;
+        background-color: #fff;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+        width: 200px;
+        min-width: 100px;
+    }
+
+    .center {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+</style>
+<!--Barre de recherche-->
+<form action="{% url 'recherche_patient' %}" method="POST" class="">
+    <div class=" table center">
+        {% csrf_token %}
+        <input type="text" class="form-control" name="IdPatient_recherche" id="IdPatient_recherche"
+               placeholder="ID Patient">
+        <input type="text" class="form-control" name="nomPatient_recherche" id="nomPatient_recherche"
+               placeholder="Nom du patient">
+        <input type="text" class="form-control" name="prenomPatient_recherche" id="prenomPatient_recherche"
+               placeholder="Prenom du patient">
+        <input type="Date" class="form-control" id="dateNPatient_recherche" name="dateNPatient_recherche"
+               placeholder="Date de naissance">
+        <input type="text" class="form-control" id="regionPatient_recherche" name="regionPatient_recherche"
+               placeholder="Region du patient">
+        <button type="submit" class="btn btn-primary">
+            <i class='bx bx-search-alt-2'></i>
+        </button>
+    </div>
+</form>
+<br><br>
+<table class="table">
+    <thead>
+    <tr class="headTable">
+        <th>NOM COMPLET</th>
+        <th>IDPATIENT</th>
+        <th>D.NAISSANCE</th>
+        <th>ADRESSE</th>
+        <th>EMAIL</th>
+        <th>ACTIONS</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for patient in patients %}
+    <tr style="background-color: white;">
+        <td style="border-top-left-radius: 8px;font-weight: bold;">{{patient.nomPatient}} {{patient.prenomPatient}}</td>
+        <td>{{patient.idPatient}}</td>
+        <td>{{patient.dateNaissancePatient}}</td>
+        <td>{{patient.delegationPatient}}, {{patient.villePatient}}, {{patient.adressePatient}}</td>
+        <td>{{patient.mailPatient}}</td>
+        <td style="border-top-right-radius: 8px;width: 10%;">
+            <a href="{% url 'imprimer_dossier_patient_pdf' patient_id=patient.idPatient %}"><i
+                    class='bx bxs-printer iconPrint' style="color: #056705;"></i></a>
+            <a href="{% url 'afficher_infos_patient' patient_id=patient.idPatient %}"><i
+                    class='bx bxs-spreadsheet iconPrint' style="color: #3cb7f1;"></i></a>
+            <a href="{% url 'add_patient_corbeille' patient_id=patient.idPatient %}"><i class='bx bxs-trash iconPrint'
+                                                                                        style="color: #f80018;"></i></a>
+            <a href="{% url 'modifier_patient' patient_id=patient.idPatient %}"><i class='bx bxs-edit-alt iconPrint'
+                                                                                   style="color: #decb00;"></i></a>
+        </td>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
+</body>
+</html>

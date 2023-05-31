@@ -1,0 +1,566 @@
+{% extends 'Administrateur/base_admin.html' %}
+{% load static %}
+{% block title %}<title>Ajouter patient</title>{% endblock %}
+{% block sideBar %}
+    <ul>
+        <li class="menu-title"><span>Menu</span></li>
+        <li>
+            <a href="{% url 'index_admin' %}"><i data-feather="home"></i> <span>Dashboard</span></a>
+        </li>
+        <li>
+            <a href="#"><i data-feather="lock"></i> <span> Administrateurs </span></a>
+        </li>
+        <li class="active">
+            <a href="{% url 'gestion_patients' %}"><i data-feather="users"></i> <span>Patients</span></a>
+        </li>
+        <li class="submenu">
+            <a href="#"><i data-feather="clipboard"></i> <span> Spécialistes</span> <span
+                    class="menu-arrow"></span></a>
+            <ul>
+                <li><a href="">Pediatre</a></li>
+                <li><a href="">Dentiste</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="#"><i data-feather="mail"></i> <span>Messagerie</span></a>
+        </li>
+        <li>
+            <a href="{% url 'statistiques' %}"><i data-feather="pie-chart"></i> <span> Statistiques</span> </a>
+        </li>
+        <li class="menu-title">
+            <span>Media</span>
+        </li>
+        <li>
+            <a href="#"><i data-feather="video"></i> <span>Videos</span></a>
+        </li>
+        <li>
+            <a href="#"><i data-feather="image"></i> <span>Slides</span></a>
+        </li>
+        <li>
+            <a href="#"><i data-feather="bell"></i> <span>Actualités</span></a>
+        </li>
+        <li>
+            <a href="#"><i data-feather="file"></i> <span>Rapports</span></a>
+        </li>
+        <li class="menu-title">
+            <span>Réglages</span>
+        </li>
+        <li>
+            <a href="profile.html"><i data-feather="user-plus"></i> <span>Profile</span></a>
+        </li>
+        <li>
+            <a href="settings.html"><i data-feather="settings"></i> <span>Paramètres</span></a>
+        </li>
+    </ul>
+{% endblock %}
+{% block contenu %}
+    {% if error == True %}
+        <div class="row">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ errorMsg }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+    {% endif %}
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col">
+                <h3 class="page-title">Ajouter nouveau patient</h3>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'index_admin' %}">Tableau de bord</a>
+                    </li>
+                    <li class="breadcrumb-item active"><a href="{% url 'gestion_patients' %}">Patients</a></li></li>
+                    <li class="breadcrumb-item active">Ajouter patient</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Identité Patient</h4>
+                    <form action="{% url 'ajouter_patient_admin' %}" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Nom du patient</label>
+                                    <input type="text" name="nompatient" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Date de naissance</label>
+                                    <input type="date" name="dateNaissancePatient" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>N° de télèphone de la mère</label>
+                                    <input type="number" name="telemaman" class="form-control"
+                                           pattern="^0[5-6-7]\d{8}$" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Prenom du patient</label>
+                                    <input type="text" class="form-control" name="prenompatient" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Sexe</label>
+                                    <select class="form-control select" name="sexepatient" required>
+                                        <option value="" selected disabled>Choisir...</option>
+                                        <option value="Masculin">Masculin</option>
+                                        <option value="Féminin">Féminin</option>
+                                        <option value="Autre">Autre</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>N° de télèphone du père </label>
+                                    <input type="number" name="telepapa" class="form-control" pattern="^0[5-6-7]\d{8}$" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Email</label>
+                                    <input type="email" name="mailpatient" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Adresse</label>
+                                    <input type="text" name="adressepatient" class="form-control" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Région</label>
+                                    <select id="delegation" class="form-control select" name="regionpatient" required>
+                                        <option selected disabled>Choisir...</option>
+                                        {% for d in delegations %}
+                                            <option value="{{ d }}">{{ d }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <div class="form-group">
+                                        <label>Ville</label>
+                                        <select id="ville" class="form-control select" name="villepatient" required>
+                                            <option selected disabled>Choisir...</option>
+                                            <optgroup label="Tanger - Tétouan - Al Hoceima">
+                                                <option value="Tanger">Tanger</option>
+                                                <option value="Tétouan">Tétouan</option>
+                                                <option value="Al Hoceima">Al Hoceima</option>
+                                                <option value="Chefchaouen">Chefchaouen</option>
+                                                <option value="Fnideq">Fnideq</option>
+                                                <option value="Mdiq">Mdiq</option>
+                                                <option value="Assilah">Assilah</option>
+                                                <option value="Larache">Larache</option>
+                                                <option value="Ksar el Kébir">Ksar el Kébir</option>
+                                                <option value="Ouezzane">Ouezzane</option>
+                                            </optgroup>
+                                            <optgroup label="L'Oriental">
+                                                <option value="Oujda">Oujda</option>
+                                                <option value="Nador">Nador</option>
+                                                <option value="Driouch">Driouch</option>
+                                                <option value="Berkane">Berkane</option>
+                                                <option value="Taourirt">Taourirt</option>
+                                                <option value="Guercif">Guercif</option>
+                                                <option value="Jerada">Jerada</option>
+                                            </optgroup>
+                                            <optgroup label="Fès - Meknès">
+                                                <option value="Fès">Fès</option>
+                                                <option value="Meknès">Meknès</option>
+                                                <option value="Ifrane">Ifrane</option>
+                                                <option value="Taounate">Taounate</option>
+                                                <option value="Moulay Yacoub">Moulay Yacoub</option>
+                                                <option value="Taza">Taza</option>
+                                                <option value="Sefrou">Sefrou</option>
+                                                <option value="Boulmane">Boulmane</option>
+                                                <option value="El Hajeb">El Hajeb</option>
+                                            </optgroup>
+                                            <optgroup label="Rabat - Salé - Kénitra">
+                                                <option value="Rabat">Rabat</option>
+                                                <option value="Salé">Salé</option>
+                                                <option value="Kénitra">Kénitra</option>
+                                                <option value="Moulay Bousselham">Moulay Bousselham</option>
+                                                <option value="Temara">Temara</option>
+                                                <option value="Sidi Slimane">Sidi Slimane</option>
+                                                <option value="Sidi Kacem">Sidi Kacem</option>
+                                                <option value="Tiflet">Tiflet</option>
+                                                <option value="Khemisset">Khemisset</option>
+                                                <option value="Rommani">Rommani</option>
+                                                <option value="Oulmes">Oulmes</option>
+                                                <option value="Ezzhiliga">Ezzhiliga</option>
+                                            </optgroup>
+                                            <optgroup label="Casablanca - Settat">
+                                                <option value="Casablanca">Casablanca</option>
+                                                <option value="Settat">Settat</option>
+                                                <option value="El Jadida">El Jadida</option>
+                                                <option value="Mohammedia">Mohammedia</option>
+                                                <option value="Berrechid">Berrechid</option>
+                                                <option value="Benslimane">Benslimane</option>
+                                                <option value="Mediouna">Mediouna</option>
+                                                <option value="Sidi Bennour">Sidi Bennour</option>
+                                                <option value="Sidi Rahal Chatai">Sidi Rahal Chatai</option>
+                                                <option value="Tit Mellil">Tit Mellil</option>
+                                                <option value="Médiouna">Médiouna</option>
+                                                <option value="Oulad Haddou">Oulad Haddou</option>
+                                                <option value="Ain Harrouda">Ain Harrouda</option>
+                                                <option value="Dar Bouazza">Dar Bouazza</option>
+                                                <option value="Loulad">Loulad</option>
+                                                <option value="Sidi Maarouf">Sidi Maarouf</option>
+                                                <option value="Nouaceur">Nouaceur</option>
+                                                <option value="Ben Ahmed">Ben Ahmed</option>
+                                                <option value="Ben Yakhlef">Ben Yakhlef</option>
+                                                <option value="Bouskoura">Bouskoura</option>
+                                            </optgroup>
+                                            <optgroup label="Marrakech - Safi">
+                                                <option value="Marrakech">Marrakech</option>
+                                                <option value="Safi">Safi</option>
+                                                <option value="Essaouira">Essaouira</option>
+                                                <option value="Al Haouz">Al Haouz</option>
+                                                <option value="Chichaoua">Chichaoua</option>
+                                                <option value="El Kelaa des Sraghna">El Kelaa des Sraghna</option>
+                                                <option value="Youssoufia">Youssoufia</option>
+                                                <option value="Kelaat Sraghna">Kelaat Sraghna</option>
+                                                <option value="Sidi Youssef Ben Ali">Sidi Youssef Ben Ali</option>
+                                                <option value="Rehamna">Rehamna</option>
+                                                <option value="Ben Guerir">Ben Guerir</option>
+                                                <option value="Essaouira-Mogador">Essaouira-Mogador</option>
+                                            </optgroup>
+                                            <optgroup label="Beni Mellal - Khénifra">
+                                                <option value="Beni Mellal">Beni Mellal</option>
+                                                <option value="Kasba Tadla">Kasba Tadla</option>
+                                                <option value="Khouribga">Khouribga</option>
+                                                <option value="Fqih Ben Salah">Fqih Ben Salah</option>
+                                                <option value="Azilal">Azilal</option>
+                                                <option value="Béni Ayat">Béni Ayat</option>
+                                                <option value="Boumalne Dades">Boumalne Dades</option>
+                                                <option value="Demnate">Demnate</option>
+                                                <option value="Kelaat M'gouna">Kelaat M'gouna</option>
+                                                <option value="Ouaouizeght">Ouaouizeght</option>
+                                                <option value="Tadla-Azilal">Tadla-Azilal</option>
+                                                <option value="Taliouine">Taliouine</option>
+                                                <option value="Khénifra">Khénifra</option>
+                                                <option value="Aguelmous">Aguelmous</option>
+                                                <option value="Azrou">Azrou</option>
+                                                <option value="Khenifra Province">Khenifra Province</option>
+                                                <option value="Midelt">Midelt</option>
+                                                <option value="Mrirt">Mrirt</option>
+                                                <option value="Tighassaline">Tighassaline</option>
+                                                <option value="Tounfite">Tounfite</option>
+                                            </optgroup>
+                                            <optgroup label="Drâa - Tafilalet">
+                                                <option value="Errachidia">Errachidia</option>
+                                                <option value="Midelt">Midelt</option>
+                                                <option value="Tinghir">Tinghir</option>
+                                                <option value="Tinejdad">Tinejdad</option>
+                                                <option value="Boudnib">Boudnib</option>
+                                                <option value="Goulmima">Goulmima</option>
+                                                <option value="Erfoud">Erfoud</option>
+                                                <option value="Merzouga">Merzouga</option>
+                                                <option value="Rissani">Rissani</option>
+                                                <option value="Alnif">Alnif</option>
+                                                <option value="Arfoud">Arfoud</option>
+                                            </optgroup>
+                                            <optgroup label="Souss - Massa">
+                                                <option value="Agadir">Agadir</option>
+                                                <option value="Ait Melloul">Ait Melloul</option>
+                                                <option value="Inezgane">Inezgane</option>
+                                                <option value="Taroudant">Taroudant</option>
+                                                <option value="Oulad Teima">Oulad Teima</option>
+                                                <option value="Tiznit">Tiznit</option>
+                                                <option value="Chtouka Ait Baha">Chtouka Ait Baha</option>
+                                                <option value="Tata">Tata</option>
+                                                <option value="Guelmim">Guelmim</option>
+                                                <option value="Tan-Tan">Tan-Tan</option>
+                                                <option value="Assa-Zag">Assa-Zag</option>
+                                                <option value="Tarfaya">Tarfaya</option>
+                                            </optgroup>
+                                            <optgroup label="Guelmim - Oued Noun">
+                                                <option value="Guelmim">Guelmim</option>
+                                                <option value="Tan-Tan">Tan-Tan</option>
+                                                <option value="Assa-Zag">Assa-Zag</option>
+                                                <option value="Sidi Ifni">Sidi Ifni</option>
+                                                <option value="Tata">Tata</option>
+                                                <option value="Smara">Smara</option>
+                                                <option value="Akhfenir">Akhfenir</option>
+                                                <option value="Lakhssas">Lakhssas</option>
+                                                <option value="Oum El Guerdane">Oum El Guerdane</option>
+                                            </optgroup>
+                                            <optgroup label="Laâyoune - Saguia al Hamra">
+                                                <option value="Laâyoune">Laâyoune</option>
+                                                <option value="Boujdour">Boujdour</option>
+                                                <option value="Tarfaya">Tarfaya</option>
+                                                <option value="Es-Semara">Es-Semara</option>
+                                                <option value="Aousserd">Aousserd</option>
+                                                <option value="Oum Dreyga">Oum Dreyga</option>
+                                            </optgroup>
+                                            <optgroup label="Dakhla - Oued Ed-Dahab">
+                                                <option value="Aousserd">Aousserd</option>
+                                                <option value="Bir Gandouz">Bir Gandouz</option>
+                                                <option value="Dakhla">Dakhla</option>
+                                                <option value="Oued Ed-Dahab">Oued Ed-Dahab</option>
+                                                <option value="El Argoub">El Argoub</option>
+                                                <option value="Mijek">Mijek</option>
+                                                <option value="Tichla">Tichla</option>
+                                                <option value="Boujdour">Boujdour</option>
+                                            </optgroup>
+                                            <option value="Autre">Autre</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Couverture Médicale</label>
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" name="mutualiste" id="mutualiste">
+                                        <label class="form-check-label" for="flexSwitchCheckDefault">Mutualiste</label>
+                                    </div>
+                                    <!--
+                                    <div class="form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" id="mutualiste"
+                                               checked>
+                                        <label class="form-check-label" for="flexSwitchCheckChecked">Mutualiste</label>
+                                    </div>
+                                    -->
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="imgPatient">Mutuelle</label>
+                                    <select id="mutuele" class="form-control select" name="mutuelepatient" required>
+                                        <option value="" selected disabled>Choisir...</option>
+                                        {% for m in mutuelles %}
+                                            <option value="{{ m }}">{{ m }}</option>
+                                        {% endfor %}
+                                        <option value="Autre">Autre</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Pediatre</label>
+                                <select id="pediatre" class="form-control select" name="pediatre" required>
+                                    <option value="" selected disabled>Choisir...</option>
+                                    {% for p in pediatres %}
+                                        <option value="{{ p.inpe }}">{{ p.inpe }}-{{ p.nomPediatre }} {{ p.prenomPediatre }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="imgPatient">Image du patient</label>
+                                    <input type="file" class="form-control"
+                                           id="imgPatient" name="imgPatient"
+                                           accept="image/png, image/jpeg, image/jpg">
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <h4 class="card-title">Dossier Antécédent</h4>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Parents Consanguins </label>
+                                    <select id="parents_Consanguins" class="form-control select"
+                                            name="parents_Consanguins" required>
+                                        <option value="" selected disabled>Choisir...</option>
+                                        <option value="Oui">Oui</option>
+                                        <option value="Non">Non</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Age maternel à l'accouchement (en année)</label>
+                                    <input type="number" name="age_maternel_accouchement" class="form-control" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Grossesse suivi</label>
+                                    <select id="grossesse_suivi" class="form-control select" name="grossesse_suivi" required>
+                                        <option value="" selected disabled>Choisir...</option>
+                                        <option value="Oui">Oui</option>
+                                        <option value="Non">Non</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>Terme de la grossesse</label>
+                                    <select id="terme_grossesse" class="form-control select" name="terme_grossesse" required>
+                                        <option value="" selected disabled>Choisir...</option>
+                                        <option value="A terme">A terme</option>
+                                        <option value="Prématuré">Prématuré</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label>Préciser le terme de la grossesse</label>
+                                <input type="number" id="precisionTerme" class="form-control" min="6" max="9"
+                                       name="precisionTerme" disabled>
+                            </div>
+                            <script>
+                                var termeGrossesse = document.getElementById('terme_grossesse');
+                                var precisionTermeInput = document.getElementById('precisionTerme');
+
+                                termeGrossesse.addEventListener('change', function () {
+                                    var selectedValue = termeGrossesse.value;
+
+                                    if (selectedValue === 'Prématuré') {
+                                        precisionTermeInput.disabled = false;
+                                    } else {
+                                        precisionTermeInput.disabled = true;
+                                        precisionTermeInput.required = true;
+                                    }
+                                });
+                            </script>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Accouchement par voie</label>
+                                    <select id="accouchement_par_voie" class="form-control select"
+                                            name="accouchement_par_voie" required>
+                                        <option value="" selected disabled>Choisir...</option>
+                                        <option value="Basse">Basse</option>
+                                        <option value="Césarienne">Césarienne</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Poids de naissance (en Kg)</label>
+                                    <select name="poids_de_naissance" id="poids_de_naissance" class="form-control"
+                                            required>
+                                        <option value="" selected disabled>Choisir...</option>
+                                        <option value="< 2Kg">< 2Kg</option>
+                                        <option value="2--2,5Kg"> 2--2,5Kg</option>
+                                        <option value="2,5--4Kg"> 2,5--4Kg</option>
+                                        <option value="> 4Kg"> > 4Kg</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="NHA">Hospitalisation à l'âge Néonatal *</label>
+                                    <select name="Notion_hospitalisation_age_neonatal" id="NHA" class="form-control"
+                                            required>
+                                        <option value="" selected disabled>Choisir...</option>
+                                        <option value="Oui">Oui</option>
+                                        <option value="Non">Non</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="DA">Diversification Alimentaire à l’âge de (en mois) *</label>
+                                    <input type="NUMBER" class="form-control" min="4" id="DA"
+                                           name="diversification_alimentaire" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Souffrance Néonatale</label>
+                                    <select name="souffrance_neonatal" id="souffrance_neonatal" class="form-control"
+                                            required>
+                                        <option value="" selected disabled>Choisir...</option>
+                                        <option value="Oui">Oui</option>
+                                        <option value="Non">Non</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Taille à la naissance (en cm)</label>
+                                    <input type="NUMBER" class="form-control" min="45" id="taille_de_naissance"
+                                           name="taille_de_naissance" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="All">Allaitement *</label>
+                                    <select name="allaitement" id="All" class="form-control" required>
+                                        <option value="" selected disabled>Choisir...</option>
+                                        <option value="Maternel">Maternel</option>
+                                        <option value="Mixte">Mixte</option>
+                                        <option value="Artificiel">Artificiel</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="RSP">Retentissement Staturo-Pondérale *</label>
+                                    <select name="retentissement_staturo_ponderale" id="RSP" class="form-control"
+                                            required>
+                                        <option value="" disabled selected>Choisir...</option>
+                                        <option value="Retard">Retard</option>
+                                        <option value="Stagnation">Stagnation</option>
+                                        <option value="Bon">Bon</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-end mt-4">
+                            <button type="submit" class="btn btn-primary">Enregistrer</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
+    <script src="{% static 'js/js/jquery.steps.js' %}"></script>
+    <script src="{% static 'js/js/main.js' %}"></script>
+    <script src="{% static 'js/js/jquery-3.3.1.min.js' %}"></script>
+    <script>
+        $(document).ready(function () {
+            $('#delegation').change(function () {
+                var selectedValue = $(this).val();
+                $.ajax({
+                    url: '/administrateur/delegationCities_ajax/',
+                    data: {'selectedValue': selectedValue},
+                    success: function (response) {
+                        $('#ville').empty();
+                        $('#ville').append('<option selected disabled>Choisir...</option>');
+                        $.each(response.cityNames, function (index, value) {
+                            $('#ville').append('<option value="' + value + '">' + value + '</option>');
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            // Initial state
+            toggleDropdown();
+
+            // Listen for changes in the checkbox state
+            $('#mutualiste').change(function () {
+                toggleDropdown();
+            });
+
+            function toggleDropdown() {
+                if ($('#mutualiste').is(':checked')) {
+                    // Enable the dropdown
+                    $('#mutuele').prop('disabled', false);
+                } else {
+                    // Disable the dropdown
+                    $('#mutuele').prop('disabled', true);
+                }
+            }
+        });
+    </script>
+    <script src="{% static 'js/Admin/bootstrap.bundle.min.js' %}"></script>
+
+    <script src="{% static 'js/Admin/feather.min.js' %}"></script>
+
+    <script src="{% static 'plugins/slimscroll/jquery.slimscroll.min.js' %}"></script>
+
+    <script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'plugins/datatables/datatables.min.js' %}"></script>
+
+    <script src="{% static 'js/Admin/script.js' %}"></script>
+{% endblock %}

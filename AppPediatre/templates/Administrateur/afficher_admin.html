@@ -1,0 +1,133 @@
+{% extends 'Administrateur/base_admin.html' %}
+{% load static %}
+{% block title %}<title>Afficher admin</title>{% endblock %}
+{% block sideBar %}
+    <ul>
+        <li class="menu-title"><span>Menu</span></li>
+        <li>
+            <a href="{% url 'index_admin' %}"><i data-feather="home"></i> <span>Dashboard</span></a>
+        </li>
+        <li class="active">
+            <a href="{% url 'gestion_administrateurs' %}"><i data-feather="lock"></i> <span> Administrateurs </span></a>
+        </li>
+        <li>
+            <a href="{% url 'gestion_patients' %}"><i data-feather="users"></i> <span>Patients</span></a>
+        </li>
+        <li class="submenu">
+            <a href="#"><i data-feather="clipboard"></i> <span> Spécialistes</span> <span
+                    class="menu-arrow"></span></a>
+            <ul>
+                <li><a href="">Pediatre</a></li>
+                <li><a href="">Dentiste</a></li>
+            </ul>
+        </li>
+        <li>
+            <a href="#"><i data-feather="mail"></i> <span>Messagerie</span></a>
+        </li>
+        <li>
+            <a href="{% url 'statistiques' %}"><i data-feather="pie-chart"></i> <span> Statistiques</span> </a>
+        </li>
+        <li class="menu-title">
+            <span>Media</span>
+        </li>
+        <li>
+            <a href="#"><i data-feather="video"></i> <span>Videos</span></a>
+        </li>
+        <li>
+            <a href="#"><i data-feather="image"></i> <span>Slides</span></a>
+        </li>
+        <li>
+            <a href="#"><i data-feather="bell"></i> <span>Actualités</span></a>
+        </li>
+        <li>
+            <a href="#"><i data-feather="file"></i> <span>Rapports</span></a>
+        </li>
+        <li class="menu-title">
+            <span>Réglages</span>
+        </li>
+        <li>
+            <a href="profile.html"><i data-feather="user-plus"></i> <span>Profile</span></a>
+        </li>
+        <li>
+            <a href="settings.html"><i data-feather="settings"></i> <span>Paramètres</span></a>
+        </li>
+    </ul>
+{% endblock %}
+{% block contenu %}
+    {% if error == True %}
+        <div class="row">
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                {{ errorMsg }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+    {% endif %}
+    <div class="page-header">
+        <div class="row align-items-center">
+            <div class="col">
+                <h3 class="page-title">Profile</h3>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'index_admin' %}">Tableau de bord</a>
+                    </li>
+                    <li class="breadcrumb-item active"><a href="{% url 'gestion_administrateurs' %}">Administrateurs</a>
+                    </li>
+                    </li>
+                    <li class="breadcrumb-item active">Profile</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="text-center mb-5">
+        <label class="avatar avatar-xxl profile-cover-avatar" for="avatar_upload">
+            <img class="avatar-img" src="{% static 'images/default-user-image-admin.jpg' %}" alt="Profile Image">
+        </label>
+        <h2>{{ admin.nomAdmin }} {{ admin.prenomAdmin }}</h2>
+    </div>
+    <div class="row">
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Informations Admin</h5>
+                </div>
+                <div class="card-body card-body-height">
+                    <ul class="activity-feed">
+                        <li class="feed-item">
+                            <div class="feed-date">Nom complet</div>
+                            <span class="feed-text">{{ admin.nomAdmin }} {{ admin.prenomAdmin }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title">Contact Admin</h5>
+                </div>
+                <div class="card-body card-body-height">
+                    <ul class="activity-feed">
+                        <li class="feed-item">
+                            <div class="feed-date">Email</div>
+                            <span class="feed-text">{{ admin.mailAdmin }}</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/additional-methods.min.js"></script>
+    <script src="{% static 'js/js/jquery.steps.js' %}"></script>
+    <script src="{% static 'js/js/main.js' %}"></script>
+    <script src="{% static 'js/js/jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'js/Admin/bootstrap.bundle.min.js' %}"></script>
+
+    <script src="{% static 'js/Admin/feather.min.js' %}"></script>
+
+    <script src="{% static 'plugins/slimscroll/jquery.slimscroll.min.js' %}"></script>
+
+    <script src="{% static 'plugins/datatables/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'plugins/datatables/datatables.min.js' %}"></script>
+
+    <script src="{% static 'js/Admin/script.js' %}"></script>
+{% endblock %}

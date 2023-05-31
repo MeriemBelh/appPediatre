@@ -1,0 +1,97 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{request.user.first_name}} {{request.user.last_name}}</title>
+
+  <!-- font awesome cdn link  -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+  <!-- custom css file link  -->
+  <link rel="stylesheet" href="{% static 'css/Pediatre/home_pediatre.css' %}">
+
+</head>
+
+<body>
+
+  <!-- header section starts  -->
+
+    <header class="header">
+
+    <div class="user">
+      <a href="{% url 'home_pediatre' %}"><img src="{% static 'images/Pediatre/user-img.png' %}" alt=""></a>
+      <h3>Dr. {{request.user.first_name}} {{request.user.last_name}}</h3>
+      <p>Cabinet Médecin Pédiatre</p>
+    </div>
+
+    <nav class="navbar">
+      <a href="{% url 'ajouter_patient' %}">AJOUTER PATIENT</a>
+      <a href="{% url 'logout_pediatre' %}">SE DECONNECTER</a>
+    </nav>
+
+  </header>
+  <!-- header section ends -->
+
+  <div id="menu-btn" class="fas fa-bars"></div>
+
+
+  <!-- about section starts  -->
+<h1 class="heading"> MES <span>PATIENTS</span> </h1>
+  <section class="about" id="about">
+    <div class="table-responsive"></div>
+    <div class="records">
+      <table width="100%">
+        <thead>
+          <tr>
+            <th>ID_PATIENT</th>
+            <th>NOM</th>
+            <th>PRENOM</th>
+            <th>DATE DE NAISSANCE</th>
+            <th>EMAIL</th>
+            <th>ACTIONS</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for patient in patients %}
+          <tr>
+            <td>#{{patient.idPatient}}</td>
+            <td>
+               {{patient.prenomPatient}}
+            </td>
+            <td>
+              {{patient.nomPatient}}
+            </td>
+            <td>
+              {{patient.dateNaissancePatient}}
+            </td>
+            <td>
+              {{patient.mailPatient}}
+            </td>
+            <td>
+              <div class="actions">
+                <span class="lab la-telegram-plane"></span>
+                <span class="las la-eye"></span>
+                <span class="las la-ellipsis-v"></span>
+              </div>
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    </div>
+  </section>
+
+  <!-- about section ends -->
+
+  <!-- custom js file link  -->
+  <script src="js/script.js"></script>
+
+</body>
+
+</html>

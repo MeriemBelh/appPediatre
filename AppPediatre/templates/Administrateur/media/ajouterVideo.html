@@ -1,0 +1,128 @@
+{% extends 'Administrateur/base_admin.html' %}
+{% load static %}
+
+{% block sideBar %}
+<ul>
+    <li class="menu-title"><span>Menu</span></li>
+    <li>
+        <a href="{% url 'index_admin' %}"><i data-feather="home"></i> <span>tableau de bord</span></a>
+    </li>
+    <li>
+        <a href="{% url 'statistiques' %}"><i data-feather="pie-chart"></i> <span> Statistiques</span></a>
+    </li>
+    <li>
+        <a href="#"><i data-feather="bell"></i> <span>Actualités</span><span
+                class="menu-arrow"></span></a>
+        <ul>
+            <li><a href="{% url 'affichage_actualite' %}">Toutes les actualités</a></li>
+            <li><a href="">Ajouter une actualité</a></li>
+        </ul>
+    </li>
+    <li>
+        <a href="{% url 'chatAdmin' %}"><i data-feather="mail"></i> <span>Messagerie</span></a>
+    </li>
+    <li class="menu-title"><span>Gestion Comptes</span></li>
+    <li>
+        <a href="{% url 'gestion_administrateurs' %}"><i data-feather="lock"></i> <span> Administrateurs </span></a>
+    </li>
+    <li>
+        <a href="{% url 'gestion_patients' %}"><i data-feather="users"></i> <span>Patients</span></a>
+    </li>
+    <li class="submenu">
+        <a href="#"><i data-feather="clipboard"></i> <span> Spécialistes</span> <span
+                class="menu-arrow"></span></a>
+        <ul>
+            <li><a href="">Pediatre</a></li>
+            <li><a href="">Dentiste</a></li>
+        </ul>
+    </li>
+
+    <li class="menu-title">
+        <span>Gestion Galerie</span>
+    </li>
+    <li class="submenu active">
+        <a href="#"><i data-feather="video"></i> <span>Videos</span><span
+                class="menu-arrow"></span></a>
+        <ul>
+            <li><a href="{% url 'affichage_video' %}">Toutes les videos</a></li>
+            <li><a class="active">Ajouter une video</a></li>
+        </ul>
+    </li>
+    <li>
+        <a href="#"><i data-feather="image"></i> <span>Images</span><span
+                class="menu-arrow"></span></a>
+        <ul>
+            <li><a href="{% url 'affichage_image' %}">Toutes les images</a></li>
+            <li><a href="{% url 'ajout_image' %}">Ajouter une image</a></li>
+        </ul>
+    </li>
+    <li class="menu-title">
+        <span>Réglages</span>
+    </li>
+    <li>
+        <a href="profile.html"><i data-feather="user-plus"></i> <span>Profile</span></a>
+    </li>
+    <li>
+        <a href="settings.html"><i data-feather="settings"></i> <span>Paramètres</span></a>
+    </li>
+</ul>
+{% endblock %}
+
+{% block contenu %}
+
+<div class="row">
+    <div class="col-xl-8 offset-xl-2">
+
+        <div class="page-header">
+            <div class="row">
+                <div class="col-sm-12">
+                    <h3 class="page-title">Ajouter Video</h3>
+                </div>
+            </div>
+        </div>
+        <form action="." method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="card">
+                <div class="card-body">
+                    <div class="bank-inner-details">
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12">
+                                <div class="form-group">
+                                    <label for="{{ form.titre.id_for_label }}">Titre<span
+                                            class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" id="{{ form.titre.id_for_label }}"
+                                           name="{{ form.titre.html_name }}">
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-md-12">
+                                <div class="form-group">
+                                    <label for="{{ form.description.id_for_label }}">Description<span
+                                            class="text-danger">*</span></label>
+                                    <textarea class="form-control" id="{{ form.description.id_for_label }}"
+                                              name="{{ form.description.html_name }}"></textarea>
+                                </div>
+                            </div>
+                            <div class="col-lg-12 col-md-12">
+                                <div class="form-group">
+                                    <label for="{{ form.lien.id_for_label }}">Lien<span
+                                            class="text-danger">*</span></label>
+                                    <textarea class="form-control" id="{{ form.lien.id_for_label }}"
+                                              name="{{ form.lien.html_name }}"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class=" blog-categories-btn pt-0">
+                    <div class="bank-details-btn ">
+                        <button type="submit" class="btn btn-primary me-2">Ajouter Video</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+<hr>
+</body>
+</html>

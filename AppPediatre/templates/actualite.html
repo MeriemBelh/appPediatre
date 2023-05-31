@@ -1,0 +1,88 @@
+{% extends 'header_footer.html' %}
+{% load custom_filters %}
+{% load static %}
+
+
+{% block import %}
+<link rel="stylesheet" href="{% static 'css/actualite.css' %}">
+<script defer src="{% static 'js/actualites.js' %}"></script>
+{% endblock %}
+
+{% block styleCss %}
+<style>
+    html{
+    scroll-behavior:auto;
+}
+
+
+
+</style>
+
+{% endblock %}
+{% block logo%}
+<a href="{% url 'homPage' %}" class="logo">
+    <img class="logo__img" src="{% static 'images/Patient/logo.jpeg' %}">
+</a>
+{% endblock logo%}
+{% block nav%}
+<nav class="nav">
+    <ul class="nav__list">
+        <li class="nav__item">
+            <a class="bttn" href="{% url 'homPage' %}">Accueil</a>
+        </li>
+        <li class="nav__item">
+            <a class="bttn" href="{% url 'image' %}">Media</a>
+        </li>
+        <li class="nav__item">
+            <a class="bttn" id="focus">Actualités</a>
+        </li>
+        <li class="nav__item">
+            <a class="bttn" href="{% url 'about' %}">A propos de nous</a>
+        </li>
+        <li class="nav__item">
+            <a class="bttn" href="{% url 'loginUsers' %}">login</a>
+        </li>
+    </ul>
+</nav>
+{% endblock nav%}
+{% block section%}{% endblock section%}
+
+{% block content %}
+
+
+<div class="blog-single-post">
+    <a href="{% url 'actualites' %}" class="back-btn"><i class="fa-solid fa-chevron-left"></i> Toutes les actualités</a>
+    <div class="blog-image">
+        <a><img alt="" src="{% static 'images/Patient/news.jpg' %}"
+                                           class="img-fluid"></a>
+    </div>
+    <h3 class="blog-title">{{actualite.titre}}
+    </h3>
+    <div class="blog-info">
+        <div class="post-list">
+            <ul>
+                <li>
+                    <div class="post-author">
+                        <a><span>{{actualite.auteur}}</span></a>
+                    </div>
+                </li>
+                <li><i class="fa-solid fa-clock"></i> {{actualite.post_date}}</li>
+            </ul>
+        </div>
+    </div>
+    <div class="blog-content">
+        <p>{{actualite.texte|break_at_periods|safe}}</p>
+        {% if actualite.pdf %}
+        <p style="margin-top:15px;font-weight:bold;"><a style="color:black;display:flex" href="{{ actualite.pdf.url }}" download><img src="{% static 'images/download.png' %}">PDF</a></p>
+        {% endif %}
+    </div>
+
+</div>
+</br>
+</br>
+{% endblock %}
+{% block contact %}{% endblock %}
+{% block footer %}{% endblock %}
+
+</body>
+</html>

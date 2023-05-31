@@ -1,0 +1,7 @@
+{% extends 'Administrateur/baseAdmin.html' %}
+{% block title %}<title>Dashboard</title>{% endblock %}
+
+{% block contenu %}
+    <p>Bienvenue Admin {{request.session.prenomAdmin}} {{request.session.nomAdmin}} </p>
+{% endblock %}
+

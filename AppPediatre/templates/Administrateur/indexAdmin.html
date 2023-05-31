@@ -1,0 +1,220 @@
+{% extends 'Administrateur/base_admin.html' %}
+{% load static %}
+{% block title %}<title>Tableau de bord</title>{% endblock %}
+
+{% block contenu %}
+{% if error == True %}
+<div class="row">
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        {{errorMsg}}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+</div>
+{% endif %}
+
+<div class="row">
+    <div class="col-xl-3 col-sm-6 col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="dash-widget-header">
+                                    <span class="dash-widget-icon bg-1">
+                                        <i class="fas fa-user-md"></i>
+                                    </span>
+                    <div class="dash-count">
+                        <div class="dash-title">Spécialistes</div>
+                        <div class="dash-counts">
+                            <p>{{specialistesNbr}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-sm-6 col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="dash-widget-header">
+                                    <span class="dash-widget-icon bg-2">
+                                        <i class="fas fa-users"></i>
+                                    </span>
+                    <div class="dash-count">
+                        <div class="dash-title">Patients</div>
+                        <div class="dash-counts">
+                            <p>{{patientsNbr}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-sm-6 col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="dash-widget-header">
+                                    <span class="dash-widget-icon bg-3">
+                                        <i class="fas fa-file-alt"></i>
+                                    </span>
+                    <div class="dash-count">
+                        <div class="dash-title">Actualités</div>
+                        <div class="dash-counts">
+                            <p>{{rapportsNbr}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-sm-6 col-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="dash-widget-header">
+                                    <span class="dash-widget-icon bg-4">
+                                        <i class="fas fa-video"></i>
+                                    </span>
+                    <div class="dash-count">
+                        <div class="dash-title">Videos</div>
+                        <div class="dash-counts">
+                            <p>{{videosNbr}}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <!--table Patients-->
+    <div class="col-md-6 col-sm-6">
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col">
+                        <h5 class="card-title">Patient</h5>
+                    </div>
+                    <div class="col-auto">
+                        <a href="{% url 'gestion_patients' %}" class="btn-right btn btn-sm btn-outline-primary">
+                            Voir tous
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="thead-light">
+                        <tr>
+                            <th>Nom complet</th>
+                            <th>Id Patient</th>
+                            <th>D. Naissance</th>
+                            <th>Compte activé</th>
+                            <th class="text-right">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for p, img in patients %}
+                        <tr>
+                            <td>
+                                <h2 class="table-avatar">
+                                    <a href="profile.html"><img
+                                            class="avatar avatar-sm me-2 avatar-img rounded-circle"
+                                            src="{{img}}"
+                                            alt="User Image"> {{p.nomPatient}} {{p.prenomPatient}}</a>
+                                </h2>
+                            </td>
+                            <td>{{p.idPatient}}</td>
+                            <td>{{p.dateNaissancePatient}}</td>
+                            {% if p.user.is_active == True %}
+                            <td><span class="badge bg-info-light">{{p.user.is_active}}</span></td>
+                            {% else %}
+                            <td><span class="badge bg-danger-light">{{p.user.is_active}}</span></td>
+                            {% endif %}
+                            <td class="text-right">
+                                <div class="dropdown dropdown-action">
+                                    <a href="#" class="action-icon dropdown-toggle"
+                                       data-bs-toggle="dropdown" aria-expanded="false"><i
+                                            class="fas fa-ellipsis-h"></i></a>
+                                    <div class="dropdown-menu dropdown-menu-right">
+                                        <a class="dropdown-item" href="{% url 'editer_patient' patient_id=p.idPatient %}"><i
+                                                class="far fa-edit me-2"></i>Editer</a>
+                                        <a class="dropdown-item" href="{% url 'supprimer_patient' patient_id=p.idPatient %}"><i
+                                                class="far fa-trash-alt me-2"></i>Supprimer</a>
+                                        <a class="dropdown-item" href="{% url 'afficher_patient' patient_id=p.idPatient %}"><i
+                                                class="far fa-eye me-2"></i>Voir</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Pediatre-->
+    <div class="col-md-6 col-sm-6">
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col">
+                        <h5 class="card-title">Pediatres</h5>
+                    </div>
+                    <div class="col-auto">
+                        <a href="estimates.html" class="btn-right btn btn-sm btn-outline-primary">
+                            View All
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="thead-light">
+                        <tr>
+                            <th>Nom complet</th>
+                            <th>Inpe</th>
+                            <th>Hopital</th>
+                            <th>CNI</th>
+                            <th class="text-right">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for p in pediatres %}
+                        <tr>
+                            <td>
+                                <h2 class="table-avatar">
+                                    <a href="profile.html"><img
+                                            class="avatar avatar-sm me-2 avatar-img rounded-circle"
+                                            src="{% static 'images/Admin/profiles/avatar-05.jpg' %}"
+                                            alt="User Image">{{p.nomPediatre}} {{p.prenomPediatre}}</a>
+                                </h2>
+                            </td>
+                            <td>{{p.inpe}}</td>
+                            <td>{{hopitalPediatre}}</td>
+                            <td>{{p.cniPediatre}}</td>
+                            <td class="text-right">
+                                <div class="dropdown dropdown-action">
+                                    <a href="#" class="action-icon dropdown-toggle"
+                                       data-bs-toggle="dropdown" aria-expanded="false"><i
+                                            class="fas fa-ellipsis-h"></i></a>
+                                    <div class="dropdown-menu dropdown-menu-right">
+                                        <a class="dropdown-item" href="edit-invoice.html"><i
+                                                class="far fa-edit me-2"></i>Editer</a>
+                                        <a class="dropdown-item" href="javascript:void(0);"><i
+                                                class="far fa-trash-alt me-2"></i>Supprimer</a>
+                                        <a class="dropdown-item" href="view-estimate.html"><i
+                                                class="far fa-eye me-2"></i>Voir</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

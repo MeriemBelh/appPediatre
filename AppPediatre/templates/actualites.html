@@ -1,0 +1,144 @@
+{% extends 'header_footer.html' %}
+{% load static %}
+
+{% block import %}
+<link rel="stylesheet" href="{% static 'css/actualites.css' %}">
+<script defer src="{% static 'js/actualites.js' %}"></script>
+{% endblock %}
+
+{% block styleCss %}
+<style>
+    html{
+    scroll-behavior:auto;
+}
+</style>
+
+{% endblock %}
+{% block logo%}
+<a href="{% url 'homPage' %}" class="logo">
+    <img class="logo__img" src="{% static 'images/Patient/logo.jpeg' %}">
+</a>
+{% endblock logo%}
+{% block nav%}
+{% if user.is_authenticated %}
+<nav class="nav">
+    <ul class="nav__list">
+        <li class="nav__item">
+            <a class="bttn" href="{% url 'homPage' %}">Accueil</a>
+        </li>
+        <li class="nav__item">
+            <a class="bttn" href="{% url 'image' %}">Media</a>
+        </li>
+        <li class="nav__item">
+            <a class="bttn" id="focus">Actualités</a>
+        </li>
+        <!-- Dossier -->
+        <li class="nav__item">
+            <a class="bttn" href="{% url 'info_patient' %}">Consulter Dossier</a>
+        </li>
+        <li class="nav__item">
+            <div class="action">
+                <div class="profile" onclick="menuToggle();">
+                    {% if imgPatient %}
+                    <img src="{{imgPatient}}" alt="">
+                    {% else %}
+                    <img src="{% static 'images/Patient/user.jpg' %}" alt="">
+                    {% endif %}
+                </div>
+
+                <div class="menu">
+                    <h3>
+                        {{patient.nomPatient}} {{patient.prenomPatient}}
+                        <div>
+                            {{patient.mailPatient}}
+                        </div>
+                    </h3>
+                    <ul>
+                        <li>
+                            <a href="{% url 'profile' %}">modifier le compte</a>
+                        </li>
+                        <li>
+                            <a href="{% url 'logout_patient' %}">Se deconnecter</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </li>
+    </ul>
+</nav>
+{% else %}
+<nav class="nav">
+    <ul class="nav__list">
+        <li class="nav__item">
+            <a class="bttn" href="{% url 'homPage' %}">Accueil</a>
+        </li>
+        <li class="nav__item">
+            <a class="bttn" href="{% url 'image' %}">Media</a>
+        </li>
+        <li class="nav__item">
+            <a class="bttn" id="focus">Actualités</a>
+        </li>
+        <li class="nav__item">
+            <a class="bttn" href="{% url 'about' %}">A propos de nous</a>
+        </li>
+        <li class="nav__item">
+            <a class="bttn" href="{% url 'loginUsers' %}">login</a>
+        </li>
+    </ul>
+</nav>
+{% endif %}
+{% endblock nav%}
+{% block section%}{% endblock section%}
+
+{% block content %}
+<h1 style="text-align:center;color:#262424;margin-bottom:30px">Toutes les actualités</h1>
+<section class="articles" id="article-container">
+    {% for x in actualite|dictsortreversed:'post_date' %}
+    <article class="article-card">
+
+        <div class="img-box">
+            <a href="{% url 'actualite' actualite_id=x.actualite_id %}"><img src="{% static 'images/Patient/news.jpg' %}" alt="" class="article-banner"></a>
+        </div>
+
+
+        <div class="article-content">
+
+            <a href="{% url 'actualite' actualite_id=x.actualite_id %}">
+                <h3 style="overflow: hidden;display: -webkit-box;-webkit-line-clamp: 1;-webkit-box-orient: vertical;text-overflow: ellipsis;" class="article-title">{{x.titre}}</h3>
+            </a>
+
+            <p style="overflow: hidden;display: -webkit-box;-webkit-line-clamp: 3;-webkit-box-orient: vertical;text-overflow: ellipsis;" class="article-text">{{x.texte}}.</p>
+
+            <div class="acticle-content-footer">
+                <div class="author">
+                    <img src="{% static 'images/Patient/user.jpg' %}" alt="" class="author-avater">
+
+                    <div class="author-info">
+                        <a>
+                            <h4 class="author-name">{{x.auteur}}</h4>
+                        </a>
+                        <div class="publish-date">{{x.post_date}}</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </article>
+    {% endfor %}
+</section>
+
+
+<div id="pagination-buttons">
+    <button id="prev-button">Précédent</button>
+    <div id="page-count"></div>
+    <button id="next-button">Suivant</button>
+</div>
+</br>
+</br>
+{% endblock %}
+{% block contact %}{% endblock %}
+{% block footer %}{% endblock %}
+
+</body>
+</html>

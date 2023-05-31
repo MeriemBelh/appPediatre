@@ -1,0 +1,148 @@
+{% extends 'Administrateur/base_admin.html' %}
+{% load static %}
+
+{% block sideBar %}
+<ul>
+    <li class="menu-title"><span>Menu</span></li>
+    <li>
+        <a href="{% url 'index_admin' %}"><i data-feather="home"></i> <span>tableau de bord</span></a>
+    </li>
+    <li>
+        <a href="{% url 'statistiques' %}"><i data-feather="pie-chart"></i> <span> Statistiques</span></a>
+    </li>
+    <li>
+        <a href="#"><i data-feather="bell"></i> <span>Actualités</span><span
+                class="menu-arrow"></span></a>
+        <ul>
+            <li><a href="{% url 'affichage_actualite' %}">Toutes les actualités</a></li>
+            <li><a href="">Ajouter une actualité</a></li>
+        </ul>
+    </li>
+    <li>
+        <a href="{% url 'chatAdmin' %}"><i data-feather="mail"></i> <span>Messagerie</span></a>
+    </li>
+    <li class="menu-title"><span>Gestion Comptes</span></li>
+    <li>
+        <a href="{% url 'gestion_administrateurs' %}"><i data-feather="lock"></i> <span> Administrateurs </span></a>
+    </li>
+    <li>
+        <a href="{% url 'gestion_patients' %}"><i data-feather="users"></i> <span>Patients</span></a>
+    </li>
+    <li class="submenu">
+        <a href="#"><i data-feather="clipboard"></i> <span> Spécialistes</span> <span
+                class="menu-arrow"></span></a>
+        <ul>
+            <li><a href="">Pediatre</a></li>
+            <li><a href="">Dentiste</a></li>
+        </ul>
+    </li>
+
+    <li class="menu-title">
+        <span>Gestion Galerie</span>
+    </li>
+    <li class="submenu active">
+        <a href="#"><i data-feather="video"></i> <span>Videos</span><span
+                class="menu-arrow"></span></a>
+        <ul>
+            <li><a class="active">Toutes les videos</a></li>
+            <li><a href="{% url 'ajout_video' %}">Ajouter une video</a></li>
+        </ul>
+    </li>
+    <li>
+        <a href="#"><i data-feather="image"></i> <span>Images</span><span
+                class="menu-arrow"></span></a>
+        <ul>
+            <li><a href="{% url 'affichage_image' %}">Toutes les images</a></li>
+            <li><a href="{% url 'ajout_image' %}">Ajouter une image</a></li>
+        </ul>
+    </li>
+    <li class="menu-title">
+        <span>Réglages</span>
+    </li>
+    <li>
+        <a href="profile.html"><i data-feather="user-plus"></i> <span>Profile</span></a>
+    </li>
+    <li>
+        <a href="settings.html"><i data-feather="settings"></i> <span>Paramètres</span></a>
+    </li>
+</ul>
+{% endblock %}
+
+{% block contenu %}
+<div class="row">
+    <div class="col-md-9">
+        <ul class="list-links mb-4">
+        </ul>
+    </div>
+    <div class="col-md-3 text-md-end">
+        <a href="{% url 'ajout_video' %}" class="btn btn-primary btn-blog mb-3"><i
+                class="feather-plus-circle me-1"></i> Ajouter une video</a>
+    </div>
+</div>
+
+<div class="row">
+    {% for x in video %}
+    <div class="col-md-6 col-xl-4 col-sm-12 d-flex">
+        <div class="blog grid-blog flex-fill">
+            <div class="blog-content">
+                <ul class="entry-meta meta-item">
+                    <li>
+                        <div style="overflow: hidden;display: -webkit-box;-webkit-line-clamp: 1;-webkit-box-orient: vertical;text-overflow: ellipsis;">
+                            <a>
+                                <h4>{{x.titre}}</h4>
+                            </a>
+                        </div>
+                    </li>
+                </ul>
+                <h5 class="blog-title"><a>
+                    {{x.lien}}</a></h5>
+                <p style="overflow: hidden;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;text-overflow: ellipsis;">
+                    {{x.description}}
+                </p>
+            </div>
+            <div class="row">
+                <div class="edit-options">
+                    <div class="edit-delete-btn">
+                        <a href="{% url 'modifier_video' video_id=x.video_id %}" class="text-success"><i
+                                class="feather-edit-3 me-1"></i> Modifier</a>
+                        <a href="#" class="text-danger" data-bs-toggle="modal"
+                           data-bs-target="#deleteModal{{x.video_id}}"><i class="feather-trash-2 me-1"></i>
+                            Supprimer</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+
+{% for x in video %}
+<div class="modal fade contentmodal" id="deleteModal{{x.video_id}}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content doctor-profile">
+            <div class="modal-header pb-0 border-bottom-0  justify-content-end">
+                <button type="button" class="close-btn" data-bs-dismiss="modal" aria-label="Close"><i
+                        class="feather-x-circle"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="delete-wrap text-center">
+                    <div class="del-icon"><i class="feather-x-circle"></i></div>
+                    <h2>
+                        Êtes-vous certain(e) de vouloir supprimer la video ?</h2>
+                    <div class="submit-section">
+                        <form action="{% url 'supprimer_video' video_id=x.video_id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-success me-2">Oui</button>
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Non</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+{% endblock %}
+</body>
+</html>

@@ -1,0 +1,57 @@
+{% extends 'header_footer.html' %}
+{% load static %}
+{% block import %}
+<link rel="stylesheet" href="{% static 'css/about.css' %}">
+{% endblock %}
+{% block styleCss %}{% endblock %}
+{% block logo%}
+<a href="{% url 'homPage' %}" class="logo">
+    <img class="logo__img" src="{% static 'images/Patient/logo.jpeg' %}">
+</a>
+{% endblock logo%}
+{% block nav%}
+<nav class="nav">
+    <ul class="nav__list">
+        <li class="nav__item">
+            <a class="btn" href="{% url 'homPage' %}">Accueil</a>
+        </li>
+        <li class="nav__item">
+            <a class="btn" href="{% url 'image' %}">Media</a>
+        </li>
+        <li class="nav__item">
+            <a class="btn" href="{% url 'actualites' %}">Actualités</a>
+        </li>
+        <li class="nav__item">
+            <a class="btn" id="focus">A propos de nous</a>
+        </li>
+        <li class="nav__item">
+            <a class="btn" href="{% url 'loginUsers' %}">login</a>
+        </li>
+    </ul>
+</nav>
+{% endblock nav%}
+{% block section%}{% endblock section%}
+{% block content %}
+<section>
+    <div class="image">
+        <img src="{% static 'images/medecin.png' %}">
+    </div>
+
+    <div class="content">
+        <h2>A propos de nous</h2>
+        <span><!-- line here --></span>
+        <p>Notre site web est dédié à offrir des soins médicaux et une attention particulière aux enfants trisomiques au
+            Maroc, quel que soit leur statut social ou leurs moyens financiers. Nous croyons que chaque enfant mérite un
+            accès aux soins de santé de qualité, et notre équipe de professionnels de la santé dévoués s'engage à faire
+            de cela une réalité. De l'analyse diagnostique au traitement et au soutien continu, nous offrons des soins
+            complets adaptés aux besoins uniques de chaque enfant. Rejoignez-nous dans notre mission de faire une
+            différence dans la vie des enfants trisomiques et de leurs familles.</p>
+    </div>
+</section>
+</br>
+{% endblock %}
+
+{% block contact %}{% endblock %}
+{% block footer %}{% endblock %}
+</body>
+</html>

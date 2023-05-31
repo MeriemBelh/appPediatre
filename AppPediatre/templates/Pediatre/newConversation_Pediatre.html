@@ -1,0 +1,199 @@
+{% extends 'Pediatre/sideBar_pediatre.html' %}
+{% load static %}
+{% block import %}
+<link rel="stylesheet" href="{% static 'css/Pediatre/recherchePatient.css' %}">
+{% endblock %}
+{% block nav%}
+<li class="nav-link">
+    <a href="{% url 'index_pediatre' %}">
+        <i class='bx bxs-user icon'></i>
+        <span class="text nav-text">Mes Patients</span>
+    </a>
+</li>
+<li class="nav-link">
+    <a href="{% url 'recherche_patient' %}">
+        <i class='bx bxs-search-alt-2 icon'></i>
+        <span class="text nav-text">Rechercher</span>
+    </a>
+</li>
+<li class="nav-link">
+    <a href="{% url 'corbeille_patient' %}">
+        <i class='bx bxs-trash-alt icon'></i>
+        <span class="text nav-text">Corbeille</span>
+    </a>
+</li>
+<li class="nav-link">
+    <a href="{% url 'messagerie_pediatre' %}" style="background-color:#194ca7;">
+        <i class='bx bxs-message icon' style="color:#f1f2f4;"></i>
+        <span class="text nav-text" style="color:#f1f2f4;">Messagerie</span>
+    </a>
+</li>
+{% endblock nav%}
+{% block title %}<title>Nouvelle Conversation</title>{% endblock %}
+
+{% block content %}
+<style>
+    .alert {
+        position: relative;
+        padding: 0.75rem 1.25rem;
+        margin-bottom: 1rem;
+        border: 1px solid transparent;
+        border-radius: 0.25rem;
+    }
+
+    .alert-danger {
+        color: #721c24;
+        background-color: #f8d7da;
+        border-color: #f5c6cb;
+    }
+
+    .alert-success {
+        color: #155724;
+        background-color: #d4edda;
+        border-color: #c3e6cb;
+    }
+
+    .alert-success hr {
+        border-top-color: #b1dfbb;
+    }
+
+    .alert-success .alert-link {
+        color: #113d26;
+    }
+</style>
+<span class="text">Nouvelle Conversation</span>
+<br><br>
+{% if errorValue == True %}
+            <div class="alert alert-danger" role="alert">
+              {{error}}
+            </div>
+        {% endif %}
+<br>
+<table class="table" style="width: 70%;">
+    <tbody>
+    <tr style="background-color: #d8f1fc;">
+        <td style="border-radius: 8px;">
+            <form action="{% url 'new_conversation_pediatre' %}" method="post">
+                 {% csrf_token %}
+                <div class="form-group">
+                    <label for="exampleInputEmail1">Destinataire</label>
+                    <input type="text" name="destinataire" class="form-control" id="exampleInputEmail1"
+                           aria-describedby="emailHelp"
+                           placeholder="Id patient, Inpe, admin...">
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputPassword1">Objet</label>
+                    <input type="text" name="subject" class="form-control" id="exampleInputPassword1"
+                           placeholder="Objet">
+                </div>
+                <div class="form-group">
+                    <label for="exampleFormControlTextarea1">Message</label>
+                    <textarea class="form-control1" name="message" id="exampleFormControlTextarea1" rows="6"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Envoyer</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<style>
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+
+    .form-control {
+        display: block;
+        width: 100%;
+        padding: 0.375rem 0.75rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        color: #495057;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    }
+
+    .form-control1 {
+        display: block;
+        width: 100%;
+        padding: 0.375rem 0.75rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        color: #495057;
+        background-color: #fff;
+        background-clip: padding-box;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+        transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        height: 150px;
+    }
+
+    .form-control:focus {
+        color: #495057;
+        background-color: #fff;
+        border-color: #80bdff;
+        outline: 0;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+
+    .form-text {
+        display: block;
+        margin-top: 0.25rem;
+        font-size: 80%;
+        color: #6c757d;
+    }
+
+    .form-check {
+        position: relative;
+        display: block;
+        padding-left: 1.25rem;
+    }
+
+    .form-check-input {
+        position: absolute;
+        margin-top: 0.3rem;
+        margin-left: -1.25rem;
+    }
+
+    .form-check-label {
+        margin-bottom: 0;
+    }
+
+    .btn-primary {
+        color: #fff;
+        background-color: #013064;
+        border-color: #013064;
+    }
+
+    .btn-primary:hover {
+        color: #fff;
+        background-color: #013064;
+        border-color: #013064;
+    }
+
+    .btn-primary:focus, .btn-primary.focus {
+        box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.5);
+    }
+
+    .btn-primary.disabled, .btn-primary:disabled {
+        color: #fff;
+        background-color: #013064;
+        border-color: #013064;
+    }
+
+    .form-check-input:focus + .form-check-label {
+        border-color: #80bdff;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+</style>
+{% endblock %}
+
+</body>
+</html>

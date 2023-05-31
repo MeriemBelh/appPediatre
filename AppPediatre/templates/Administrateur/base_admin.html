@@ -1,0 +1,156 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+
+    {% block title %}<title>Administrateur</title>{% endblock %}
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.20/c3.min.css">
+    <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
+    <link rel="stylesheet" href="{% static 'css/Admin/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/fontawesome/css/fontawesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/fontawesome/css/all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/Admin/style.css' %}">
+    {% block import %}{% endblock %}
+    {% block styleCss %}{% endblock %}
+</head>
+
+<body class="nk-body bg-lighter npc-default has-sidebar no-touch nk-nio-theme">
+<div class="main-wrapper">
+    <div class="header header-one">
+        <div class="header-left header-left-one">
+            <!--Administrateur/base_admin.html-->
+            <a href="{% url 'index_admin' %}" class="logo">
+                <img src="{% static 'images/Admin/logo.jpg' %}" alt="Logo">
+            </a>
+            <a href="#" class="white-logo">
+                <img src="{% static 'images/default-user-image-admin.jpg' %}" alt="Logo">
+            </a>
+            <a href="#" class="logo logo-small">
+                <img src="{% static 'images/default-user-image-admin.jpg' %}" alt="Logo" width="30" height="30">
+            </a>
+        </div>
+        <a href="javascript:void(0);" id="toggle_btn">
+            <i class="fas fa-bars"></i>
+        </a>
+        <div class="top-nav-search">
+            <form>
+                <input type="text" class="form-control" placeholder="Recherche...">
+                <button class="btn" type="submit"><i class="fas fa-search"></i></button>
+            </form>
+        </div>
+        <a class="mobile_btn" id="mobile_btn">
+            <i class="fas fa-bars"></i>
+        </a>
+        <ul class="nav nav-tabs user-menu">
+            <li class="nav-item dropdown has-arrow main-drop">
+                <a href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
+                        <span class="user-img">
+                            <img src="{% static 'images/default-user-image-admin.jpg' %}" alt="">
+                            <span class="status online"></span>
+                        </span>
+                    <span>Admin</span>
+                </a>
+                <div class="dropdown-menu">
+                    <a class="dropdown-item" href="{% url 'logout_admin' %}"><i data-feather="log-out" class="me-1"></i>
+                        Logout</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+    <!---------Menu------->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-inner slimscroll">
+            <div id="sidebar-menu" class="sidebar-menu">
+                {% block sideBar %}
+                <ul>
+                        <li class="menu-title"><span>Menu</span></li>
+                        <li class="active">
+                            <a><i data-feather="home"></i> <span>tableau de bord</span></a>
+                        </li>
+                        <li>
+                            <a href="{% url 'statistiques' %}"><i data-feather="pie-chart"></i> <span> Statistiques</span> </a>
+                        </li>
+                        <li>
+                        <a href="#"><i data-feather="bell"></i> <span>Actualités</span><span
+                                class="menu-arrow"></span></a>
+                            <ul>
+                                <li><a href="{% url 'affichage_actualite' %}">Toutes les actualités</a></li>
+                                <li><a href="">Ajouter une actualité</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="{% url 'chatAdmin' %}"><i data-feather="mail"></i> <span>Messagerie</span></a>
+                        </li>
+                        <li class="menu-title"><span>Gestion Comptes</span></li>
+                        <li>
+                            <a href="{% url 'gestion_administrateurs' %}"><i data-feather="lock"></i> <span> Administrateurs </span></a>
+                        </li>
+                        <li>
+                            <a href="{% url 'gestion_patients' %}"><i data-feather="users"></i>
+                                <span>Patients</span></a>
+                        </li>
+                        <li class="submenu">
+                            <a href="#"><i data-feather="clipboard"></i> <span> Spécialistes</span> <span
+                                    class="menu-arrow"></span></a>
+                            <ul>
+                                <li><a href="">Pediatre</a></li>
+                                <li><a href="">Dentiste</a></li>
+                            </ul>
+                        </li>
+
+
+                        <li class="menu-title">
+                            <span>Gestion media</span>
+                        </li>
+                        <li>
+                        <a href="#"><i data-feather="video"></i> <span>Videos</span><span
+                                class="menu-arrow"></span></a>
+                        <ul>
+                            <li><a href="{% url 'affichage_video' %}">Toutes les videos</a></li>
+                            <li><a href="{% url 'ajout_video' %}">Ajouter une video</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#"><i data-feather="image"></i> <span>Images</span><span
+                                class="menu-arrow"></span></a>
+                        <ul>
+                            <li><a href="{% url 'affichage_image' %}">Toutes les images</a></li>
+                            <li><a href="{% url 'ajout_image' %}">Ajouter une image</a></li>
+                        </ul>
+                    </li>
+                        <li class="menu-title">
+                            <span>Réglages</span>
+                        </li>
+                        <li>
+                            <a href="profile.html"><i data-feather="user-plus"></i> <span>Profile</span></a>
+                        </li>
+                        <li>
+                            <a href="settings.html"><i data-feather="settings"></i> <span>Paramètres</span></a>
+                        </li>
+                    </ul>
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+
+    <div class="page-wrapper">
+        <div class="content container-fluid">
+            {% block contenu %}{% endblock %}
+        </div>
+    </div>
+</div>
+
+<script src="{% static 'js/Admin/jquery-3.6.0.min.js' %}"></script>
+<script src="{% static 'js/Admin/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'js/Admin/feather.min.js' %}"></script>
+<script src="{% static 'plugins/slimscroll/jquery.slimscroll.min.js' %}"></script>
+<script src="{% static 'plugins/apexchart/apexcharts.min.js' %}"></script>
+<script src="{% static 'plugins/apexchart/chart-data.js' %}"></script>
+<script src="{% static 'js/Admin/script.js' %}"></script>
+</body>
+
+</html>

@@ -1,0 +1,83 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{request.user.first_name}} {{request.user.last_name}}</title>
+
+  <!-- font awesome cdn link  -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+  <!-- custom css file link  -->
+  <link rel="stylesheet" href="{% static 'css/Pediatre/home_pediatre.css' %}">
+
+</head>
+<body>
+<!-- header section starts  -->
+
+    <header class="header">
+
+    <div class="user">
+      <a href="{% url 'home_pediatre' %}"><img src="{% static 'images/Pediatre/user-img.png' %}" alt=""></a>
+      <h3>Dr. {{request.user.first_name}} {{request.user.last_name}}</h3>
+      <p>Cabinet Médecin Pédiatre</p>
+    </div>
+
+    <nav class="navbar">
+      <a href="{% url 'ajouter_patient' %}">AJOUTER PATIENT</a>
+      <a href="{% url 'logout_pediatre' %}">SE DECONNECTER</a>
+    </nav>
+
+  </header>
+  <!-- header section ends -->
+
+  <div id="menu-btn" class="fas fa-bars"></div>
+<h3>&nbsp;&nbsp;Dossier Médical&nbsp;</h3>
+<hr>
+<p>Nom : {{nom}}</p>
+<p>Prenom : {{prenom}}</p>
+<p>teleMom : {{teleMom}}</p>
+<p>teleDad : {{teleDad}}</p>
+<p>adresse : {{adresse}}</p>
+<p>ville : {{ville}}</p>
+<p>delegation : {{delegation}}</p>
+<p>datenaissance : {{datenaissance}}</p>
+<p>couvertureMedicale : {{couvertureMedicale}}</p>
+<br><hr>
+<p>parents_Consanguins : {{parents_Consanguins}}</p>
+<p>age_maternel_accouchement : {{age_maternel_accouchement}}</p>
+<p>grossesse_suivi : {{grossesse_suivi}}</p>
+<p>terme_grossesse : {{terme_grossesse}}</p>
+<p>precisionTerme : {{precisionTerme}}</p>
+<p>accouchement_par_voie : {{accouchement_par_voie}}</p>
+<p>souffrance_neonatal : {{souffrance_neonatal}}</p>
+<p>poids_de_naissance : {{poids_de_naissance}}</p>
+<p>taille_de_naissance : {{taille_de_naissance}}</p>
+<p>Notion_hospitalisation_age_neonatal : {{Notion_hospitalisation_age_neonatal}}</p>
+<p>allaitement : {{allaitement}}</p>
+<p>diversification_alimentaire : {{diversification_alimentaire}}</p>
+<p>retentissement_staturo_ponderale : {{retentissement_staturo_ponderale}}</p>
+<br><hr>
+<p>scolarise : {{scolarise}}</p>
+<p>scolarise_age_de_début : {{scolarise_age_de_début}}</p>
+<p>classe_primaires : {{classe_primaires}}</p>
+<p>scolarise_classe_préparatoire : {{scolarise_classe_préparatoire}}</p>
+<p>classe_primaire_years : {{classe_primaire_years}}</p>
+<p>classe_secondaires : {{classe_secondaires}}</p>
+<p>classe_secondaire_years : {{classe_secondaire_years}}</p>
+<p>bac_years : {{bac_years}}</p>
+<p>bac_filieres : {{bac_filieres}}</p>
+<p>scolarise_bac_choice : {{scolarise_bac_choice}}</p>
+<p>scolarise_classe_secondaires_choice : {{scolarise_classe_secondaires_choice}}</p>
+<p>activite_sportive : {{activite_sportive}}</p>
+<p>activite_artistique : {{activite_artistique}}</p>
+<p>activite_prof : {{activite_prof}}</p>
+<p>APr : {{APr}}</p>
+<p>AAr : {{AAr}}</p>
+<p>ASp : {{ASp}}</p>
+<br><hr>
+</body>
+</html>
