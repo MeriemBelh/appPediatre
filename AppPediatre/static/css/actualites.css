@@ -1,0 +1,268 @@
+:root {
+  --red: #6cb9e0;
+}
+
+
+body {
+  justify-content: center;
+  align-items:     center;
+  background: hsl(210, 46%, 95%);
+  padding-top: 120px;
+}
+.action{
+    right: 25px;
+    top:40px
+}
+.action .profile{
+    border-radius: 50%;
+    cursor: pointer;
+    height: 40px;
+    overflow: hidden;
+    width: 40px;
+}
+.action .profile img{
+    width: 100%;
+    top:0;
+    object-fit: cover;
+    left: 0;
+    height: 100%;
+}
+.action .menu{
+    background-color:#FFF;
+    box-sizing:0 5px 25px rgba(0,0,0,0.1);
+    border-radius: 15px;
+    padding: 10px 20px;
+    position: absolute;
+    right: -10px;
+    width: 200px;
+    transition: 0.5s;
+    top: 120px;
+    visibility: hidden;
+    opacity: 0;
+}
+.action .menu.active{
+    opacity: 1;
+    top: 80px;
+    visibility: visible;
+}
+.action .menu::before{
+    background-color:#fff;
+    content: '';
+    height: 20px;
+    position:sticky;
+    right: 30px;
+    transform:rotate(45deg);
+    top:-5px;
+    width: 20px;
+}
+.action .menu h3{
+    color: #555;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.3em;
+    padding: 20px 0px;
+    text-align: left;
+    width: 100%;
+}
+.action .menu h3 div{
+    color: #818181;
+    font-size: 12px;
+    font-weight: 400;
+}
+.action .menu ul li{
+    align-items: center;
+    border-top:1px solid rgba(0,0,0,0.05);
+    display: flex;
+    justify-content: left;
+    list-style: none;
+    padding: 10px 0px;
+}
+.action .menu ul li img{
+    max-width: 20px;
+    margin-right: 10px;
+    opacity: 0.5;
+    transition:0.5s
+}
+.action .menu ul li a{
+    display: inline-block;
+    color: #555;
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: 0.5s;
+}
+.action .menu ul li:hover img{
+    opacity: 1;
+}
+.action .menu ul li:hover a{
+    color:var(--purple);
+}
+
+@media (max-width: 760px) {
+  .action .menu{
+    margin-top:13%;
+    margin-right:27%;
+  }
+}
+
+@media (max-width: 540px) {
+  .action .menu{
+    margin-top:15%;
+    margin-right:17%;
+  }
+}
+
+@media (max-width: 460px) {
+  .action .menu{
+    margin-right:12%;
+    margin-top:21%;
+  }
+}
+
+.articles{
+    margin-left:8%;
+  }
+
+.article-card {
+margin-bottom:20px;
+  display: grid;
+  grid-template-columns: 30% minmax(50%, 70%);
+  max-width: 90%;
+  border-radius: 10px;
+  box-shadow: 6px 6px 5px hsla(0, 0%, 0%, 0.02),
+              25px 25px 20px hsla(0, 0%, 0%, 0.03),
+              100px 100px 80px hsla(0, 0%, 0%, 0.05);
+}
+
+
+.img-box {
+  border-radius: 10px 0 0 10px;
+  overflow: hidden;
+}
+
+.article-banner {
+  width:  100%;
+  height: 100%;
+  object-position: left;
+  transition: all 0.5s ease;
+}
+
+.article-card:hover .article-banner { transform: scale(1.1); }
+
+.article-content {
+  background: #fff;
+  padding: 32px 40px;
+  border-radius: 0 10px 10px 0;
+}
+
+.article-title {
+  font-size: 20px;
+  color: hsl(217, 19%, 35%);
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+.article-text {
+  color: hsl(214, 17%, 51%);
+  font-size: 13px;
+  line-height: 1.5;
+  margin-bottom: 18px;
+}
+
+.acticle-content-footer {
+  display:         flex;
+  justify-content: space-between;
+  align-items:     center;
+}
+
+.author {
+  display:     flex;
+  align-items: center;
+}
+
+.author-avater {
+  width:  40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 15px;
+}
+
+.author-name {
+  color: hsl(217, 19%, 35%);
+  font-size: 13px;
+}
+
+.publish-date {
+  color: hsl(212, 23%, 69%);
+  font-size: 13px;
+}
+
+@media screen and (max-width: 768px) {
+
+  :root {
+    --fs-13: 12px;
+
+  }
+
+  .articles{
+    margin-left:5%;
+  }
+
+  .article-card {
+  max-width:95%;
+    grid-template-columns: 1fr;
+    overflow: hidden;
+    margin-bottom:30px;
+  }
+
+  .img-box, .article-content { border-radius: 0; }
+
+  .img-box { height: 180px; }
+
+  .article-content { padding: 30px 28px 20px; }
+
+  .article-title { font-size: 15px; }
+
+  .article-text { margin-bottom: 30px; }
+
+  .acticle-content-footer { position: relative; }
+
+  .author-avater {
+    width:  35px;
+    height: 35px;
+  }
+
+}
+
+#pagination-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+#pagination-buttons button {
+  padding: 10px 20px;
+  background-color: #6cb9e0;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 0 5px;
+}
+
+#pagination-buttons button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+#page-count {
+  margin: 0 10px;
+  font-size: 14px;
+}
+
+
+.wait-cursor {
+  cursor: wait;
+}

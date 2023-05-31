@@ -1,0 +1,219 @@
+:root {
+  --white: #ffffff;
+}
+
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+ul {
+  list-style: none;
+}
+
+ul li {
+   line-height: 2;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+}
+
+/* For JS */
+.icons-size{
+    color: #333;
+    font-size: 12px;
+}
+.action{
+    right: 25px;
+    top:40px
+}
+.action .profile{
+    border-radius: 50%;
+    cursor: pointer;
+    height: 40px;
+    overflow: hidden;
+    width: 40px;
+}
+.action .profile img{
+    width: 100%;
+    top:0;
+    object-fit: cover;
+    left: 0;
+    height: 100%;
+}
+.action .menu{
+    background-color:#FFF;
+    box-sizing:0 5px 25px rgba(0,0,0,0.1);
+    border-radius: 15px;
+    padding: 10px 20px;
+    position: absolute;
+    right: -10px;
+    width: 200px;
+    transition: 0.5s;
+    top: 120px;
+    visibility: hidden;
+    opacity: 0;
+}
+.action .menu.active{
+    opacity: 1;
+    top: 80px;
+    visibility: visible;
+}
+.action .menu::before{
+    background-color:#fff;
+    content: '';
+    height: 20px;
+    position:sticky;
+    right: 30px;
+    transform:rotate(45deg);
+    top:-5px;
+    width: 20px;
+}
+.action .menu h3{
+    color: #555;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.3em;
+    padding: 20px 0px;
+    text-align: left;
+    width: 100%;
+}
+.action .menu h3 div{
+    color: #818181;
+    font-size: 12px;
+    font-weight: 400;
+}
+.action .menu ul li{
+    align-items: center;
+    border-top:1px solid rgba(0,0,0,0.05);
+    display: flex;
+    justify-content: left;
+    list-style: none;
+    padding: 10px 0px;
+}
+.action .menu ul li img{
+    max-width: 20px;
+    margin-right: 10px;
+    opacity: 0.5;
+    transition:0.5s
+}
+.action .menu ul li a{
+    display: inline-block;
+    color: #555;
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: 0.5s;
+}
+.action .menu ul li:hover img{
+    opacity: 1;
+}
+
+/* MEDIA QUERIES */
+@media (max-width: 930px) {
+  .action .menu{
+    margin-right:35%;
+    margin-top:10%;
+}
+}
+
+@media (max-width: 760px) {
+  .action .menu{
+    margin-top:13%;
+    margin-right:27%;
+  }
+}
+
+@media (max-width: 540px) {
+  .action .menu{
+    margin-top:15%;
+    margin-right:17%;
+  }
+}
+
+@media (max-width: 460px) {
+  .action .menu{
+    margin-right:12%;
+    margin-top:21%;
+  }
+}
+
+@media (max-width: 360px) {
+  .top-bar__content {
+    font-size: 10px;
+  }
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+table {
+  border-collapse: collapse;
+  width: 60%;
+  max-width: 800px;
+  margin: 0 auto;
+  margin-top: 30px;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+}
+
+table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+table th {
+  color: white;
+  text-align: left;
+  padding: 10px;
+}
+
+table td {
+  padding: 10px;
+}
+
+
+/* Responsive table */
+
+@media screen and (max-width: 350px) {
+  .table-container {
+    overflow-x: scroll;
+  }
+  table {
+    width: 100%;
+  }
+  table td,
+  table th {
+    white-space: nowrap;
+  }
+}
+
+
+.bouton {
+    display: inline-block;
+  border: 1px solid #ccc;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 10px;
+}
+
+.bouton:hover{
+    opacity:0.9;
+}
