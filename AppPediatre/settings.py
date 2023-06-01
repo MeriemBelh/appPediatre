@@ -11,13 +11,13 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 import os
 from pathlib import Path
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 MEDIA_URL = '/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'Uploads/')
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
@@ -28,8 +28,7 @@ SECRET_KEY = 'django-insecure-u60fmtdj%94w)-)&iji(u&o1i=(#r(o817+n8m0ekf*3w*w%lu
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['.vercel.app']
-
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -59,13 +58,13 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'AppPediatre.urls'
 
-#Authentication backends
+# Authentication backends
 AUTH_USER_MODEL = 'Pediatre.User'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR,'AppPediatre/templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'AppPediatre/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -80,20 +79,33 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'AppPediatre.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'dbpediatre2',
+#         'USER': 'root',
+#         'PASSWORD': 'root',
+#         'HOST': 'localhost',
+#         'PORT': '3306',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'dbpediatre2',
-        'USER': 'root',
-        'PASSWORD': 'root',
-        'HOST': 'localhost',
-        'PORT': '3306',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'dbpediatre',
+        'USER': 'dbpediatre_user',
+        'PASSWORD': '2d9PmVfcgX6pfwMHmO8Sa77fdKDb2vYM',
+        'HOST': 'dpg-chruj0grddl7atfg00c0-a.oregon-postgres.render.com',
+        'PORT': '',
     }
 }
+
+db_from_env = dj_database_url.config(default=os.environ.get('DATABASE_URL'))
+DATABASES['default'].update(db_from_env)
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -113,7 +125,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
 
@@ -125,15 +136,13 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR,"AppPediatre/static")]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "AppPediatre/static")]
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
